@@ -21,7 +21,7 @@ function KhamBenhForm({ dataSelected }: any) {
     const [nextRowKey, setNextRowKey] = useState(1);
     const [rows, setRows] = useState<JSX.Element[]>([]);
 
-    const handleBenhChange = (value: any) => {
+    const handleBenhChange = (event: ChangeEvent<unknown>, value: any) => {
         const selectedBenhIds = value.map((benh: any) => benh?._id);
         setSelectedBenh(selectedBenhIds)
     };
@@ -35,7 +35,7 @@ function KhamBenhForm({ dataSelected }: any) {
         }
     }, [memoizedDataSelected])
 
-    const handleBenhPhuChange = (value: any) => {
+    const handleBenhPhuChange = (event: ChangeEvent<unknown>, value: any) => {
         const selectedBenhPhuIds = value.map((benh: any) => benh?._id);
         setSelectedBenhPhu(selectedBenhPhuIds)
     };
@@ -114,7 +114,7 @@ function KhamBenhForm({ dataSelected }: any) {
                         renderInput={(params) => (
                             <TextField {...params} label="Thuốc" placeholder="Tên thuốc..." />
                         )}
-                        onChange={(value) => handleThuocChange(value, newRowKey)}
+                        onChange={(event, value) => handleThuocChange(value, newRowKey)}
                         sx={{ width: '100%' }}
                     />
                 </Col>
