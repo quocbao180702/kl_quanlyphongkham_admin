@@ -38,6 +38,7 @@ query getAllBacSi{
         cccd
         ngayBD
     		user{
+          _id
           username
           email
           phoneNumber
@@ -65,6 +66,7 @@ query getAllBenhNhan{
     cccd
     bhyt
     user{
+      _id
       phoneNumber
       email
     }
@@ -154,3 +156,72 @@ query GetAllNgayVaPhong($ngaykham: DateTime!, $phongIds: String!){
   }
 }
 `
+
+const getAllLoaiCLS = gql`
+query GetAllLoaiCLS{
+  getAllLoaiCLS{
+    _id
+    tenxetnghiem
+    gia
+    mota
+  }
+}`
+
+const getAllPhieuCLSbyNgay = gql`
+query GetAllPhieuCLSbyNgay($ngaytao: DateTime!){
+  getAllPhieuCLSbyNgay(ngaytao: $ngaytao){
+      _id
+    benhnhan{
+      hoten
+      ngaysinh
+      gioitinh
+      user{
+        phoneNumber
+      }
+    }
+    bacsi{
+      hoten
+      ngaysinh
+      gioitinh
+      user{
+        phoneNumber
+      }
+    }
+    bhyt
+    ketquacanlamsangs{
+      _id
+      loaicanlamsang{
+        tenxetnghiem
+        gia
+      }
+      hinhanh{
+        fileName
+        url
+        type
+      }
+      ketluan
+      thietbi
+    }
+  }
+}`
+
+const getAllPhong = gql`
+query GetAllPhong{
+  getAllPhong{
+    _id
+    tenphong
+    mota
+    chuyenkhoa{
+      tenkhoa
+    }
+  }
+}`
+
+const getAllChuyenKhoa = gql`
+query GetAllChuyenKhoa{
+  getAllChuyenKhoa{
+    _id
+    tenkhoa
+    mota
+  }
+}`

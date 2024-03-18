@@ -2,13 +2,15 @@ import axios from 'axios'
 
 type TypeFile = 'image' /* | 'video' | 'document' */
 export const backendUrlFile = {
-    image: 'http://localhost:3000/file-upload/PhongKhamImageUpload',
+    /* image: `${import.meta.env.BACKEND_URL || window.location.origin}${'/phongkham/images'}`, */
+    image: `http://localhost:3000/images`
     /* video:'http://localhost:3000/file-upload/PhongKhamImageUpload',
     document: 'http://localhost:3000/file-upload/PhongKhamImageUpload' */
 }
 
 const backendUpload = {
-    image: 'http://localhost:3000/file-upload/PhongKhamImageUpload',
+    /* image: `${import.meta.env.BACKEND_URL || window.location.origin}${'/file-upload/PhongKhamImageUpload'}`, */
+    image: `http://localhost:3000/file-upload/PhongKhamImageUpload`
    /*  video: 'http://localhost:3000/file-upload/PhongKhamImageUpload',
     document: 'http://localhost:3000/file-upload/PhongKhamImageUpload' */
 }
@@ -87,8 +89,8 @@ export async function uploadMultiFile(
 
 export function getUrlImage(linkImage: any) {
     const { url, fileName, type } = linkImage
-    if (type === 'file') {
-        return `http://localhost:3000/file-upload/PhongKhamImageUpload/${fileName}`
+    if (type === 'FILE') {
+        return `${backendUrlFile.image}/${fileName}`
     }
     return url
 }

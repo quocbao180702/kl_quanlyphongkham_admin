@@ -3,8 +3,9 @@ import ChoKham from "./tab-chokham";
 import XetNghiem from "./xetnghiem";
 import KhamBenhForm from "./form-khambenh";
 import SinhHieu from "./sinhhieu-tab";
-import { createContext, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { BenhNhan } from "../../graphql-definition/graphql";
+import YeuCauCanLamSang from "./f_YeuCauCLS";
 
 
 export const EditContext = createContext({});
@@ -14,14 +15,15 @@ function KhamBenh() {
     const [dataSelected, setDataSelected] = useState({});
 
     const [isEditing, setIsEditing] = useState(true);
-    
+    const [modalShow, setModalShow] = useState(false);
+
     const handleEditToggle = () => {
         setIsEditing(!isEditing);
     };
 
     const handleYeuCauXetNghiem = () => {
-        
-    } 
+        setModalShow(true);
+    }
 
     const rowBenhNhanSelected = (select: BenhNhan) => {
         setDataSelected(select);
@@ -69,12 +71,17 @@ function KhamBenh() {
                             </div>
                         </div>
                         <SinhHieu dataSelected={dataSelected} />
-                        <KhamBenhForm dataSelected={dataSelected}/>
+                        <KhamBenhForm dataSelected={dataSelected} />
                     </div>
                     <div className="col-2" >
                         <XetNghiem />
                     </div>
                 </div>
+                <YeuCauCanLamSang
+                    show={modalShow}
+                    onHide={() => setModalShow(false)}
+                    benhnhan={dataSelected}
+                />
             </div>
         </EditContext.Provider>
     </>);

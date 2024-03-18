@@ -21,6 +21,9 @@ function Header() {
                             <Link className="nav-link" to="/khambenh">Khám Bệnh</Link>
                         </li>
                         <li className="nav-item">
+                            <Link className="nav-link" to="/canlamsang">Cận Lâm Sàng</Link>
+                        </li>
+                        <li className="nav-item">
                             <Link className="nav-link" to="/bacsi">Bác Sĩ</Link>
                         </li>
                         <li className="nav-item">

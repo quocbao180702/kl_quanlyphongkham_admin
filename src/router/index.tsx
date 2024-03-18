@@ -10,6 +10,8 @@ import NguoiDung from "../pages/nguoidung"
 import KhamBenh from "../pages/khambenh"
 import Logout from "../pages/logout"
 import BacSiPage from "../pages/bacsi"
+import CanLamSan from "../pages/canlamsang"
+import CanLamSang from "../pages/canlamsang"
 
 export const AppRouter = () => {
 
@@ -24,6 +26,7 @@ export const AppRouter = () => {
                         <Route path="bacsi" element={<BacSiPage />} />
                         <Route path="thuoc" element={<Thuoc />} />
                         <Route path="khambenh" element={<KhamBenh />} />
+                        <Route path="canlamsang" element={<CanLamSang />} />
                     </Route>
                     
                     <Route path="login" element={<Login />} />

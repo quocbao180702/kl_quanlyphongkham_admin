@@ -80,7 +80,6 @@ function UploadImage({
                             width: '100%',
                             height: '100%',
                             objectFit: 'fill'
-                            // borderRadius: 10
                         }}
                         src={getUrlImage(imageUrl)}
                     />

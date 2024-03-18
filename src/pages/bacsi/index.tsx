@@ -1,13 +1,40 @@
 import { Table, Row, Button } from "react-bootstrap";
-import { useGetAllBacSiQuery } from "../../graphql-definition/graphql"; // Rename BacSi import alias
+import { BacSi, useDeleteBacSiMutation, useGetAllBacSiQuery } from "../../graphql-definition/graphql"; // Rename BacSi import alias
 import { MdDelete } from "react-icons/md";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { FaMarker } from "react-icons/fa";
+import { useState } from "react";
+import ThemBacSi from "./f_themBacSi";
+import SuaBacSi from "./f_suaBacSi";
+import dayjs, { Dayjs } from 'dayjs';
 
 function BacSiPage() { // Rename the function here
 
-    const { data, loading, error } = useGetAllBacSiQuery();
+    const { data, loading, error, refetch } = useGetAllBacSiQuery();
 
+    const [modalAdd, setModalAdd] = useState(false);
+    const [selectedBacSi, setSelectedBacSi] = useState({});
+    const [modalSua, setModalSua] = useState(false);
+
+    const handleEdit = (bacsi: BacSi) => {
+        setSelectedBacSi(bacsi);
+        setModalSua(true);
+    };
+
+    const handleAdd = () =>{
+        setModalAdd(true)
+    }
+
+    const [deleteBacSi] = useDeleteBacSiMutation()
+
+    const handleDelete = async (id: string) =>{
+        try{
+            await deleteBacSi({variables: {id}});
+            refetch();
+        }catch(error){
+            console.log('Error deleting user: ', error)
+        }
+    }
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error...</div>;
@@ -18,6 +45,7 @@ function BacSiPage() { // Rename the function here
 
                 <Row className="mt-3">
                     <div className="d-flex justify-content-center">
+                    <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Thêm Bác Sĩ</Button>
                         <Button className="mr-3 btn-outline-primary">Nhập Exel</Button>
                         <Button className="mr-3 btn-outline-success">Xuất Exel</Button>
                         <Button className="mr-3 btn-outline-danger">Xuất PDF</Button>
@@ -48,7 +76,7 @@ function BacSiPage() { // Rename the function here
                                     <tr key={bs._id}>
                                         <td>{index + 1}</td>
                                         <td>{bs?.hoten}</td>
-                                        <td>{bs?.ngaysinh}</td>
+                                        <td>{dayjs(bs?.ngaysinh).format('YYYY-MM-DD')}</td>
                                         <td>{bs?.gioitinh ? 'Nam' : 'Nữ'}</td>
                                         <td>{bs?.diachi}</td>
                                         <td>{bs?.user?.phoneNumber}</td>
@@ -61,15 +89,25 @@ function BacSiPage() { // Rename the function here
                                             ))}
                                         </td>
                                         <td>{bs?.chuyenkhoa?.tenkhoa}</td>
-                                        <td ><MdDelete /></td>
-                                        <td><IoAddCircleOutline /></td>
-                                        <td><FaMarker /></td>
+                                        <td onClick={() => handleDelete(bs?._id)}><MdDelete /></td>
+                                        <td onClick={() => handleEdit(bs)}><FaMarker /></td>
                                     </tr>
                                 )
                             })}
                         </tbody>
                     </Table>
                 </Row>
+                <ThemBacSi
+                    show={modalAdd}
+                    onHide={() => setModalAdd(false)}
+                    refetch={refetch}
+                />
+                <SuaBacSi
+                    show={modalSua}
+                    onHide = {() => setModalSua(false)}
+                    bacsi={selectedBacSi}
+                    refetch={refetch}
+                />
             </div>
         </>
     );
