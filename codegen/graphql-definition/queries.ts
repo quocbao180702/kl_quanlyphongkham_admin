@@ -1,9 +1,10 @@
 import { gql } from "@apollo/client";
 
 const getAllUsers = gql`
-query getAllUsers{
-    getAllUsers{
-      _id
+query GetAllUser($input: FetchUsersArgs!){
+  countUser
+  getAllUsers(fetchUsersArgs: $input){
+    _id
       username
       email
       phoneNumber
@@ -16,8 +17,8 @@ query getAllUsers{
         type
       }
       refreshToken
-    }
   }
+}
 `
 
 const logout = gql`
@@ -28,8 +29,9 @@ query Logout {
 
 
 const getAllBacSi = gql`
-query getAllBacSi{
-  getAllBacSi{
+query GetAllBacSi($input: FetchPagination!){
+  CountBacSi
+  getAllBacSi(fetchPagination: $input){
      	_id
         hoten	
         ngaysinh
@@ -52,12 +54,14 @@ query getAllBacSi{
           tenkhoa
         }
     }
-}`
+}
+`
 
 
 const getAllBenhNhan = gql`
-query getAllBenhNhan{
-  getAllBenhNhan{
+query getAllBenhNhan($input: FetchPagination!){
+  CountBenhNhan
+  getAllBenhNhan(fetchPagination: $input){
      _id
     hoten
     ngaysinh
@@ -74,9 +78,10 @@ query getAllBenhNhan{
 }`
 
 
-const getAllThuoc = gql`
-query getAllThuoc{
-  getAllThuoc{
+const getThuocPagination = gql`
+query GetThuocPagination($input: FetchPagination!){
+  CountThuoc
+  getThuocPagination(fetchPagination: $input){
     _id
     tenthuoc
     tenPhoBien
@@ -91,6 +96,22 @@ query getAllThuoc{
   }
 }
 `
+const getAllThuoc= gql`
+query GetAllThuoc{
+  getAllThuoc{
+    _id
+    tenthuoc
+    tenPhoBien
+    dangthuoc
+    donvi
+    gia
+    hamluong
+    bhyt
+    nhasanxuat
+    hansudung
+    soluong
+  }
+}`
 
 const getAllSinhHieuByBenhNhan = gql`
 query GetAllSinhHieuByBenhNhan($id: String!){

@@ -146,6 +146,16 @@ export type Dichvu = {
   tendichvu: Scalars['String']['output'];
 };
 
+export type FetchPagination = {
+  skip?: Scalars['Int']['input'];
+  take?: Scalars['Int']['input'];
+};
+
+export type FetchUsersArgs = {
+  skip?: Scalars['Int']['input'];
+  take?: Scalars['Int']['input'];
+};
+
 export type Hoadon = {
   __typename?: 'Hoadon';
   _id: Scalars['ID']['output'];
@@ -674,6 +684,10 @@ export type Phong = {
 
 export type Query = {
   __typename?: 'Query';
+  CountBacSi: Scalars['Float']['output'];
+  CountBenhNhan: Scalars['Float']['output'];
+  CountThuoc: Scalars['Float']['output'];
+  countUser: Scalars['Float']['output'];
   findAll: Array<Hoadon>;
   getAllBacSi: Array<BacSi>;
   getAllBenh: Array<Benh>;
@@ -695,11 +709,22 @@ export type Query = {
   getAllToaThuoc: Array<Toathuoc>;
   getAllUsers: Array<Users>;
   getBenhNhanbyId: BenhNhan;
+  getThuocPagination: Array<Thuoc>;
   getThuocbyIds: Array<Thuoc>;
   getUserByEmail: Users;
   getUserById: Users;
   getUserByUsername: Users;
   logout?: Maybe<Scalars['Boolean']['output']>;
+};
+
+
+export type QueryGetAllBacSiArgs = {
+  fetchPagination: FetchPagination;
+};
+
+
+export type QueryGetAllBenhNhanArgs = {
+  fetchPagination: FetchPagination;
 };
 
 
@@ -719,8 +744,18 @@ export type QueryGetAllSinhHieuByBenhNhanArgs = {
 };
 
 
+export type QueryGetAllUsersArgs = {
+  fetchUsersArgs: FetchUsersArgs;
+};
+
+
 export type QueryGetBenhNhanbyIdArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryGetThuocPaginationArgs = {
+  fetchPagination: FetchPagination;
 };
 
 
@@ -1112,25 +1147,38 @@ export type DeleteThuocMutationVariables = Exact<{
 
 export type DeleteThuocMutation = { __typename?: 'Mutation', deleteThuoc: boolean };
 
-export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAllUserQueryVariables = Exact<{
+  input: FetchUsersArgs;
+}>;
 
 
-export type GetAllUsersQuery = { __typename?: 'Query', getAllUsers: Array<{ __typename?: 'Users', _id: string, username: string, email: string, phoneNumber: string, password: string, role: UserRole, isLocked: boolean, refreshToken: string, avatar: { __typename?: 'LinkImage', fileName: string, url: string, type: TypeImage } }> };
+export type GetAllUserQuery = { __typename?: 'Query', countUser: number, getAllUsers: Array<{ __typename?: 'Users', _id: string, username: string, email: string, phoneNumber: string, password: string, role: UserRole, isLocked: boolean, refreshToken: string, avatar: { __typename?: 'LinkImage', fileName: string, url: string, type: TypeImage } }> };
 
 export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutQuery = { __typename?: 'Query', logout?: boolean | null };
 
-export type GetAllBacSiQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAllBacSiQueryVariables = Exact<{
+  input: FetchPagination;
+}>;
 
 
-export type GetAllBacSiQuery = { __typename?: 'Query', getAllBacSi: Array<{ __typename?: 'BacSi', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, cccd: string, ngayBD: any, user: { __typename?: 'Users', _id: string, username: string, email: string, phoneNumber: string }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, chuyenkhoa: { __typename?: 'ChuyenKhoa', _id: string, tenkhoa: string } }> };
+export type GetAllBacSiQuery = { __typename?: 'Query', CountBacSi: number, getAllBacSi: Array<{ __typename?: 'BacSi', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, cccd: string, ngayBD: any, user: { __typename?: 'Users', _id: string, username: string, email: string, phoneNumber: string }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, chuyenkhoa: { __typename?: 'ChuyenKhoa', _id: string, tenkhoa: string } }> };
 
-export type GetAllBenhNhanQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAllBenhNhanQueryVariables = Exact<{
+  input: FetchPagination;
+}>;
 
 
-export type GetAllBenhNhanQuery = { __typename?: 'Query', getAllBenhNhan: Array<{ __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: string, gioitinh: boolean, diachi: string, cccd: string, bhyt: string, user: { __typename?: 'Users', _id: string, phoneNumber: string, email: string } }> };
+export type GetAllBenhNhanQuery = { __typename?: 'Query', CountBenhNhan: number, getAllBenhNhan: Array<{ __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: string, gioitinh: boolean, diachi: string, cccd: string, bhyt: string, user: { __typename?: 'Users', _id: string, phoneNumber: string, email: string } }> };
+
+export type GetThuocPaginationQueryVariables = Exact<{
+  input: FetchPagination;
+}>;
+
+
+export type GetThuocPaginationQuery = { __typename?: 'Query', CountThuoc: number, getThuocPagination: Array<{ __typename?: 'Thuoc', _id: string, tenthuoc: string, tenPhoBien: string, dangthuoc: string, donvi: string, gia: number, hamluong: number, bhyt: boolean, nhasanxuat: string, hansudung: string, soluong: number }> };
 
 export type GetAllThuocQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1823,9 +1871,10 @@ export function useDeleteThuocMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteThuocMutationHookResult = ReturnType<typeof useDeleteThuocMutation>;
 export type DeleteThuocMutationResult = Apollo.MutationResult<DeleteThuocMutation>;
 export type DeleteThuocMutationOptions = Apollo.BaseMutationOptions<DeleteThuocMutation, DeleteThuocMutationVariables>;
-export const GetAllUsersDocument = gql`
-    query getAllUsers {
-  getAllUsers {
+export const GetAllUserDocument = gql`
+    query GetAllUser($input: FetchUsersArgs!) {
+  countUser
+  getAllUsers(fetchUsersArgs: $input) {
     _id
     username
     email
@@ -1844,36 +1893,37 @@ export const GetAllUsersDocument = gql`
     `;
 
 /**
- * __useGetAllUsersQuery__
+ * __useGetAllUserQuery__
  *
- * To run a query within a React component, call `useGetAllUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAllUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetAllUsersQuery({
+ * const { data, loading, error } = useGetAllUserQuery({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
-export function useGetAllUsersQuery(baseOptions?: Apollo.QueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>) {
+export function useGetAllUserQuery(baseOptions: Apollo.QueryHookOptions<GetAllUserQuery, GetAllUserQueryVariables> & ({ variables: GetAllUserQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, options);
+        return Apollo.useQuery<GetAllUserQuery, GetAllUserQueryVariables>(GetAllUserDocument, options);
       }
-export function useGetAllUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>) {
+export function useGetAllUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllUserQuery, GetAllUserQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, options);
+          return Apollo.useLazyQuery<GetAllUserQuery, GetAllUserQueryVariables>(GetAllUserDocument, options);
         }
-export function useGetAllUsersSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>) {
+export function useGetAllUserSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllUserQuery, GetAllUserQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, options);
+          return Apollo.useSuspenseQuery<GetAllUserQuery, GetAllUserQueryVariables>(GetAllUserDocument, options);
         }
-export type GetAllUsersQueryHookResult = ReturnType<typeof useGetAllUsersQuery>;
-export type GetAllUsersLazyQueryHookResult = ReturnType<typeof useGetAllUsersLazyQuery>;
-export type GetAllUsersSuspenseQueryHookResult = ReturnType<typeof useGetAllUsersSuspenseQuery>;
-export type GetAllUsersQueryResult = Apollo.QueryResult<GetAllUsersQuery, GetAllUsersQueryVariables>;
+export type GetAllUserQueryHookResult = ReturnType<typeof useGetAllUserQuery>;
+export type GetAllUserLazyQueryHookResult = ReturnType<typeof useGetAllUserLazyQuery>;
+export type GetAllUserSuspenseQueryHookResult = ReturnType<typeof useGetAllUserSuspenseQuery>;
+export type GetAllUserQueryResult = Apollo.QueryResult<GetAllUserQuery, GetAllUserQueryVariables>;
 export const LogoutDocument = gql`
     query Logout {
   logout
@@ -1912,8 +1962,9 @@ export type LogoutLazyQueryHookResult = ReturnType<typeof useLogoutLazyQuery>;
 export type LogoutSuspenseQueryHookResult = ReturnType<typeof useLogoutSuspenseQuery>;
 export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
 export const GetAllBacSiDocument = gql`
-    query getAllBacSi {
-  getAllBacSi {
+    query GetAllBacSi($input: FetchPagination!) {
+  CountBacSi
+  getAllBacSi(fetchPagination: $input) {
     _id
     hoten
     ngaysinh
@@ -1951,10 +2002,11 @@ export const GetAllBacSiDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllBacSiQuery({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
-export function useGetAllBacSiQuery(baseOptions?: Apollo.QueryHookOptions<GetAllBacSiQuery, GetAllBacSiQueryVariables>) {
+export function useGetAllBacSiQuery(baseOptions: Apollo.QueryHookOptions<GetAllBacSiQuery, GetAllBacSiQueryVariables> & ({ variables: GetAllBacSiQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetAllBacSiQuery, GetAllBacSiQueryVariables>(GetAllBacSiDocument, options);
       }
@@ -1971,8 +2023,9 @@ export type GetAllBacSiLazyQueryHookResult = ReturnType<typeof useGetAllBacSiLaz
 export type GetAllBacSiSuspenseQueryHookResult = ReturnType<typeof useGetAllBacSiSuspenseQuery>;
 export type GetAllBacSiQueryResult = Apollo.QueryResult<GetAllBacSiQuery, GetAllBacSiQueryVariables>;
 export const GetAllBenhNhanDocument = gql`
-    query getAllBenhNhan {
-  getAllBenhNhan {
+    query getAllBenhNhan($input: FetchPagination!) {
+  CountBenhNhan
+  getAllBenhNhan(fetchPagination: $input) {
     _id
     hoten
     ngaysinh
@@ -2001,10 +2054,11 @@ export const GetAllBenhNhanDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllBenhNhanQuery({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
-export function useGetAllBenhNhanQuery(baseOptions?: Apollo.QueryHookOptions<GetAllBenhNhanQuery, GetAllBenhNhanQueryVariables>) {
+export function useGetAllBenhNhanQuery(baseOptions: Apollo.QueryHookOptions<GetAllBenhNhanQuery, GetAllBenhNhanQueryVariables> & ({ variables: GetAllBenhNhanQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetAllBenhNhanQuery, GetAllBenhNhanQueryVariables>(GetAllBenhNhanDocument, options);
       }
@@ -2020,8 +2074,59 @@ export type GetAllBenhNhanQueryHookResult = ReturnType<typeof useGetAllBenhNhanQ
 export type GetAllBenhNhanLazyQueryHookResult = ReturnType<typeof useGetAllBenhNhanLazyQuery>;
 export type GetAllBenhNhanSuspenseQueryHookResult = ReturnType<typeof useGetAllBenhNhanSuspenseQuery>;
 export type GetAllBenhNhanQueryResult = Apollo.QueryResult<GetAllBenhNhanQuery, GetAllBenhNhanQueryVariables>;
+export const GetThuocPaginationDocument = gql`
+    query GetThuocPagination($input: FetchPagination!) {
+  CountThuoc
+  getThuocPagination(fetchPagination: $input) {
+    _id
+    tenthuoc
+    tenPhoBien
+    dangthuoc
+    donvi
+    gia
+    hamluong
+    bhyt
+    nhasanxuat
+    hansudung
+    soluong
+  }
+}
+    `;
+
+/**
+ * __useGetThuocPaginationQuery__
+ *
+ * To run a query within a React component, call `useGetThuocPaginationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetThuocPaginationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetThuocPaginationQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetThuocPaginationQuery(baseOptions: Apollo.QueryHookOptions<GetThuocPaginationQuery, GetThuocPaginationQueryVariables> & ({ variables: GetThuocPaginationQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetThuocPaginationQuery, GetThuocPaginationQueryVariables>(GetThuocPaginationDocument, options);
+      }
+export function useGetThuocPaginationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetThuocPaginationQuery, GetThuocPaginationQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetThuocPaginationQuery, GetThuocPaginationQueryVariables>(GetThuocPaginationDocument, options);
+        }
+export function useGetThuocPaginationSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetThuocPaginationQuery, GetThuocPaginationQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetThuocPaginationQuery, GetThuocPaginationQueryVariables>(GetThuocPaginationDocument, options);
+        }
+export type GetThuocPaginationQueryHookResult = ReturnType<typeof useGetThuocPaginationQuery>;
+export type GetThuocPaginationLazyQueryHookResult = ReturnType<typeof useGetThuocPaginationLazyQuery>;
+export type GetThuocPaginationSuspenseQueryHookResult = ReturnType<typeof useGetThuocPaginationSuspenseQuery>;
+export type GetThuocPaginationQueryResult = Apollo.QueryResult<GetThuocPaginationQuery, GetThuocPaginationQueryVariables>;
 export const GetAllThuocDocument = gql`
-    query getAllThuoc {
+    query GetAllThuoc {
   getAllThuoc {
     _id
     tenthuoc

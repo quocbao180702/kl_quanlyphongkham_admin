@@ -1,21 +1,36 @@
 
 import { Button, Row, Table } from "react-bootstrap";
-import { Thuoc, useDeleteThuocMutation, useGetAllThuocQuery } from "../../graphql-definition/graphql";
+import { Thuoc, useDeleteThuocMutation, useGetThuocPaginationQuery } from "../../graphql-definition/graphql";
 import { MdDelete } from "react-icons/md";
 import { FaMarker } from "react-icons/fa";
 import { useState } from "react";
 import ThemThuoc from "./f_themThuoc";
 import SuaThuoc from "./f_suaThuoc";
+import Pagination from "../../components/pagination";
 
 function ThuocPage() {
 
-    const { data, loading, error, refetch } = useGetAllThuocQuery();
+    const [take, setTake] = useState(2);
+    const [skip, setSkip] =  useState(0);
+    const { data, loading, error, refetch } = useGetThuocPaginationQuery({
+        variables: {
+            "input": {
+                "take": take,
+                "skip": skip
+            }
+        }
+    });
 
 
     const [modalAdd, setModalAdd] = useState(false);
     const [modalSua, setModalSua] = useState(false);
     const [selectedThuoc, setSelectedThuoc] = useState({});
-    
+    const [page, setPage] = useState(1);
+
+    const handleChangPage = (skip: number, page: number) =>{
+        setSkip(skip);
+        setPage(page)
+    }
     
     const handleAdd = () => {
         setModalAdd(true)
@@ -70,7 +85,7 @@ function ThuocPage() {
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.getAllThuoc.map((thuoc: any, index: number) => (
+                        {data?.getThuocPagination.map((thuoc: any, index: number) => (
                             <tr key={thuoc._id}>
                                 <td>{index + 1}</td>
                                 <td>{thuoc?.tenthuoc}</td>
@@ -89,6 +104,7 @@ function ThuocPage() {
                         ))}
                     </tbody>
                 </Table>
+                <Pagination count={data?.CountThuoc as number} take={take} skip={handleChangPage} page={page}/>
             </Row>
             <ThemThuoc 
                 show={modalAdd}

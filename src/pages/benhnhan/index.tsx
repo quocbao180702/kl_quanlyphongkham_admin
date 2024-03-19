@@ -8,16 +8,33 @@ import moment from "moment";
 import ThemBenhNhan from "./f_themBenhNhan";
 import { useState } from "react";
 import SuaBenhNhan from "./f_suaBenhNhan";
+import Pagination from "../../components/pagination";
 
 
 export default function BenhNhanPage(){
 
-    const { data, loading, error, refetch } = useGetAllBenhNhanQuery();
+    const [take, setTake] = useState(2);
+    const [skip, setSkip] =  useState(0);
+    const { data, loading, error, refetch } = useGetAllBenhNhanQuery({
+        variables: {
+            "input": {
+                "take": take,
+                "skip": skip
+            }
+        }
+    });
 
 
     const [modalAdd, setModalAdd] = useState(false);
     const [modalSua, setModalSua] = useState(false);
     const [selectedBenhNhan, setSelectedBenhNhan] = useState({});
+    const [page, setPage] = useState(1);
+
+    const handleChangPage = (skip: number, page: number) =>{
+        setSkip(skip);
+        setPage(page)
+    }
+
 
 
     const handleAdd = () =>{
@@ -91,6 +108,7 @@ export default function BenhNhanPage(){
                     ))}
                 </tbody>
             </Table>
+            <Pagination count={data?.CountBenhNhan as number} take={take} skip={handleChangPage} page={page}/>
             </Row>
             <ThemBenhNhan 
                 show={modalAdd}

@@ -2,18 +2,35 @@ import { Button, Row, Table, Image } from 'react-bootstrap';
 import { MdDelete } from 'react-icons/md';
 import { FaMarker } from 'react-icons/fa';
 import { CiLock, CiUnlock } from 'react-icons/ci';
-import { LinkImage, Users, useDeleteUserMutation, useGetAllUsersQuery, useXulyKhoaMutation } from '../../graphql-definition/graphql';
+import { LinkImage, Users, useDeleteUserMutation, useGetAllUserQuery, useXulyKhoaMutation } from '../../graphql-definition/graphql';
 import { useEffect, useState } from 'react';
 import MyVerticallyCenteredModal from './form_updateUser'; import ThemNguoiDung from './f_themUser';
 import { getUrlImage } from '../../utils/uploadFile';
+import Pagination from '../../components/pagination';
 ;
 
 function NguoiDung() {
-    const { data, loading, error, refetch } = useGetAllUsersQuery();
+
+    const [take, setTake] = useState(2);
+    const [skip, setSkip] =  useState(0);
+    const { data, loading, error, refetch } = useGetAllUserQuery({
+        variables: {
+            "input": {
+                "take": take,
+                "skip": skip
+            }
+        }
+    });
 
     const [selectedUser, setSelectedUser] = useState({});
     const [modalShow, setModalShow] = useState(false);
     const [modalAdd, setModalAdd] = useState(false);
+    const [page, setPage] = useState(1);
+
+    const handleChangPage = (skip: number, page: number) =>{
+        setSkip(skip);
+        setPage(page)
+    }
 
 
     const [deleteUser] = useDeleteUserMutation();
@@ -100,6 +117,7 @@ function NguoiDung() {
                         ))}
                     </tbody>
                 </Table>
+                <Pagination count={data?.countUser as number} take={take} skip={handleChangPage} page={page}/>
             </Row>
             <MyVerticallyCenteredModal
                 show={modalShow}

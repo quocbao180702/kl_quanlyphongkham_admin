@@ -7,14 +7,32 @@ import { useState } from "react";
 import ThemBacSi from "./f_themBacSi";
 import SuaBacSi from "./f_suaBacSi";
 import dayjs, { Dayjs } from 'dayjs';
+import Pagination from "../../components/pagination";
 
 function BacSiPage() { // Rename the function here
 
-    const { data, loading, error, refetch } = useGetAllBacSiQuery();
+
+    const [take, setTake] = useState(2);
+    const [skip, setSkip] =  useState(0);
+    const { data, loading, error, refetch } = useGetAllBacSiQuery({
+        variables: {
+            "input": {
+                "take": take,
+                "skip": skip
+            }
+        }
+    });
 
     const [modalAdd, setModalAdd] = useState(false);
     const [selectedBacSi, setSelectedBacSi] = useState({});
     const [modalSua, setModalSua] = useState(false);
+    const [page, setPage] = useState(1);
+
+    const handleChangPage = (skip: number, page: number) =>{
+        setSkip(skip);
+        setPage(page)
+    }
+
 
     const handleEdit = (bacsi: BacSi) => {
         setSelectedBacSi(bacsi);
@@ -96,6 +114,7 @@ function BacSiPage() { // Rename the function here
                             })}
                         </tbody>
                     </Table>
+                    <Pagination count={data?.CountBacSi as number} take={take} skip={handleChangPage} page={page}/>
                 </Row>
                 <ThemBacSi
                     show={modalAdd}
