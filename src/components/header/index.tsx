@@ -1,9 +1,25 @@
 import { Link } from "react-router-dom";
 import { getJwtToken } from "../../utils/jwt";
+import { jwtDecode } from "jwt-decode";
+import { useContext, useEffect, useState } from "react";
+import { useLogoutMutation } from "../../graphql-definition/graphql";
+import { AuthContext } from "../../provider/AuthContextProvider";
 
 
 function Header() {
-    const isLoggedIn = getJwtToken();
+    const { isAuthenticated, logoutClient } = useContext(AuthContext)
+    const [logoutServer, _] = useLogoutMutation()
+
+    const logout = async () => {
+        try {
+            logoutClient()
+            await logoutServer()
+        }
+        catch (error) {
+            console.log(error)
+        }
+
+    }
     return (
         <>
             <nav className="navbar navbar-expand-lg navbar-light bg-primary">
@@ -18,13 +34,16 @@ function Header() {
                             <Link className="nav-link" to="/">Home <span className="sr-only">(current)</span></Link>
                         </li>
                         <li className="nav-item">
+                            <Link className="nav-link" to="/datlich">Đặt Lịch</Link>
+                        </li>
+                        <li className="nav-item">
                             <Link className="nav-link" to="/khambenh">Khám Bệnh</Link>
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link" to="/canlamsang">Cận Lâm Sàng</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/bacsi">Bác Sĩ</Link>
+                            <Link className="nav-link" to="/nhansu">Nhân Sự</Link>
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link" to="/benhnhan">Bệnh Nhân</Link>
@@ -37,13 +56,13 @@ function Header() {
                         </li>
                     </ul>
                     <ul className="navbar-nav ml-5">
-                        {isLoggedIn ? (
+                        {isAuthenticated ? (
                             <>
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/profile">Profile</Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link" to="/logout">Logout</Link>
+                                    <Link className="nav-link" to="#" onClick={logout}>Logout</Link>
                                 </li>
                             </>
                         ) : (

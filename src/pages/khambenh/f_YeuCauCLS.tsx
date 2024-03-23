@@ -7,13 +7,12 @@ import { Box, Checkbox, FormControlLabel } from "@mui/material";
 import { message } from "antd";
 import dayjs, { Dayjs } from 'dayjs';
 
-function YeuCauCanLamSang({ show, onHide, benhnhan }: any) {
+function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi }: any) {
 
     const { data, loading, error } = useGetAllLoaiClsQuery();
     const [checked, setChecked] = useState([false, false, false, false, false]);
     const [selectedValues, setSelectedValues] = useState<string[]>([]);
-    const [benhnhanId, setBenhNhanId] = useState('');
-    const [bacsiId, setBacSiId] = useState('');
+    const [benhnhanId, setBenhNhanId] = useState();
     const [bhyt, setBHYT] = useState(Boolean);
     const [createphieuchidinhCLS, _] = useCreatePhieuchidinhcanlamsangMutation();
 
@@ -22,24 +21,25 @@ function YeuCauCanLamSang({ show, onHide, benhnhan }: any) {
             setBenhNhanId(benhnhan?._id);
         }
         benhnhan?.bhyt ? setBHYT(true) : setBHYT(false)
-        setBacSiId('65e4771ce1a675b267dd2e76');
+        console.log('bệnh nhân là yêu cầu là', benhnhan)
+        console.log('bác sĩ là: ', bacsi)
     }, [benhnhan])
 
 
     const HandleUpdate = async () => {
         console.log('code: ', selectedValues)
-        console.log('bac si: ', bacsiId);
+        console.log('bac si: ', bacsi?._id);
         console.log('benh nhan: ', benhnhanId)
         console.log('bhyt so: ', bhyt)
-        console.log('ngaytao: ', dayjs().format('YYYY/MM/DD'))
+        console.log('ngaytao: ', dayjs().format('YYYY-MM-DD'))
         try {
-            if (bacsiId && benhnhanId && bhyt) {
+            if (bacsi?._id && benhnhanId && bhyt) {
                 const ketqua = selectedValues.map(value => ({ loaicanlamsang: value }));
                 const response = await createphieuchidinhCLS({
                     variables: {
                         "phieuchidinh": {
                             "benhnhan": benhnhanId,
-                            "bacsi": bacsiId,
+                            "bacsi": bacsi?._id,
                             "bhyt": true,
                             "ngaytao": dayjs().format('YYYY-MM-DD')
                         },
@@ -47,8 +47,8 @@ function YeuCauCanLamSang({ show, onHide, benhnhan }: any) {
                     }
                 })
             }
-            else{
-                console.log('trường dữ liệu có thể bị thiếu:  ', bacsiId, benhnhanId, bhyt)
+            else {
+                console.log('trường dữ liệu có thể bị thiếu:  ', bacsi?._id, benhnhanId, bhyt)
             }
         }
         catch (error) {
@@ -151,7 +151,7 @@ function YeuCauCanLamSang({ show, onHide, benhnhan }: any) {
                 </Row>
                 <Row>
                     <h6>Bác Sĩ</h6>
-                    Bác sĩ: Nguyễn Văn A - Phòng 1 - Chuyên Khoa Chấn Thương Chỉnh Hình - 0767979122 - {bacsiId}
+                    Bác sĩ: {bacsi?.hoten} - {bacsi?.phongs?.tenphong} - {bacsi?.chuyenkhoa?.tenkhoa} - {bacsi?.user?.phoneNumber}
                     <hr />
                     <div style={{ border: "1px solid black" }}></div>
                 </Row>

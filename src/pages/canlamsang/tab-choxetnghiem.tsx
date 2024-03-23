@@ -1,12 +1,8 @@
 import { Table } from "react-bootstrap";
-import { BenhNhan, Phieuchidinhcanlamsang, useGetAllPhieuClSbyNgayQuery } from "../../graphql-definition/graphql";
+import { Phieuchidinhcanlamsang } from "../../graphql-definition/graphql";
 import moment from "moment";
 
-function ChoXetNghiem({ dataAgrsChoKham, selected }: any) {
-
-
-    const { loading, error, data } = useGetAllPhieuClSbyNgayQuery({ variables: { ngaytao: dataAgrsChoKham?.ngaytao } })
-
+function ChoXetNghiem({ data, loading, error, selected, refetchData }: any) {
     const handleRowSelect = (phieuchidinh: Phieuchidinhcanlamsang) => {
         selected(phieuchidinh);
         console.log('row selected is:', phieuchidinh);

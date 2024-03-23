@@ -19,7 +19,7 @@ function SinhHieu({ dataSelected }: any) {
     const memoizedDataSelected = useMemo(() => dataSelected, [dataSelected]);
 
     useEffect(() => {
-        if (memoizedDataSelected) {
+        if (memoizedDataSelected?.sinhhieu) {
             setMach(memoizedDataSelected?.sinhhieu?.mach || 0.0);
             setNhietdo(memoizedDataSelected?.sinhhieu?.nhietdo || 0.0);
             const ha = memoizedDataSelected?.sinhhieu?.ha || '';

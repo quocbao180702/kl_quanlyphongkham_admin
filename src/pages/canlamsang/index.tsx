@@ -1,6 +1,6 @@
 import { Button, Col, Form, Row, Tab, Table, Tabs } from "react-bootstrap";
 import ChoXetNghiem from "./tab-choxetnghiem";
-import { KetQuaCanLamSang, LinkImage, Phieuchidinhcanlamsang, TypeImage, useUpdateKetquacanlamsangMutation } from "../../graphql-definition/graphql";
+import { KetQuaCanLamSang, LinkImage, Phieuchidinhcanlamsang, TypeImage, useFindAllRelatedKetQuaCanLamSangLazyQuery, useGetAllPhieuClSbyNgayQuery, useUpdateKetquacanlamsangMutation } from "../../graphql-definition/graphql";
 import { FormEvent, useEffect, useState } from "react";
 import dayjs, { Dayjs } from 'dayjs';
 import { Autocomplete, TextField } from "@mui/material";
@@ -14,16 +14,26 @@ function CanLamSang() {
     const [thietbi, setThietBi] = useState('');
     /* const [hinhanh, setHinhAnh] = useState<LinkImage>(); */
 
-    const dataAgrsChoKham = {
-        ngaytao: dayjs().format('YYYY-MM-DD')
-    }
-
     const rowBenhNhanSelected = (select: Phieuchidinhcanlamsang) => {
         setDataSelected(select);
     }
 
+    const { loading, error, data, refetch } = useGetAllPhieuClSbyNgayQuery({ variables: { ngaytao: dayjs().format('YYYY-MM-DD') } })
+
+    const ketQuaIds = dataSelected?.ketquacanlamsangs?.map(ketQua => ketQua._id) || [];
+    const [getKetQua, { data: dataKetqua, loading: loadingKetqua, error: errorKetqua, refetch: refetchKetQua }] = useFindAllRelatedKetQuaCanLamSangLazyQuery(
+        {
+            variables: {
+                input: ketQuaIds
+            }
+        }
+    );
+
     useEffect(() => {
         console.log('data đã gửi lên là: ', dataSelected)
+        if (dataSelected !== undefined) {
+            getKetQua()
+        }
     }, [dataSelected])
 
 
@@ -35,6 +45,10 @@ function CanLamSang() {
     }
 
     const [updateKetquacanlamsang] = useUpdateKetquacanlamsangMutation()
+
+    const handleHuyKham = () => {
+        setDataSelected(undefined)
+    }
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -59,6 +73,7 @@ function CanLamSang() {
                         }
                     }
                 })
+                refetchKetQua()
             }
         } catch (error) {
             console.log('lỗi bạn gặp khi update xét nghiệm là: ', error)
@@ -74,7 +89,7 @@ function CanLamSang() {
                         id="fill-tab-example"
                     >
                         <Tab eventKey="chokham" title="Đang Chờ">
-                            <ChoXetNghiem dataAgrsChoKham={dataAgrsChoKham} selected={rowBenhNhanSelected} />
+                            <ChoXetNghiem data={data} loading={loading} error={error} selected={rowBenhNhanSelected} refetchData={refetch} />
                         </Tab>
                         <Tab eventKey="dangkham" title="Đã Khám">
                             {/* <ChoKham data={data} error={error} loading={loading} selected={rowBenhNhanSelected} /> */}
@@ -89,7 +104,7 @@ function CanLamSang() {
                         <div className="d-flex justify-content-around align-items-center">
                             <Button className="mr-1">Khám</Button>
                             <Button className="mr-1">Gửi mẫu</Button>
-                            <Button className="mr-1">Hủy Khám</Button>
+                            <Button className="mr-1" onClick={handleHuyKham}>Hủy Khám</Button>
                         </div>
                     </div>
                     <div className="row mt-3">
@@ -99,27 +114,27 @@ function CanLamSang() {
                                 <Col md={4}>
                                     <Form.Group className="mb-3" controlId="formBasicEmail">
                                         <Form.Label>Loại Cận Lâm Sàng</Form.Label>
-                                        <Form.Control type="text" placeholder="Loại cận lâm sàng" value={ketquaCLS?.loaicanlamsang?.tenxetnghiem || ''} />
+                                        <Form.Control type="text" placeholder="Loại cận lâm sàng" defaultValue={ketquaCLS?.loaicanlamsang?.tenxetnghiem || ''} />
                                     </Form.Group>
                                 </Col>
                                 <Col md={4}>
                                     <Form.Group className="mb-3" controlId="formBasicEmail">
                                         <Form.Label>Kết Luận</Form.Label>
-                                        <Form.Control type="text" placeholder="Kết luận" value={ketluan} onChange={event => setKetLuan(event.target.value)} />
+                                        <Form.Control type="text" placeholder="Kết luận" defaultValue={ketluan} onChange={event => setKetLuan(event.target.value)} />
                                     </Form.Group>
                                 </Col>
 
                                 <Col md={4}>
                                     <Form.Group className="mb-3" controlId="formBasicPassword">
                                         <Form.Label>Thiết Bị</Form.Label>
-                                        <Form.Control type="text" placeholder="Thiết bị" value={thietbi} onChange={event => setThietBi(event.target.value)} />
+                                        <Form.Control type="text" placeholder="Thiết bị" defaultValue={thietbi} onChange={event => setThietBi(event.target.value)} />
                                     </Form.Group>
                                 </Col>
                             </Row>
                             <Row className="d-flex justify-content-center">
                                 <Form.Group className="mb-3 w-50" controlId="formBasicEmail">
                                     <Form.Label>Hình Ảnh</Form.Label>
-                                    <Form.Control type="text" placeholder="Hình ảnh" value={ketquaCLS?.hinhanh?.fileName || ''} />
+                                    <Form.Control type="text" placeholder="Hình ảnh" defaultValue={ketquaCLS?.hinhanh?.fileName || ''} />
                                 </Form.Group>
                             </Row>
                             <Row className="d-flex justify-content-center">
@@ -141,7 +156,7 @@ function CanLamSang() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {dataSelected?.ketquacanlamsangs?.map((ketqua: any, index: number) => (
+                                {dataKetqua?.findAllRelatedKetQuaCanLamSang?.map((ketqua: any, index: number) => (
                                     <tr className='rowSelected' key={ketqua._id} onClick={() => handleSelected(ketqua)}>
                                         <td>{index + 1}</td>
                                         <td>{ketqua?.loaicanlamsang?.tenxetnghiem}</td>

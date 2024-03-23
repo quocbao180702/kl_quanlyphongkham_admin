@@ -1,5 +1,94 @@
 import { gql } from "@apollo/client";
 
+
+const onlyUser = gql`
+query OnlyUser{
+  onlyUser{
+  	... on Users{
+      _id
+      username
+      phoneNumber
+      email
+      role
+      avatar{
+        url
+        fileName
+        type
+      }
+      isLocked
+    }
+    ... on BacSi{
+      _id
+      hoten
+      ngaysinh
+      gioitinh
+      diachi
+      cccd
+      ngayBD
+      user{
+        _id
+      username
+      phoneNumber
+      email
+      role
+      avatar{
+        url
+        fileName
+        type
+      }
+      isLocked
+      }
+      phongs{
+        _id
+        tenphong
+      }
+      chuyenkhoa{
+        tenkhoa
+      }
+    }
+    ... on BenhNhan{
+      _id
+      hoten
+      ngaysinh
+      gioitinh
+      diachi
+      cccd
+      bhyt
+      user{
+        phoneNumber
+        email
+      }
+    }
+    ... on NhanVien{
+      _id
+      hoten
+      ngaysinh
+      gioitinh
+      diachi
+      cccd
+      ngayBD
+      chucvu
+      user{
+        _id
+      username
+      phoneNumber
+      email
+      role
+      avatar{
+        url
+        fileName
+        type
+      }
+      isLocked
+      }
+      phongs{
+        _id
+        tenphong
+      }
+    }
+  }
+}`
+
 const getAllUsers = gql`
 query GetAllUser($input: FetchUsersArgs!){
   countUser
@@ -20,13 +109,6 @@ query GetAllUser($input: FetchUsersArgs!){
   }
 }
 `
-
-const logout = gql`
-query Logout {
-  logout
-}
-`
-
 
 const getAllBacSi = gql`
 query GetAllBacSi($input: FetchPagination!){
@@ -96,7 +178,7 @@ query GetThuocPagination($input: FetchPagination!){
   }
 }
 `
-const getAllThuoc= gql`
+const getAllThuoc = gql`
 query GetAllThuoc{
   getAllThuoc{
     _id
@@ -140,7 +222,7 @@ query GetAllBenh{
 
 
 const getAllNgayVaPhong = gql`
-query GetAllNgayVaPhong($ngaykham: DateTime!, $phongIds: String!){
+query GetAllNgayVaPhong($ngaykham: String!, $phongIds: String!){
   getAllByNgayVaPhong(ngaykham: $ngaykham, phongIds: $phongIds){
     _id
     benhnhan{
@@ -244,5 +326,22 @@ query GetAllChuyenKhoa{
     _id
     tenkhoa
     mota
+  }
+}`
+
+const findAllRelatedKetQuaCanLamSang = gql`
+query FindAllRelatedKetQuaCanLamSang($input: [String!]!){
+  findAllRelatedKetQuaCanLamSang(ketQuaIds: $input){
+    _id
+    loaicanlamsang{
+      tenxetnghiem
+    }
+    hinhanh{
+      url
+      fileName
+      type
+    }
+    thietbi
+    ketluan
   }
 }`

@@ -4,20 +4,13 @@ const login = gql`
 mutation login($input: LoginUserInput!){
   login(loginUserInput: $input){
     access_token
-    user{
-      _id
-      username
-      phoneNumber
-      email
-      role
-      avatar{
-        url
-        fileName
-        type
-      }
-      isLocked
-    }
   }
+}
+`
+
+const logout = gql`
+mutation Logout{
+  logout
 }
 `
 

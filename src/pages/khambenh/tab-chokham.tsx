@@ -1,12 +1,22 @@
 import { Table } from 'react-bootstrap';
 import { BenhNhan, useGetAllNgayVaPhongQuery } from '../../graphql-definition/graphql';
 import moment from 'moment';
+import { useEffect } from 'react';
 
 function ChoKham({ dataAgrsChoKham, selected }: any) {
     /* const [selectedRow, setSelectedRow] = useState(''); */
 
-    const { loading, error, data } = useGetAllNgayVaPhongQuery({ variables: { ngaykham: dataAgrsChoKham?.ngaykham, phongIds: dataAgrsChoKham?.phongIds } })
+    const { loading, error, data } = useGetAllNgayVaPhongQuery({
+        variables: {
+            ngaykham: dataAgrsChoKham?.ngaykham,
+            phongIds: dataAgrsChoKham?.phongIds
+        },
+        skip: !dataAgrsChoKham || !dataAgrsChoKham.phongIds
+    });
 
+    useEffect(() => {
+        console.log(dataAgrsChoKham)
+    }, [dataAgrsChoKham])
 
     const handleRowSelect = (benhnhan: BenhNhan) => {
         selected(benhnhan);
@@ -14,7 +24,7 @@ function ChoKham({ dataAgrsChoKham, selected }: any) {
     };
 
     if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error...</div>;
+    if (error) return <div>Error...{error.message}</div>;
 
     return (
         <>
@@ -30,7 +40,7 @@ function ChoKham({ dataAgrsChoKham, selected }: any) {
                     </tr>
                 </thead>
                 <tbody>
-                     {data?.getAllByNgayVaPhong.map((kb: any) => (
+                    {data?.getAllByNgayVaPhong.map((kb: any) => (
                         <tr className='rowSelected' key={kb._id} onClick={() => handleRowSelect(kb?.benhnhan)}>
                             <td>{kb?.sothutu}</td>
                             <td>{kb?.benhnhan?.hoten}</td>

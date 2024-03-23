@@ -3,22 +3,33 @@ import ChoKham from "./tab-chokham";
 import XetNghiem from "./xetnghiem";
 import KhamBenhForm from "./form-khambenh";
 import SinhHieu from "./sinhhieu-tab";
-import { createContext, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { BenhNhan } from "../../graphql-definition/graphql";
 import YeuCauCanLamSang from "./f_YeuCauCLS";
-
+import { AuthContext } from "../../provider/AuthContextProvider";
+import dayjs from 'dayjs'
+import moment from "moment";
 
 export const EditContext = createContext({});
 
 function KhamBenh() {
 
-    const [dataSelected, setDataSelected] = useState({});
+    const { profile } = useContext(AuthContext)
+    const [dataSelected, setDataSelected] = useState<BenhNhan | undefined>(undefined);
+    const [phong, setPhong] = useState(profile?.phongs && profile.phongs.length > 0 ? profile.phongs[0]._id : "");
+    const [dataAgrsChoKham, setDataAgrsChoKham] = useState({
+        ngaykham: dayjs().format('YYYY-MM-DD'),
+        phongIds: (profile && profile.phongs && profile.phongs.length > 0) ? profile.phongs[0]._id : "",
+    })
 
     const [isEditing, setIsEditing] = useState(true);
     const [modalShow, setModalShow] = useState(false);
 
     const handleEditToggle = () => {
         setIsEditing(!isEditing);
+        if (dataSelected?.sinhhieu == null) {
+            console.log('tạo sinh hiệu trong đây')
+        }
     };
 
     const handleYeuCauXetNghiem = () => {
@@ -29,12 +40,34 @@ function KhamBenh() {
         setDataSelected(select);
     }
 
+    useEffect(() => {
+        if (dataSelected?.sinhhieu == null) {
+            console.log('Chưa Tạo Sinh Hiệu')
+        }
+    }, [dataSelected])
+
     const editContextValue = useMemo(() => ({ isEditing, setIsEditing }), [isEditing, setIsEditing]);
 
-    const dataAgrsChoKham = {
-        ngaykham: "2024-04-02T00:00:00.000Z",
-        phongIds: "65e47226d48a2f39f7140278",
-    }
+    const handleSelect = (event: ChangeEvent<HTMLSelectElement>) => {
+        const selectedPhongId = event.target.value;
+        setPhong(selectedPhongId);
+    };
+
+    useEffect(() => {
+        // Kiểm tra nếu profile và phongIds đều có dữ liệu
+        if (profile && profile.phongs && profile.phongs[0]?._id) {
+            // Cập nhật phongIds với giá trị từ profile
+            setPhong(profile.phongs[0]._id);
+            setDataAgrsChoKham({
+                ngaykham: dayjs().format('YYYY-MM-DD'),
+                phongIds: profile.phongs[0]._id,
+            });
+        }
+    }, [profile]);
+
+    useEffect(() => {
+        console.log(dataAgrsChoKham?.ngaykham, dataAgrsChoKham?.phongIds)
+    }, [phong])
 
     const handleToaThuoc = () => {
         return true
@@ -70,6 +103,34 @@ function KhamBenh() {
                                 <Button className="mr-1">Hủy Khám</Button>
                             </div>
                         </div>
+                        <div className="row mt-1">
+                            {profile?.hoten && <p>Họ Tên: {profile.hoten}</p>}
+                            <p>{profile?.phongs && profile?.phongs.length > 0 ? `Phòng: ${profile.phongs[0].tenphong}` : ''}</p>
+                            {profile?.chuyenkhoa && <p>Chuyên Khoa: {profile.chuyenkhoa.tenkhoa}</p>}
+                            {profile?.gioitinh !== undefined && (
+                                <p>Giới Tính: {profile.gioitinh ? 'Nam' : 'Nữ'}</p>
+                            )}
+                            <br />
+                            <select onChange={handleSelect} value={phong}>
+                                <option value="">Phòng</option>
+                                {profile?.phongs && profile.phongs.map((phong: any) => (
+                                    <option key={phong?._id} value={phong?._id}>{phong?.tenphong}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="row mt-1">
+                            <h6>Bệnh Nhân Đang Khám Là: </h6>
+                            {dataSelected ? (
+                                <>
+                                    <p>Họ Tên: {dataSelected.hoten}</p>
+                                    - <p>Giới Tính {dataSelected?.gioitinh ? 'Nam' : 'Nữ'}</p>
+                                    - <p>Ngày Sinh: {moment(dataSelected?.ngaysinh).format('YYYY-MM-DD')}</p>
+                                    - <p>BHYT: {dataSelected.bhyt}</p>
+                                </>
+                            ) : (
+                                <p>Không có bệnh nhân đang khám.</p>
+                            )}
+                        </div>
                         <SinhHieu dataSelected={dataSelected} />
                         <KhamBenhForm dataSelected={dataSelected} />
                     </div>
@@ -81,6 +142,7 @@ function KhamBenh() {
                     show={modalShow}
                     onHide={() => setModalShow(false)}
                     benhnhan={dataSelected}
+                    bacsi={profile}
                 />
             </div>
         </EditContext.Provider>

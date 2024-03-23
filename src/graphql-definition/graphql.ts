@@ -49,8 +49,8 @@ export type BenhNhan = {
   diachi: Scalars['String']['output'];
   gioitinh: Scalars['Boolean']['output'];
   hoten: Scalars['String']['output'];
-  ngaysinh: Scalars['String']['output'];
-  sinhhieu: Sinhhieu;
+  ngaysinh: Scalars['DateTime']['output'];
+  sinhhieu?: Maybe<Sinhhieu>;
   user: Users;
 };
 
@@ -200,8 +200,8 @@ export type LoaiCanLamSang = {
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   access_token: Scalars['String']['output'];
-  refresh_token: Scalars['String']['output'];
-  user: Users;
+  code: Scalars['Int']['output'];
+  success: Scalars['Boolean']['output'];
 };
 
 export type LoginUserInput = {
@@ -247,6 +247,7 @@ export type Mutation = {
   deleteToathuoc: Toathuoc;
   deleteUser: Scalars['Boolean']['output'];
   login: LoginResponse;
+  logout?: Maybe<Scalars['Boolean']['output']>;
   updateBacSi: BacSi;
   updateBenh: Benh;
   updateBenhNhan: BenhNhan;
@@ -497,7 +498,6 @@ export type MutationUpdateLoaicanlamsangArgs = {
 
 
 export type MutationUpdateNhanVienArgs = {
-  _id: Scalars['String']['input'];
   input: UpdateNhanVienInput;
 };
 
@@ -602,13 +602,14 @@ export type NewLoaiCanLamSangInput = {
 
 export type NewNhanVienInput = {
   cccd: Scalars['String']['input'];
+  chucvu: Scalars['String']['input'];
   diachi: Scalars['String']['input'];
   gioitinh: Scalars['Boolean']['input'];
   hoten: Scalars['String']['input'];
   ngayBD: Scalars['DateTime']['input'];
   ngaysinh: Scalars['DateTime']['input'];
-  phong: Scalars['String']['input'];
-  sdt: Scalars['String']['input'];
+  phongs: Array<Scalars['String']['input']>;
+  user: Scalars['String']['input'];
 };
 
 export type NewPhongInput = {
@@ -644,14 +645,17 @@ export type NhanVien = {
   __typename?: 'NhanVien';
   _id: Scalars['ID']['output'];
   cccd: Scalars['String']['output'];
+  chucvu: Scalars['String']['output'];
   diachi: Scalars['String']['output'];
   gioitinh: Scalars['Boolean']['output'];
   hoten: Scalars['String']['output'];
   ngayBD: Scalars['DateTime']['output'];
   ngaysinh: Scalars['DateTime']['output'];
-  phong: Scalars['String']['output'];
-  sdt: Scalars['String']['output'];
+  phongs: Array<Phong>;
+  user: Users;
 };
+
+export type OnlyUser = BacSi | BenhNhan | NhanVien | Users;
 
 export type PhieuXacNhan = {
   __typename?: 'PhieuXacNhan';
@@ -689,6 +693,7 @@ export type Query = {
   CountThuoc: Scalars['Float']['output'];
   countUser: Scalars['Float']['output'];
   findAll: Array<Hoadon>;
+  findAllRelatedKetQuaCanLamSang?: Maybe<Array<KetQuaCanLamSang>>;
   getAllBacSi: Array<BacSi>;
   getAllBenh: Array<Benh>;
   getAllBenhNhan: Array<BenhNhan>;
@@ -708,13 +713,21 @@ export type Query = {
   getAllThuoc: Array<Thuoc>;
   getAllToaThuoc: Array<Toathuoc>;
   getAllUsers: Array<Users>;
+  getBacSibyUserId?: Maybe<BacSi>;
   getBenhNhanbyId: BenhNhan;
+  getBenhNhanbyUserId?: Maybe<BenhNhan>;
+  getNhanVienbyUserId?: Maybe<NhanVien>;
   getThuocPagination: Array<Thuoc>;
   getThuocbyIds: Array<Thuoc>;
   getUserByEmail: Users;
   getUserById: Users;
-  getUserByUsername: Users;
-  logout?: Maybe<Scalars['Boolean']['output']>;
+  getUserByUsername?: Maybe<Users>;
+  onlyUser?: Maybe<OnlyUser>;
+};
+
+
+export type QueryFindAllRelatedKetQuaCanLamSangArgs = {
+  ketQuaIds: Array<Scalars['String']['input']>;
 };
 
 
@@ -729,7 +742,7 @@ export type QueryGetAllBenhNhanArgs = {
 
 
 export type QueryGetAllByNgayVaPhongArgs = {
-  ngaykham: Scalars['DateTime']['input'];
+  ngaykham: Scalars['String']['input'];
   phongIds: Scalars['String']['input'];
 };
 
@@ -749,8 +762,23 @@ export type QueryGetAllUsersArgs = {
 };
 
 
+export type QueryGetBacSibyUserIdArgs = {
+  user: Scalars['String']['input'];
+};
+
+
 export type QueryGetBenhNhanbyIdArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryGetBenhNhanbyUserIdArgs = {
+  user: Scalars['String']['input'];
+};
+
+
+export type QueryGetNhanVienbyUserIdArgs = {
+  user: Scalars['String']['input'];
 };
 
 
@@ -913,14 +941,16 @@ export type UpdateLoaicanlamsangInput = {
 };
 
 export type UpdateNhanVienInput = {
-  cccd: Scalars['String']['input'];
-  diachi: Scalars['String']['input'];
-  gioitinh: Scalars['Boolean']['input'];
-  hoten: Scalars['String']['input'];
-  ngayBD: Scalars['DateTime']['input'];
-  ngaysinh: Scalars['DateTime']['input'];
-  phong: Scalars['String']['input'];
-  sdt: Scalars['String']['input'];
+  cccd?: InputMaybe<Scalars['String']['input']>;
+  chucvu?: InputMaybe<Scalars['String']['input']>;
+  diachi?: InputMaybe<Scalars['String']['input']>;
+  gioitinh?: InputMaybe<Scalars['Boolean']['input']>;
+  hoten?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  ngayBD?: InputMaybe<Scalars['DateTime']['input']>;
+  ngaysinh?: InputMaybe<Scalars['DateTime']['input']>;
+  phongs?: InputMaybe<Array<Scalars['String']['input']>>;
+  user?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdatePhieuXacNhanInput = {
@@ -1003,6 +1033,7 @@ export type UpdateUserInput = {
 
 export enum UserRole {
   Admin = 'ADMIN',
+  Doctor = 'DOCTOR',
   Staff = 'STAFF',
   User = 'USER'
 }
@@ -1025,7 +1056,12 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginResponse', access_token: string, user: { __typename?: 'Users', _id: string, username: string, phoneNumber: string, email: string, role: UserRole, isLocked: boolean, avatar: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } } } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginResponse', access_token: string } };
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout?: boolean | null };
 
 export type CreateUserMutationVariables = Exact<{
   input: NewUserInput;
@@ -1147,17 +1183,17 @@ export type DeleteThuocMutationVariables = Exact<{
 
 export type DeleteThuocMutation = { __typename?: 'Mutation', deleteThuoc: boolean };
 
+export type OnlyUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type OnlyUserQuery = { __typename?: 'Query', onlyUser?: { __typename?: 'BacSi', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, cccd: string, ngayBD: any, user: { __typename?: 'Users', _id: string, username: string, phoneNumber: string, email: string, role: UserRole, isLocked: boolean, avatar: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, chuyenkhoa: { __typename?: 'ChuyenKhoa', tenkhoa: string } } | { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, cccd: string, bhyt: string, user: { __typename?: 'Users', phoneNumber: string, email: string } } | { __typename?: 'NhanVien', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, cccd: string, ngayBD: any, chucvu: string, user: { __typename?: 'Users', _id: string, username: string, phoneNumber: string, email: string, role: UserRole, isLocked: boolean, avatar: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }> } | { __typename?: 'Users', _id: string, username: string, phoneNumber: string, email: string, role: UserRole, isLocked: boolean, avatar: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } } | null };
+
 export type GetAllUserQueryVariables = Exact<{
   input: FetchUsersArgs;
 }>;
 
 
 export type GetAllUserQuery = { __typename?: 'Query', countUser: number, getAllUsers: Array<{ __typename?: 'Users', _id: string, username: string, email: string, phoneNumber: string, password: string, role: UserRole, isLocked: boolean, refreshToken: string, avatar: { __typename?: 'LinkImage', fileName: string, url: string, type: TypeImage } }> };
-
-export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type LogoutQuery = { __typename?: 'Query', logout?: boolean | null };
 
 export type GetAllBacSiQueryVariables = Exact<{
   input: FetchPagination;
@@ -1171,7 +1207,7 @@ export type GetAllBenhNhanQueryVariables = Exact<{
 }>;
 
 
-export type GetAllBenhNhanQuery = { __typename?: 'Query', CountBenhNhan: number, getAllBenhNhan: Array<{ __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: string, gioitinh: boolean, diachi: string, cccd: string, bhyt: string, user: { __typename?: 'Users', _id: string, phoneNumber: string, email: string } }> };
+export type GetAllBenhNhanQuery = { __typename?: 'Query', CountBenhNhan: number, getAllBenhNhan: Array<{ __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, cccd: string, bhyt: string, user: { __typename?: 'Users', _id: string, phoneNumber: string, email: string } }> };
 
 export type GetThuocPaginationQueryVariables = Exact<{
   input: FetchPagination;
@@ -1198,12 +1234,12 @@ export type GetAllBenhQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetAllBenhQuery = { __typename?: 'Query', getAllBenh: Array<{ __typename?: 'Benh', tenbenh: string, motabenh: string, _id: string, maICD: string, chuongbenh: string }> };
 
 export type GetAllNgayVaPhongQueryVariables = Exact<{
-  ngaykham: Scalars['DateTime']['input'];
+  ngaykham: Scalars['String']['input'];
   phongIds: Scalars['String']['input'];
 }>;
 
 
-export type GetAllNgayVaPhongQuery = { __typename?: 'Query', getAllByNgayVaPhong: Array<{ __typename?: 'PhieuXacNhan', _id: string, trangthai: boolean, sothutu: number, ngaytao: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: string, gioitinh: boolean, diachi: string, cccd: string, bhyt: string, user: { __typename?: 'Users', phoneNumber: string, email: string }, sinhhieu: { __typename?: 'Sinhhieu', _id: string, mach: number, nhietdo: number, ha: string, chieucao: number, cannang: number, bmi: number, benhmangtinh: boolean } }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }> }> };
+export type GetAllNgayVaPhongQuery = { __typename?: 'Query', getAllByNgayVaPhong: Array<{ __typename?: 'PhieuXacNhan', _id: string, trangthai: boolean, sothutu: number, ngaytao: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, cccd: string, bhyt: string, user: { __typename?: 'Users', phoneNumber: string, email: string }, sinhhieu?: { __typename?: 'Sinhhieu', _id: string, mach: number, nhietdo: number, ha: string, chieucao: number, cannang: number, bmi: number, benhmangtinh: boolean } | null }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }> }> };
 
 export type GetAllLoaiClsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1215,7 +1251,7 @@ export type GetAllPhieuClSbyNgayQueryVariables = Exact<{
 }>;
 
 
-export type GetAllPhieuClSbyNgayQuery = { __typename?: 'Query', getAllPhieuCLSbyNgay: Array<{ __typename?: 'Phieuchidinhcanlamsang', _id: string, bhyt: boolean, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: string, gioitinh: boolean, user: { __typename?: 'Users', phoneNumber: string } }, bacsi: { __typename?: 'BacSi', hoten: string, ngaysinh: any, gioitinh: boolean, user: { __typename?: 'Users', phoneNumber: string } }, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', _id: string, ketluan?: string | null, thietbi?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', tenxetnghiem: string, gia: number }, hinhanh?: { __typename?: 'LinkImage', fileName: string, url: string, type: TypeImage } | null }> }> };
+export type GetAllPhieuClSbyNgayQuery = { __typename?: 'Query', getAllPhieuCLSbyNgay: Array<{ __typename?: 'Phieuchidinhcanlamsang', _id: string, bhyt: boolean, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean, user: { __typename?: 'Users', phoneNumber: string } }, bacsi: { __typename?: 'BacSi', hoten: string, ngaysinh: any, gioitinh: boolean, user: { __typename?: 'Users', phoneNumber: string } }, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', _id: string, ketluan?: string | null, thietbi?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', tenxetnghiem: string, gia: number }, hinhanh?: { __typename?: 'LinkImage', fileName: string, url: string, type: TypeImage } | null }> }> };
 
 export type GetAllPhongQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1227,24 +1263,18 @@ export type GetAllChuyenKhoaQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllChuyenKhoaQuery = { __typename?: 'Query', getAllChuyenKhoa: Array<{ __typename?: 'ChuyenKhoa', _id: string, tenkhoa: string, mota: string }> };
 
+export type FindAllRelatedKetQuaCanLamSangQueryVariables = Exact<{
+  input: Array<Scalars['String']['input']> | Scalars['String']['input'];
+}>;
+
+
+export type FindAllRelatedKetQuaCanLamSangQuery = { __typename?: 'Query', findAllRelatedKetQuaCanLamSang?: Array<{ __typename?: 'KetQuaCanLamSang', _id: string, thietbi?: string | null, ketluan?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', tenxetnghiem: string }, hinhanh?: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } | null }> | null };
+
 
 export const LoginDocument = gql`
     mutation login($input: LoginUserInput!) {
   login(loginUserInput: $input) {
     access_token
-    user {
-      _id
-      username
-      phoneNumber
-      email
-      role
-      avatar {
-        url
-        fileName
-        type
-      }
-      isLocked
-    }
   }
 }
     `;
@@ -1274,6 +1304,36 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout
+}
+    `;
+export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
+
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
+      }
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
+export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($input: NewUserInput!) {
   createUser(newUserInput: $input) {
@@ -1871,6 +1931,126 @@ export function useDeleteThuocMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteThuocMutationHookResult = ReturnType<typeof useDeleteThuocMutation>;
 export type DeleteThuocMutationResult = Apollo.MutationResult<DeleteThuocMutation>;
 export type DeleteThuocMutationOptions = Apollo.BaseMutationOptions<DeleteThuocMutation, DeleteThuocMutationVariables>;
+export const OnlyUserDocument = gql`
+    query OnlyUser {
+  onlyUser {
+    ... on Users {
+      _id
+      username
+      phoneNumber
+      email
+      role
+      avatar {
+        url
+        fileName
+        type
+      }
+      isLocked
+    }
+    ... on BacSi {
+      _id
+      hoten
+      ngaysinh
+      gioitinh
+      diachi
+      cccd
+      ngayBD
+      user {
+        _id
+        username
+        phoneNumber
+        email
+        role
+        avatar {
+          url
+          fileName
+          type
+        }
+        isLocked
+      }
+      phongs {
+        _id
+        tenphong
+      }
+      chuyenkhoa {
+        tenkhoa
+      }
+    }
+    ... on BenhNhan {
+      _id
+      hoten
+      ngaysinh
+      gioitinh
+      diachi
+      cccd
+      bhyt
+      user {
+        phoneNumber
+        email
+      }
+    }
+    ... on NhanVien {
+      _id
+      hoten
+      ngaysinh
+      gioitinh
+      diachi
+      cccd
+      ngayBD
+      chucvu
+      user {
+        _id
+        username
+        phoneNumber
+        email
+        role
+        avatar {
+          url
+          fileName
+          type
+        }
+        isLocked
+      }
+      phongs {
+        _id
+        tenphong
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useOnlyUserQuery__
+ *
+ * To run a query within a React component, call `useOnlyUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useOnlyUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOnlyUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useOnlyUserQuery(baseOptions?: Apollo.QueryHookOptions<OnlyUserQuery, OnlyUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<OnlyUserQuery, OnlyUserQueryVariables>(OnlyUserDocument, options);
+      }
+export function useOnlyUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<OnlyUserQuery, OnlyUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<OnlyUserQuery, OnlyUserQueryVariables>(OnlyUserDocument, options);
+        }
+export function useOnlyUserSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<OnlyUserQuery, OnlyUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<OnlyUserQuery, OnlyUserQueryVariables>(OnlyUserDocument, options);
+        }
+export type OnlyUserQueryHookResult = ReturnType<typeof useOnlyUserQuery>;
+export type OnlyUserLazyQueryHookResult = ReturnType<typeof useOnlyUserLazyQuery>;
+export type OnlyUserSuspenseQueryHookResult = ReturnType<typeof useOnlyUserSuspenseQuery>;
+export type OnlyUserQueryResult = Apollo.QueryResult<OnlyUserQuery, OnlyUserQueryVariables>;
 export const GetAllUserDocument = gql`
     query GetAllUser($input: FetchUsersArgs!) {
   countUser
@@ -1924,43 +2104,6 @@ export type GetAllUserQueryHookResult = ReturnType<typeof useGetAllUserQuery>;
 export type GetAllUserLazyQueryHookResult = ReturnType<typeof useGetAllUserLazyQuery>;
 export type GetAllUserSuspenseQueryHookResult = ReturnType<typeof useGetAllUserSuspenseQuery>;
 export type GetAllUserQueryResult = Apollo.QueryResult<GetAllUserQuery, GetAllUserQueryVariables>;
-export const LogoutDocument = gql`
-    query Logout {
-  logout
-}
-    `;
-
-/**
- * __useLogoutQuery__
- *
- * To run a query within a React component, call `useLogoutQuery` and pass it any options that fit your needs.
- * When your component renders, `useLogoutQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useLogoutQuery({
- *   variables: {
- *   },
- * });
- */
-export function useLogoutQuery(baseOptions?: Apollo.QueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
-      }
-export function useLogoutLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
-        }
-export function useLogoutSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<LogoutQuery, LogoutQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<LogoutQuery, LogoutQueryVariables>(LogoutDocument, options);
-        }
-export type LogoutQueryHookResult = ReturnType<typeof useLogoutQuery>;
-export type LogoutLazyQueryHookResult = ReturnType<typeof useLogoutLazyQuery>;
-export type LogoutSuspenseQueryHookResult = ReturnType<typeof useLogoutSuspenseQuery>;
-export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
 export const GetAllBacSiDocument = gql`
     query GetAllBacSi($input: FetchPagination!) {
   CountBacSi
@@ -2265,7 +2408,7 @@ export type GetAllBenhLazyQueryHookResult = ReturnType<typeof useGetAllBenhLazyQ
 export type GetAllBenhSuspenseQueryHookResult = ReturnType<typeof useGetAllBenhSuspenseQuery>;
 export type GetAllBenhQueryResult = Apollo.QueryResult<GetAllBenhQuery, GetAllBenhQueryVariables>;
 export const GetAllNgayVaPhongDocument = gql`
-    query GetAllNgayVaPhong($ngaykham: DateTime!, $phongIds: String!) {
+    query GetAllNgayVaPhong($ngaykham: String!, $phongIds: String!) {
   getAllByNgayVaPhong(ngaykham: $ngaykham, phongIds: $phongIds) {
     _id
     benhnhan {
@@ -2534,3 +2677,53 @@ export type GetAllChuyenKhoaQueryHookResult = ReturnType<typeof useGetAllChuyenK
 export type GetAllChuyenKhoaLazyQueryHookResult = ReturnType<typeof useGetAllChuyenKhoaLazyQuery>;
 export type GetAllChuyenKhoaSuspenseQueryHookResult = ReturnType<typeof useGetAllChuyenKhoaSuspenseQuery>;
 export type GetAllChuyenKhoaQueryResult = Apollo.QueryResult<GetAllChuyenKhoaQuery, GetAllChuyenKhoaQueryVariables>;
+export const FindAllRelatedKetQuaCanLamSangDocument = gql`
+    query FindAllRelatedKetQuaCanLamSang($input: [String!]!) {
+  findAllRelatedKetQuaCanLamSang(ketQuaIds: $input) {
+    _id
+    loaicanlamsang {
+      tenxetnghiem
+    }
+    hinhanh {
+      url
+      fileName
+      type
+    }
+    thietbi
+    ketluan
+  }
+}
+    `;
+
+/**
+ * __useFindAllRelatedKetQuaCanLamSangQuery__
+ *
+ * To run a query within a React component, call `useFindAllRelatedKetQuaCanLamSangQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAllRelatedKetQuaCanLamSangQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAllRelatedKetQuaCanLamSangQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useFindAllRelatedKetQuaCanLamSangQuery(baseOptions: Apollo.QueryHookOptions<FindAllRelatedKetQuaCanLamSangQuery, FindAllRelatedKetQuaCanLamSangQueryVariables> & ({ variables: FindAllRelatedKetQuaCanLamSangQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindAllRelatedKetQuaCanLamSangQuery, FindAllRelatedKetQuaCanLamSangQueryVariables>(FindAllRelatedKetQuaCanLamSangDocument, options);
+      }
+export function useFindAllRelatedKetQuaCanLamSangLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindAllRelatedKetQuaCanLamSangQuery, FindAllRelatedKetQuaCanLamSangQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindAllRelatedKetQuaCanLamSangQuery, FindAllRelatedKetQuaCanLamSangQueryVariables>(FindAllRelatedKetQuaCanLamSangDocument, options);
+        }
+export function useFindAllRelatedKetQuaCanLamSangSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<FindAllRelatedKetQuaCanLamSangQuery, FindAllRelatedKetQuaCanLamSangQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindAllRelatedKetQuaCanLamSangQuery, FindAllRelatedKetQuaCanLamSangQueryVariables>(FindAllRelatedKetQuaCanLamSangDocument, options);
+        }
+export type FindAllRelatedKetQuaCanLamSangQueryHookResult = ReturnType<typeof useFindAllRelatedKetQuaCanLamSangQuery>;
+export type FindAllRelatedKetQuaCanLamSangLazyQueryHookResult = ReturnType<typeof useFindAllRelatedKetQuaCanLamSangLazyQuery>;
+export type FindAllRelatedKetQuaCanLamSangSuspenseQueryHookResult = ReturnType<typeof useFindAllRelatedKetQuaCanLamSangSuspenseQuery>;
+export type FindAllRelatedKetQuaCanLamSangQueryResult = Apollo.QueryResult<FindAllRelatedKetQuaCanLamSangQuery, FindAllRelatedKetQuaCanLamSangQueryVariables>;
