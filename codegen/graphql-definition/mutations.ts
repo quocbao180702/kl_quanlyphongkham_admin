@@ -166,7 +166,7 @@ mutation CreateThuoc($input: NewThuocInput!){
 }
 `
 
-const updateThuoc =gql`
+const updateThuoc = gql`
 mutation UpdateThuoc($input: UpdateThuocInput!){
   updateThuoc(input: $input){
     _id
@@ -177,3 +177,34 @@ const deleteThuoc = gql`
 mutation DeleteThuoc($id: String!){
   deleteThuoc(_id: $id)
 }`
+
+
+const createHoadon = gql`
+mutation CreateHoaDon($input: CreateHoadonInput!){
+  createHoadon(createHoadonInput: $input){
+    _id
+  }
+}
+`
+const updateHoadon = gql`
+mutation UpdateHoadon($input: UpdateHoadonInput!){
+  updateHoadon(updateHoadonInput: $input){
+    _id
+  }
+}
+`
+
+const updateTrangThai = gql`
+mutation UpdateTrangThai($id: String!){
+  updateTrangThai(id: $id){
+    _id
+    trangthai
+  }
+}`
+
+const deleteHoadon = gql`
+mutation DeleteHoaDon($id: String!){
+  deleteHoadon(id: $id)
+}`
+
+

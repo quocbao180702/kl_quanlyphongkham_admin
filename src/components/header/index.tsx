@@ -54,6 +54,9 @@ function Header() {
                         <li className="nav-item">
                             <Link className="nav-link" to="/thuoc">Thuốc</Link>
                         </li>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/hoadon">Hóa Đơn</Link>
+                        </li>
                     </ul>
                     <ul className="navbar-nav ml-5">
                         {isAuthenticated ? (

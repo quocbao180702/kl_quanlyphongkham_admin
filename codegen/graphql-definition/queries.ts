@@ -345,3 +345,38 @@ query FindAllRelatedKetQuaCanLamSang($input: [String!]!){
     ketluan
   }
 }`
+
+
+const getAllHoadon = gql`
+query GetAllHoaDon{
+  getAllHoadon{
+    _id
+    benhnhan{
+      hoten
+      ngaysinh
+      gioitinh
+    }
+    trangthai
+    ngaytao
+    bhyt
+    thanhtien
+    canlamsangs{
+      ten
+      gia
+      soluong
+      thanhtien
+    }
+    thuocs{
+      ten
+      gia
+      soluong
+      thanhtien
+    }
+    vattuyte{
+      ten
+      gia
+      soluong
+      thanhtien
+    }
+  }
+}`

@@ -54,6 +54,17 @@ export type BenhNhan = {
   user: Users;
 };
 
+export type ChiPhi = {
+  __typename?: 'ChiPhi';
+  bhyt: Scalars['Boolean']['output'];
+  gia: Scalars['Float']['output'];
+};
+
+export type ChiPhiInput = {
+  bhyt: Scalars['Boolean']['input'];
+  gia: Scalars['Float']['input'];
+};
+
 export type ChuyenKhoa = {
   __typename?: 'ChuyenKhoa';
   _id: Scalars['ID']['output'];
@@ -71,11 +82,8 @@ export type CreateDichvuInput = {
 
 export type CreateHoadonInput = {
   benhnhan: Scalars['String']['input'];
-  canlamsangs: Array<Scalars['String']['input']>;
-  dichvus: Array<Scalars['String']['input']>;
+  bhyt: Scalars['Boolean']['input'];
   ngaytao: Scalars['DateTime']['input'];
-  thanhtien: Scalars['Float']['input'];
-  thuocs: Array<Scalars['String']['input']>;
 };
 
 export type CreateKetquacanlamsangInput = {
@@ -125,14 +133,36 @@ export type CreateToathuocInput = {
   thuocs: Array<Scalars['String']['input']>;
 };
 
+export type CreateVattuyteInput = {
+  chiphi: Array<ChiPhiInput>;
+  dvt: Scalars['String']['input'];
+  soluong: Scalars['Int']['input'];
+  tenvattu: Scalars['String']['input'];
+};
+
 export type DatLich = {
   __typename?: 'DatLich';
   _id: Scalars['ID']['output'];
-  benhnhans: BenhNhan;
+  benhnhan: BenhNhan;
   bhyt: Scalars['Boolean']['output'];
   motabenh: Scalars['String']['output'];
   ngaydat: Scalars['DateTime']['output'];
   ngaykham: Scalars['DateTime']['output'];
+};
+
+export type DichVu = {
+  __typename?: 'DichVu';
+  gia: Scalars['Float']['output'];
+  soluong: Scalars['Int']['output'];
+  ten: Scalars['String']['output'];
+  thanhtien: Scalars['Float']['output'];
+};
+
+export type DichVuInput = {
+  gia: Scalars['Float']['input'];
+  soluong: Scalars['Int']['input'];
+  ten: Scalars['String']['input'];
+  thanhtien: Scalars['Float']['input'];
 };
 
 export type Dichvu = {
@@ -160,11 +190,13 @@ export type Hoadon = {
   __typename?: 'Hoadon';
   _id: Scalars['ID']['output'];
   benhnhan: BenhNhan;
-  canlamsangs: Array<LoaiCanLamSang>;
-  dichvus: Array<Dichvu>;
+  bhyt: Scalars['Boolean']['output'];
+  canlamsangs: Array<DichVu>;
   ngaytao: Scalars['DateTime']['output'];
   thanhtien: Scalars['Float']['output'];
-  thuocs: Array<Thuoc>;
+  thuocs: Array<DichVu>;
+  trangthai: Scalars['Boolean']['output'];
+  vattuyte: Array<DichVu>;
 };
 
 export type KetQuaCanLamSang = {
@@ -229,13 +261,14 @@ export type Mutation = {
   createThuoc: Thuoc;
   createToathuoc: Toathuoc;
   createUser: Users;
+  createVatTuYTe: Vattuyte;
   deleteBacSi: Scalars['Boolean']['output'];
   deleteBenh: Scalars['Boolean']['output'];
   deleteBenhNhan: Scalars['Boolean']['output'];
   deleteChuyenKhoa: Scalars['Boolean']['output'];
   deleteDatLich: Scalars['Boolean']['output'];
   deleteDichvu: Dichvu;
-  deleteHoadon: Hoadon;
+  deleteHoadon: Scalars['Boolean']['output'];
   deleteLoaicanlamsang: Scalars['Boolean']['output'];
   deleteNhanVien: Scalars['Boolean']['output'];
   deletePhieuXacNhan: Scalars['Boolean']['output'];
@@ -246,6 +279,7 @@ export type Mutation = {
   deleteThuoc: Scalars['Boolean']['output'];
   deleteToathuoc: Toathuoc;
   deleteUser: Scalars['Boolean']['output'];
+  deleteVatTuYTe: Scalars['Boolean']['output'];
   login: LoginResponse;
   logout?: Maybe<Scalars['Boolean']['output']>;
   updateBacSi: BacSi;
@@ -266,7 +300,9 @@ export type Mutation = {
   updateSoluongThuoc: Thuoc;
   updateThuoc: Thuoc;
   updateToathuoc: Toathuoc;
+  updateTrangThai: Hoadon;
   updateUser: Users;
+  updateVatTuYTe: Vattuyte;
   xulyKhoa: Users;
 };
 
@@ -362,6 +398,11 @@ export type MutationCreateUserArgs = {
 };
 
 
+export type MutationCreateVatTuYTeArgs = {
+  createDichvuInput: CreateVattuyteInput;
+};
+
+
 export type MutationDeleteBacSiArgs = {
   _id: Scalars['String']['input'];
 };
@@ -444,6 +485,11 @@ export type MutationDeleteToathuocArgs = {
 
 export type MutationDeleteUserArgs = {
   _id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteVatTuYTeArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -543,8 +589,18 @@ export type MutationUpdateToathuocArgs = {
 };
 
 
+export type MutationUpdateTrangThaiArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
+};
+
+
+export type MutationUpdateVatTuYTeArgs = {
+  updateDichvuInput: UpdateVattuyteInput;
 };
 
 
@@ -587,7 +643,7 @@ export type NewChuyenKhoaInput = {
 };
 
 export type NewDatLichInput = {
-  benhnhans: Scalars['String']['input'];
+  benhnhan: Scalars['String']['input'];
   bhyt: Scalars['Boolean']['input'];
   motabenh: Scalars['String']['input'];
   ngaydat: Scalars['DateTime']['input'];
@@ -692,15 +748,15 @@ export type Query = {
   CountBenhNhan: Scalars['Float']['output'];
   CountThuoc: Scalars['Float']['output'];
   countUser: Scalars['Float']['output'];
-  findAll: Array<Hoadon>;
   findAllRelatedKetQuaCanLamSang?: Maybe<Array<KetQuaCanLamSang>>;
   getAllBacSi: Array<BacSi>;
   getAllBenh: Array<Benh>;
   getAllBenhNhan: Array<BenhNhan>;
   getAllByNgayVaPhong: Array<PhieuXacNhan>;
   getAllChuyenKhoa: Array<ChuyenKhoa>;
-  getAllDatLich: Array<DatLich>;
+  getAllDatLich?: Maybe<Array<DatLich>>;
   getAllDichVu: Array<Dichvu>;
+  getAllHoadon: Array<Hoadon>;
   getAllLoaiCLS: Array<LoaiCanLamSang>;
   getAllNhanVien: Array<NhanVien>;
   getAllPhieuCLS: Array<Phieuchidinhcanlamsang>;
@@ -713,6 +769,7 @@ export type Query = {
   getAllThuoc: Array<Thuoc>;
   getAllToaThuoc: Array<Toathuoc>;
   getAllUsers: Array<Users>;
+  getAllVatTuYTe: Array<Vattuyte>;
   getBacSibyUserId?: Maybe<BacSi>;
   getBenhNhanbyId: BenhNhan;
   getBenhNhanbyUserId?: Maybe<BenhNhan>;
@@ -826,6 +883,11 @@ export type Sobenh = {
   ngaytao: Scalars['DateTime']['output'];
 };
 
+export type Subscription = {
+  __typename?: 'Subscription';
+  newDatLich: DatLich;
+};
+
 export type Thuoc = {
   __typename?: 'Thuoc';
   _id: Scalars['ID']['output'];
@@ -898,7 +960,7 @@ export type UpdateChuyenKhoaInput = {
 };
 
 export type UpdateDatLichInput = {
-  benhnhans?: InputMaybe<Scalars['String']['input']>;
+  benhnhan?: InputMaybe<Scalars['String']['input']>;
   bhyt?: InputMaybe<Scalars['Boolean']['input']>;
   id: Scalars['String']['input'];
   motabenh?: InputMaybe<Scalars['String']['input']>;
@@ -917,12 +979,12 @@ export type UpdateDichvuInput = {
 
 export type UpdateHoadonInput = {
   benhnhan?: InputMaybe<Scalars['String']['input']>;
-  canlamsangs?: InputMaybe<Array<Scalars['String']['input']>>;
-  dichvus?: InputMaybe<Array<Scalars['String']['input']>>;
+  bhyt?: InputMaybe<Scalars['Boolean']['input']>;
+  canlamsangs: Array<DichVuInput>;
   id: Scalars['String']['input'];
   ngaytao?: InputMaybe<Scalars['DateTime']['input']>;
-  thanhtien?: InputMaybe<Scalars['Float']['input']>;
-  thuocs?: InputMaybe<Array<Scalars['String']['input']>>;
+  thuocs: Array<DichVuInput>;
+  vattuyte: Array<DichVuInput>;
 };
 
 export type UpdateKetquacanlamsangInput = {
@@ -1031,6 +1093,14 @@ export type UpdateUserInput = {
   username: Scalars['String']['input'];
 };
 
+export type UpdateVattuyteInput = {
+  chiphi?: InputMaybe<Array<ChiPhiInput>>;
+  dvt?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
+  soluong?: InputMaybe<Scalars['Int']['input']>;
+  tenvattu?: InputMaybe<Scalars['String']['input']>;
+};
+
 export enum UserRole {
   Admin = 'ADMIN',
   Doctor = 'DOCTOR',
@@ -1049,6 +1119,15 @@ export type Users = {
   refreshToken: Scalars['String']['output'];
   role: UserRole;
   username: Scalars['String']['output'];
+};
+
+export type Vattuyte = {
+  __typename?: 'Vattuyte';
+  _id: Scalars['ID']['output'];
+  chiphi: Array<ChiPhi>;
+  dvt: Scalars['String']['output'];
+  soluong: Scalars['Int']['output'];
+  tenvattu: Scalars['String']['output'];
 };
 
 export type LoginMutationVariables = Exact<{
@@ -1183,6 +1262,34 @@ export type DeleteThuocMutationVariables = Exact<{
 
 export type DeleteThuocMutation = { __typename?: 'Mutation', deleteThuoc: boolean };
 
+export type CreateHoaDonMutationVariables = Exact<{
+  input: CreateHoadonInput;
+}>;
+
+
+export type CreateHoaDonMutation = { __typename?: 'Mutation', createHoadon: { __typename?: 'Hoadon', _id: string } };
+
+export type UpdateHoadonMutationVariables = Exact<{
+  input: UpdateHoadonInput;
+}>;
+
+
+export type UpdateHoadonMutation = { __typename?: 'Mutation', updateHoadon: { __typename?: 'Hoadon', _id: string } };
+
+export type UpdateTrangThaiMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type UpdateTrangThaiMutation = { __typename?: 'Mutation', updateTrangThai: { __typename?: 'Hoadon', _id: string, trangthai: boolean } };
+
+export type DeleteHoaDonMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteHoaDonMutation = { __typename?: 'Mutation', deleteHoadon: boolean };
+
 export type OnlyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1269,6 +1376,16 @@ export type FindAllRelatedKetQuaCanLamSangQueryVariables = Exact<{
 
 
 export type FindAllRelatedKetQuaCanLamSangQuery = { __typename?: 'Query', findAllRelatedKetQuaCanLamSang?: Array<{ __typename?: 'KetQuaCanLamSang', _id: string, thietbi?: string | null, ketluan?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', tenxetnghiem: string }, hinhanh?: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } | null }> | null };
+
+export type GetAllHoaDonQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllHoaDonQuery = { __typename?: 'Query', getAllHoadon: Array<{ __typename?: 'Hoadon', _id: string, trangthai: boolean, ngaytao: any, bhyt: boolean, thanhtien: number, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean }, canlamsangs: Array<{ __typename?: 'DichVu', ten: string, gia: number, soluong: number, thanhtien: number }>, thuocs: Array<{ __typename?: 'DichVu', ten: string, gia: number, soluong: number, thanhtien: number }>, vattuyte: Array<{ __typename?: 'DichVu', ten: string, gia: number, soluong: number, thanhtien: number }> }> };
+
+export type NewDatLichSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NewDatLichSubscription = { __typename?: 'Subscription', newDatLich: { __typename?: 'DatLich', _id: string, motabenh: string, ngaydat: any, ngaykham: any, bhyt: boolean, benhnhan: { __typename?: 'BenhNhan', ngaysinh: any, hoten: string } } };
 
 
 export const LoginDocument = gql`
@@ -1931,6 +2048,137 @@ export function useDeleteThuocMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteThuocMutationHookResult = ReturnType<typeof useDeleteThuocMutation>;
 export type DeleteThuocMutationResult = Apollo.MutationResult<DeleteThuocMutation>;
 export type DeleteThuocMutationOptions = Apollo.BaseMutationOptions<DeleteThuocMutation, DeleteThuocMutationVariables>;
+export const CreateHoaDonDocument = gql`
+    mutation CreateHoaDon($input: CreateHoadonInput!) {
+  createHoadon(createHoadonInput: $input) {
+    _id
+  }
+}
+    `;
+export type CreateHoaDonMutationFn = Apollo.MutationFunction<CreateHoaDonMutation, CreateHoaDonMutationVariables>;
+
+/**
+ * __useCreateHoaDonMutation__
+ *
+ * To run a mutation, you first call `useCreateHoaDonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateHoaDonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createHoaDonMutation, { data, loading, error }] = useCreateHoaDonMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateHoaDonMutation(baseOptions?: Apollo.MutationHookOptions<CreateHoaDonMutation, CreateHoaDonMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateHoaDonMutation, CreateHoaDonMutationVariables>(CreateHoaDonDocument, options);
+      }
+export type CreateHoaDonMutationHookResult = ReturnType<typeof useCreateHoaDonMutation>;
+export type CreateHoaDonMutationResult = Apollo.MutationResult<CreateHoaDonMutation>;
+export type CreateHoaDonMutationOptions = Apollo.BaseMutationOptions<CreateHoaDonMutation, CreateHoaDonMutationVariables>;
+export const UpdateHoadonDocument = gql`
+    mutation UpdateHoadon($input: UpdateHoadonInput!) {
+  updateHoadon(updateHoadonInput: $input) {
+    _id
+  }
+}
+    `;
+export type UpdateHoadonMutationFn = Apollo.MutationFunction<UpdateHoadonMutation, UpdateHoadonMutationVariables>;
+
+/**
+ * __useUpdateHoadonMutation__
+ *
+ * To run a mutation, you first call `useUpdateHoadonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateHoadonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateHoadonMutation, { data, loading, error }] = useUpdateHoadonMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateHoadonMutation(baseOptions?: Apollo.MutationHookOptions<UpdateHoadonMutation, UpdateHoadonMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateHoadonMutation, UpdateHoadonMutationVariables>(UpdateHoadonDocument, options);
+      }
+export type UpdateHoadonMutationHookResult = ReturnType<typeof useUpdateHoadonMutation>;
+export type UpdateHoadonMutationResult = Apollo.MutationResult<UpdateHoadonMutation>;
+export type UpdateHoadonMutationOptions = Apollo.BaseMutationOptions<UpdateHoadonMutation, UpdateHoadonMutationVariables>;
+export const UpdateTrangThaiDocument = gql`
+    mutation UpdateTrangThai($id: String!) {
+  updateTrangThai(id: $id) {
+    _id
+    trangthai
+  }
+}
+    `;
+export type UpdateTrangThaiMutationFn = Apollo.MutationFunction<UpdateTrangThaiMutation, UpdateTrangThaiMutationVariables>;
+
+/**
+ * __useUpdateTrangThaiMutation__
+ *
+ * To run a mutation, you first call `useUpdateTrangThaiMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTrangThaiMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTrangThaiMutation, { data, loading, error }] = useUpdateTrangThaiMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdateTrangThaiMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTrangThaiMutation, UpdateTrangThaiMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTrangThaiMutation, UpdateTrangThaiMutationVariables>(UpdateTrangThaiDocument, options);
+      }
+export type UpdateTrangThaiMutationHookResult = ReturnType<typeof useUpdateTrangThaiMutation>;
+export type UpdateTrangThaiMutationResult = Apollo.MutationResult<UpdateTrangThaiMutation>;
+export type UpdateTrangThaiMutationOptions = Apollo.BaseMutationOptions<UpdateTrangThaiMutation, UpdateTrangThaiMutationVariables>;
+export const DeleteHoaDonDocument = gql`
+    mutation DeleteHoaDon($id: String!) {
+  deleteHoadon(id: $id)
+}
+    `;
+export type DeleteHoaDonMutationFn = Apollo.MutationFunction<DeleteHoaDonMutation, DeleteHoaDonMutationVariables>;
+
+/**
+ * __useDeleteHoaDonMutation__
+ *
+ * To run a mutation, you first call `useDeleteHoaDonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteHoaDonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteHoaDonMutation, { data, loading, error }] = useDeleteHoaDonMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteHoaDonMutation(baseOptions?: Apollo.MutationHookOptions<DeleteHoaDonMutation, DeleteHoaDonMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteHoaDonMutation, DeleteHoaDonMutationVariables>(DeleteHoaDonDocument, options);
+      }
+export type DeleteHoaDonMutationHookResult = ReturnType<typeof useDeleteHoaDonMutation>;
+export type DeleteHoaDonMutationResult = Apollo.MutationResult<DeleteHoaDonMutation>;
+export type DeleteHoaDonMutationOptions = Apollo.BaseMutationOptions<DeleteHoaDonMutation, DeleteHoaDonMutationVariables>;
 export const OnlyUserDocument = gql`
     query OnlyUser {
   onlyUser {
@@ -2727,3 +2975,106 @@ export type FindAllRelatedKetQuaCanLamSangQueryHookResult = ReturnType<typeof us
 export type FindAllRelatedKetQuaCanLamSangLazyQueryHookResult = ReturnType<typeof useFindAllRelatedKetQuaCanLamSangLazyQuery>;
 export type FindAllRelatedKetQuaCanLamSangSuspenseQueryHookResult = ReturnType<typeof useFindAllRelatedKetQuaCanLamSangSuspenseQuery>;
 export type FindAllRelatedKetQuaCanLamSangQueryResult = Apollo.QueryResult<FindAllRelatedKetQuaCanLamSangQuery, FindAllRelatedKetQuaCanLamSangQueryVariables>;
+export const GetAllHoaDonDocument = gql`
+    query GetAllHoaDon {
+  getAllHoadon {
+    _id
+    benhnhan {
+      hoten
+      ngaysinh
+      gioitinh
+    }
+    trangthai
+    ngaytao
+    bhyt
+    thanhtien
+    canlamsangs {
+      ten
+      gia
+      soluong
+      thanhtien
+    }
+    thuocs {
+      ten
+      gia
+      soluong
+      thanhtien
+    }
+    vattuyte {
+      ten
+      gia
+      soluong
+      thanhtien
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllHoaDonQuery__
+ *
+ * To run a query within a React component, call `useGetAllHoaDonQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllHoaDonQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllHoaDonQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllHoaDonQuery(baseOptions?: Apollo.QueryHookOptions<GetAllHoaDonQuery, GetAllHoaDonQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllHoaDonQuery, GetAllHoaDonQueryVariables>(GetAllHoaDonDocument, options);
+      }
+export function useGetAllHoaDonLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllHoaDonQuery, GetAllHoaDonQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllHoaDonQuery, GetAllHoaDonQueryVariables>(GetAllHoaDonDocument, options);
+        }
+export function useGetAllHoaDonSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllHoaDonQuery, GetAllHoaDonQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllHoaDonQuery, GetAllHoaDonQueryVariables>(GetAllHoaDonDocument, options);
+        }
+export type GetAllHoaDonQueryHookResult = ReturnType<typeof useGetAllHoaDonQuery>;
+export type GetAllHoaDonLazyQueryHookResult = ReturnType<typeof useGetAllHoaDonLazyQuery>;
+export type GetAllHoaDonSuspenseQueryHookResult = ReturnType<typeof useGetAllHoaDonSuspenseQuery>;
+export type GetAllHoaDonQueryResult = Apollo.QueryResult<GetAllHoaDonQuery, GetAllHoaDonQueryVariables>;
+export const NewDatLichDocument = gql`
+    subscription NewDatLich {
+  newDatLich {
+    _id
+    benhnhan {
+      ngaysinh
+      hoten
+    }
+    motabenh
+    ngaydat
+    ngaykham
+    bhyt
+  }
+}
+    `;
+
+/**
+ * __useNewDatLichSubscription__
+ *
+ * To run a query within a React component, call `useNewDatLichSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useNewDatLichSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewDatLichSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNewDatLichSubscription(baseOptions?: Apollo.SubscriptionHookOptions<NewDatLichSubscription, NewDatLichSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<NewDatLichSubscription, NewDatLichSubscriptionVariables>(NewDatLichDocument, options);
+      }
+export type NewDatLichSubscriptionHookResult = ReturnType<typeof useNewDatLichSubscription>;
+export type NewDatLichSubscriptionResult = Apollo.SubscriptionResult<NewDatLichSubscription>;

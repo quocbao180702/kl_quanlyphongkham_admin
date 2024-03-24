@@ -18,10 +18,12 @@
     "@mui/x-date-pickers": "^6.19.6",
     "@tanstack/react-table": "^8.12.0",
     "antd": "^5.15.0",
+    "apollo-link-ws": "^1.0.20",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "graphql": "^16.8.1",
+    "graphql-ws": "^5.15.0",
     "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",
     "process": "^0.11.10",
@@ -32,6 +34,7 @@
     "react-icons": "^5.0.1",
     "react-jwt": "^1.2.1",
     "react-router-dom": "^6.22.1",
+    "subscriptions-transport-ws": "^0.9.19",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
