@@ -80,7 +80,6 @@ function BacSiPage() { // Rename the function here
                                 <th>Giới tính</th>
                                 <th>Địa chỉ</th>
                                 <th>SĐT</th>
-                                <th>Email</th>
                                 <th>CCCD</th>
                                 <th>Ngày BD</th>
                                 <th>Phòng</th>
@@ -97,8 +96,7 @@ function BacSiPage() { // Rename the function here
                                         <td>{dayjs(bs?.ngaysinh).format('YYYY-MM-DD')}</td>
                                         <td>{bs?.gioitinh ? 'Nam' : 'Nữ'}</td>
                                         <td>{bs?.diachi}</td>
-                                        <td>{bs?.user?.phoneNumber}</td>
-                                        <td>{bs?.user?.email}</td>
+                                        <td>{bs?.sodienthoai}</td>
                                         <td>{bs?.cccd}</td>
                                         <td>{new Intl.DateTimeFormat('vi-VN', { dateStyle: 'short' }).format(bs?.ngaybd)}</td>
                                         <td>

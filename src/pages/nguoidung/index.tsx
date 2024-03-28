@@ -12,7 +12,7 @@ import Pagination from '../../components/pagination';
 function NguoiDung() {
 
     const [take, setTake] = useState(2);
-    const [skip, setSkip] =  useState(0);
+    const [skip, setSkip] = useState(0);
     const { data, loading, error, refetch } = useGetAllUserQuery({
         variables: {
             "input": {
@@ -27,7 +27,7 @@ function NguoiDung() {
     const [modalAdd, setModalAdd] = useState(false);
     const [page, setPage] = useState(1);
 
-    const handleChangPage = (skip: number, page: number) =>{
+    const handleChangPage = (skip: number, page: number) => {
         setSkip(skip);
         setPage(page)
     }
@@ -84,14 +84,13 @@ function NguoiDung() {
                             <th>Hình ảnh</th>
                             <th>Username</th>
                             <th>Email</th>
-                            <th>Số điện thoại</th>
                             <th>Quyền</th>
                             <th>Khóa</th>
                             <th colSpan={3} className="text-center">Thao Tác</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.getAllUsers.map((user: Users) => (
+                        {data?.getAllUsers.map((user: any) => (
                             <tr key={user._id}>
                                 <td>
                                     <Image
@@ -106,7 +105,6 @@ function NguoiDung() {
                                 </td>
                                 <td>{user.username}</td>
                                 <td>{user.email}</td>
-                                <td>{user.phoneNumber}</td>
                                 <td>{user.role}</td>
                                 <td onClick={() => handleKhoa(user._id)}>{user.isLocked ? <CiLock /> : <CiUnlock />}</td>
                                 <td onClick={() => handleDelete(user._id)}>
@@ -117,7 +115,7 @@ function NguoiDung() {
                         ))}
                     </tbody>
                 </Table>
-                <Pagination count={data?.countUser as number} take={take} skip={handleChangPage} page={page}/>
+                <Pagination count={data?.countUser as number} take={take} skip={handleChangPage} page={page} />
             </Row>
             <MyVerticallyCenteredModal
                 show={modalShow}

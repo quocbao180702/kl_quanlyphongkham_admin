@@ -32,7 +32,6 @@ mutation updateUser($update: UpdateUserInput!) {
   updateUser(input: $update) {
     _id
     username
-    phoneNumber
     email
    	password
     role
@@ -194,9 +193,9 @@ mutation UpdateHoadon($input: UpdateHoadonInput!){
 }
 `
 
-const updateTrangThai = gql`
-mutation UpdateTrangThai($id: String!){
-  updateTrangThai(id: $id){
+const updateTrangThaiCanLamSang = gql`
+mutation UpdateTrangThaiCanLamSang($id: String!){
+  updateTrangThaiCanLamSang(id: $id){
     _id
     trangthai
   }
@@ -207,4 +206,50 @@ mutation DeleteHoaDon($id: String!){
   deleteHoadon(id: $id)
 }`
 
+const createPhieuXacNhan = gql`
+mutation CreatePhieuXacNhan($input: CreatePhieuXacNhanInput!){
+  createPhieuXacNhan(newPhieuXacNhanInput: $input){
+    _id
+  }
+}`
 
+
+const updateTrangThaiKham = gql`
+mutation  UpdateTrangThaiKham($id: String!, $trangthai: String!){
+  updateTrangThaiKham(id: $id, trangthai: $trangthai){
+    _id
+    trangthai
+  }
+}`
+
+const updateTrangThaiDatLich = gql`
+mutation UpdateTrangThaiDatLich($id: String!, $trangthai: String!){
+  updateTrangThaiDatLich(id: $id, trangthai: $trangthai){
+    _id
+    trangthai
+  }
+}`
+
+const deleteDatLich = gql`
+mutation DeleteDatlich($id: String!){
+  deleteDatLich(_id:$id)
+}`
+
+const createNhanVien = gql`
+mutation CreateNhanVien($input: NewNhanVienInput!){
+  createNhanVien(newNhanVienInput: $input){
+    _id
+  }
+}`
+
+const updateNhanVien = gql`
+mutation UpdateNhanVien($input: UpdateNhanVienInput!){
+  updateNhanVien(input: $input){
+    _id
+  }
+}`
+
+const deleteNhanVien = gql`
+mutation DeleteNhanVien($id: String!){
+  deleteNhanVien(_id: $id)
+}`

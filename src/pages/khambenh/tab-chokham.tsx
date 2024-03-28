@@ -3,23 +3,11 @@ import { BenhNhan, useGetAllNgayVaPhongQuery } from '../../graphql-definition/gr
 import moment from 'moment';
 import { useEffect } from 'react';
 
-function ChoKham({ dataAgrsChoKham, selected }: any) {
+function ChoKham({ data, loading, error, selected }: any) {
     /* const [selectedRow, setSelectedRow] = useState(''); */
 
-    const { loading, error, data } = useGetAllNgayVaPhongQuery({
-        variables: {
-            ngaykham: dataAgrsChoKham?.ngaykham,
-            phongIds: dataAgrsChoKham?.phongIds
-        },
-        skip: !dataAgrsChoKham || !dataAgrsChoKham.phongIds
-    });
-
-    useEffect(() => {
-        console.log(dataAgrsChoKham)
-    }, [dataAgrsChoKham])
-
-    const handleRowSelect = (benhnhan: BenhNhan) => {
-        selected(benhnhan);
+    const handleRowSelect = (benhnhan: BenhNhan, id: string) => {
+        selected(benhnhan, id);
         console.log('row selected is:', benhnhan);
     };
 
@@ -40,8 +28,18 @@ function ChoKham({ dataAgrsChoKham, selected }: any) {
                     </tr>
                 </thead>
                 <tbody>
-                    {data?.getAllByNgayVaPhong.map((kb: any) => (
-                        <tr className='rowSelected' key={kb._id} onClick={() => handleRowSelect(kb?.benhnhan)}>
+                    {data?.getAllByNgayVaPhong && data.getAllByNgayVaPhong.length > 0 && data.getAllByNgayVaPhong.map((kb: any) => (
+                        <tr className='rowSelected' key={kb._id} onClick={() => handleRowSelect(kb?.benhnhan, kb?._id)}>
+                            <td>{kb?.sothutu}</td>
+                            <td>{kb?.benhnhan?.hoten}</td>
+                            <td>{moment(kb?.benhnhan?.ngaysinh).format('YYYY/MM/DD')}</td>
+                            <td>{kb?.benhnhan?.gioitinh ? 'Nam' : 'Nữ'}</td>
+                            <td>{kb?.benhnhan?.bhyt ? "Yes" : 'No'}</td>
+                            <td>{kb?.benhnhan?.user?.phoneNumber}</td>
+                        </tr>
+                    ))}
+                    {data?.getAllPhieuXacNhanDaXetNgiem && data.getAllPhieuXacNhanDaXetNgiem.length > 0 && data.getAllPhieuXacNhanDaXetNgiem.map((kb: any) => (
+                        <tr className='rowSelected' key={kb._id} onClick={() => handleRowSelect(kb?.benhnhan, kb?._id)}>
                             <td>{kb?.sothutu}</td>
                             <td>{kb?.benhnhan?.hoten}</td>
                             <td>{moment(kb?.benhnhan?.ngaysinh).format('YYYY/MM/DD')}</td>
@@ -51,6 +49,7 @@ function ChoKham({ dataAgrsChoKham, selected }: any) {
                         </tr>
                     ))}
                 </tbody>
+
             </Table>
         </>
     );

@@ -29,6 +29,7 @@ function ThemBenhNhan({ show, onHide, refetch }: any) {
         console.log('cccd: ', data?.bhyt);
         try {
             if (data?.hoten && data?.diachi && data?.cccd && data?.bhyt) {
+                console.log('username', data?.username)
                 const response = await createBenhNhan({
                     variables: {
                         "input": {
@@ -38,7 +39,8 @@ function ThemBenhNhan({ show, onHide, refetch }: any) {
                             "diachi": data?.diachi,
                             "cccd": data?.cccd,
                             "bhyt": data?.bhyt,
-                            "user": "65f5113dfa5ba17aa83877cf"
+                            "sodienthoai": data?.sdt,
+                            "username": data?.username
                         }
                     }
                 })
@@ -103,6 +105,24 @@ function ThemBenhNhan({ show, onHide, refetch }: any) {
                             type="text"
                             placeholder={"Địa chỉ"}
                             {...register('diachi')}
+                        />
+                    </Form.Group>
+
+                    <Form.Group controlId="formBacSiCCCD" className="mt-2">
+                        <Form.Label>SĐT</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder={"SĐT"}
+                            {...register('sdt')}
+                        />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formUserUsername">
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder={"Enter username"}
+                            {...register('username')}
                         />
                     </Form.Group>
 

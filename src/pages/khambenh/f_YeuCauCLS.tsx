@@ -1,5 +1,5 @@
 import { Button, Form, Modal, Row } from "react-bootstrap";
-import { LinkImage, LoaiCanLamSang, useCreatePhieuchidinhcanlamsangMutation, useGetAllLoaiClsQuery } from "../../graphql-definition/graphql";
+import { LinkImage, LoaiCanLamSang, useCreatePhieuchidinhcanlamsangMutation, useGetAllLoaiClsQuery, useUpdateTrangThaiKhamMutation } from "../../graphql-definition/graphql";
 import { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import UploadImage from "../../components/UploadImage";
@@ -7,14 +7,16 @@ import { Box, Checkbox, FormControlLabel } from "@mui/material";
 import { message } from "antd";
 import dayjs, { Dayjs } from 'dayjs';
 
-function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi }: any) {
+function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refetchChoKham, refetchCHOXETNGHIEM }: any) {
 
     const { data, loading, error } = useGetAllLoaiClsQuery();
     const [checked, setChecked] = useState([false, false, false, false, false]);
     const [selectedValues, setSelectedValues] = useState<string[]>([]);
     const [benhnhanId, setBenhNhanId] = useState();
     const [bhyt, setBHYT] = useState(Boolean);
-    const [createphieuchidinhCLS, _] = useCreatePhieuchidinhcanlamsangMutation();
+
+    const [createphieuchidinhCLS] = useCreatePhieuchidinhcanlamsangMutation();
+    const [updateTrangThaiKham] = useUpdateTrangThaiKhamMutation()
 
     useEffect(() => {
         if (benhnhan?._id !== undefined) {
@@ -33,19 +35,31 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi }: any) {
         console.log('bhyt so: ', bhyt)
         console.log('ngaytao: ', dayjs().format('YYYY-MM-DD'))
         try {
-            if (bacsi?._id && benhnhanId && bhyt) {
+            if (bacsi?._id && benhnhanId && bhyt && idPhieuXacNhan) {
                 const ketqua = selectedValues.map(value => ({ loaicanlamsang: value }));
-                const response = await createphieuchidinhCLS({
-                    variables: {
-                        "phieuchidinh": {
-                            "benhnhan": benhnhanId,
-                            "bacsi": bacsi?._id,
-                            "bhyt": true,
-                            "ngaytao": dayjs().format('YYYY-MM-DD')
-                        },
-                        "ketqua": ketqua
-                    }
-                })
+
+                const [response, update] = await Promise.all([
+                    createphieuchidinhCLS({
+                        variables: {
+                            "phieuchidinh": {
+                                "benhnhan": benhnhanId,
+                                "bacsi": bacsi?._id,
+                                "phieuxacnhan": idPhieuXacNhan,
+                                "bhyt": true,
+                                "ngaytao": dayjs().format('YYYY-MM-DD')
+                            },
+                            "ketqua": ketqua
+                        }
+                    }),
+                    updateTrangThaiKham({
+                        variables: {
+                            "id": idPhieuXacNhan,
+                            "trangthai": "CHOXETNGHIEM"
+                        }
+                    })
+                ]);
+                refetchCHOXETNGHIEM();
+                refetchChoKham();
             }
             else {
                 console.log('trường dữ liệu có thể bị thiếu:  ', bacsi?._id, benhnhanId, bhyt)

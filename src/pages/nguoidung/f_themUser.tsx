@@ -12,7 +12,6 @@ function ThemNguoiDung({ show, onHide, refresh }: any) {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [phoneNumber, setPhoneNumber] = useState('');
     const [role, setRole] = useState<UserRole>(UserRole.User);
     const [imageUrl, setImageUrl] = useState<LinkImage>();
 
@@ -29,15 +28,14 @@ function ThemNguoiDung({ show, onHide, refresh }: any) {
 
     const handleAdd = async () => {
         try {
-            console.log(username, email, password, phoneNumber, role, imageUrl)
-            if (username && email && password && phoneNumber && role && imageUrl) {
+            console.log(username, email, password, role, imageUrl)
+            if (username && email && password  && role && imageUrl) {
                 const response = await createUserMutation({
                     variables: {
                         input: {
                             username: username,
                             email: email,
                             password: password,
-                            phoneNumber: phoneNumber,
                             avatar: {
                                 url: imageUrl.url,
                                 fileName: imageUrl.fileName,
@@ -114,15 +112,6 @@ function ThemNguoiDung({ show, onHide, refresh }: any) {
                         />
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formUserphoneNumber">
-                        <Form.Label>Phone number</Form.Label>
-                        <Form.Control
-                            type="tel"
-                            placeholder={"Enter phone number"}
-                            value={phoneNumber}
-                            onChange={event => setPhoneNumber(event.target.value)}
-                        />
-                    </Form.Group>
 
                     <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                         <InputLabel id="demo-select-small-label">Quyền</InputLabel>
@@ -134,8 +123,9 @@ function ThemNguoiDung({ show, onHide, refresh }: any) {
                             onChange={handleChange}
                         >
                             <MenuItem value={UserRole.Admin}>Admin</MenuItem>
-                            <MenuItem value={UserRole.Staff}>Staff</MenuItem>
-                            <MenuItem value={UserRole.User}>User</MenuItem>
+                            <MenuItem value={UserRole.Staff}>Nhân Viên</MenuItem>
+                            <MenuItem value={UserRole.Doctor}>Bác Sĩ</MenuItem>
+                            <MenuItem value={UserRole.User}>Người Dùng</MenuItem>
                         </Select>
                     </FormControl>
                 </Form>

@@ -1,5 +1,5 @@
 import { Button, Row, Table } from "react-bootstrap";
-import { Hoadon, useDeleteHoaDonMutation, useGetAllHoaDonQuery, useUpdateTrangThaiMutation } from "../../graphql-definition/graphql";
+import { Hoadon, useDeleteHoaDonMutation, useGetAllHoaDonQuery, useUpdateTrangThaiCanLamSangMutation } from "../../graphql-definition/graphql";
 import moment from "moment";
 import { MdDelete } from "react-icons/md";
 import { FaMarker } from "react-icons/fa";
@@ -32,7 +32,7 @@ function HoaDonPage() {
     }
 
 
-    const [updateTrangThai] = useUpdateTrangThaiMutation()
+    const [updateTrangThai] = useUpdateTrangThaiCanLamSangMutation()
 
     const handleTrangThai = async (id: string) => {
         try{

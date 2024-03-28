@@ -7,7 +7,6 @@ query OnlyUser{
   	... on Users{
       _id
       username
-      phoneNumber
       email
       role
       avatar{
@@ -23,12 +22,12 @@ query OnlyUser{
       ngaysinh
       gioitinh
       diachi
+      sodienthoai
       cccd
       ngayBD
       user{
         _id
       username
-      phoneNumber
       email
       role
       avatar{
@@ -52,10 +51,10 @@ query OnlyUser{
       ngaysinh
       gioitinh
       diachi
+      sodienthoai
       cccd
       bhyt
       user{
-        phoneNumber
         email
       }
     }
@@ -65,13 +64,13 @@ query OnlyUser{
       ngaysinh
       gioitinh
       diachi
+      sodienthoai
       cccd
       ngayBD
       chucvu
       user{
         _id
       username
-      phoneNumber
       email
       role
       avatar{
@@ -96,7 +95,6 @@ query GetAllUser($input: FetchUsersArgs!){
     _id
       username
       email
-      phoneNumber
       password
       role
       isLocked
@@ -119,13 +117,13 @@ query GetAllBacSi($input: FetchPagination!){
         ngaysinh
         gioitinh
         diachi
+        sodienthoai
         cccd
         ngayBD
     		user{
           _id
           username
           email
-          phoneNumber
         }
     		phongs{
           _id
@@ -149,15 +147,26 @@ query getAllBenhNhan($input: FetchPagination!){
     ngaysinh
     gioitinh
     diachi
+    sodienthoai
     cccd
     bhyt
-    user{
-      _id
-      phoneNumber
-      email
-    }
   }
 }`
+
+const getAllBenhNhanNoPagination = gql`
+query GetAllBenhNhanNoPagination{
+  getAllBenhNhanNoPagination{
+     _id
+    hoten
+    ngaysinh
+    gioitinh
+    diachi
+    sodienthoai
+    cccd
+    bhyt
+  }
+}
+`
 
 
 const getThuocPagination = gql`
@@ -169,7 +178,8 @@ query GetThuocPagination($input: FetchPagination!){
     tenPhoBien
     dangthuoc
     donvi
-    gia
+    giaBHYT
+    giaKhongBHYT
     hamluong
     bhyt
     nhasanxuat
@@ -186,7 +196,8 @@ query GetAllThuoc{
     tenPhoBien
     dangthuoc
     donvi
-    gia
+    giaBHYT
+    giaKhongBHYT
     hamluong
     bhyt
     nhasanxuat
@@ -222,8 +233,8 @@ query GetAllBenh{
 
 
 const getAllNgayVaPhong = gql`
-query GetAllNgayVaPhong($ngaykham: String!, $phongIds: String!){
-  getAllByNgayVaPhong(ngaykham: $ngaykham, phongIds: $phongIds){
+query GetAllNgayVaPhong($ngaykham: String!, $phongIds: String!, $trangthai: String!){
+  getAllByNgayVaPhong(ngaykham: $ngaykham, phongIds: $phongIds, trangthai: $trangthai){
     _id
     benhnhan{
       _id
@@ -231,12 +242,9 @@ query GetAllNgayVaPhong($ngaykham: String!, $phongIds: String!){
       ngaysinh
       gioitinh
       diachi
+      sodienthoai
       cccd
       bhyt
-      user{
-        phoneNumber
-        email
-      }
       sinhhieu{
         _id
         mach
@@ -271,24 +279,20 @@ query GetAllLoaiCLS{
 }`
 
 const getAllPhieuCLSbyNgay = gql`
-query GetAllPhieuCLSbyNgay($ngaytao: DateTime!){
-  getAllPhieuCLSbyNgay(ngaytao: $ngaytao){
+query GetAllPhieuCLSbyNgay($ngaytao: DateTime!,$trangthai: Boolean!){
+  getAllPhieuCLSbyNgay(ngaytao: $ngaytao, trangthai: $trangthai){
       _id
     benhnhan{
       hoten
       ngaysinh
       gioitinh
-      user{
-        phoneNumber
-      }
+      sodienthoai
     }
     bacsi{
       hoten
       ngaysinh
       gioitinh
-      user{
-        phoneNumber
-      }
+      sodienthoai
     }
     bhyt
     ketquacanlamsangs{
@@ -378,5 +382,104 @@ query GetAllHoaDon{
       soluong
       thanhtien
     }
+  }
+}`
+
+const getAllDatLichbyTrangThai = gql`
+  query GetAllDatLichbyTrangThai($input: String!){
+    getAllDatLichbyTrangThai(trangthai: $input){
+      _id
+      benhnhan{
+        _id
+        hoten
+        ngaysinh
+      }
+      motabenh
+      ngaydat
+      ngaykham
+      trangthai
+      bhyt
+    }
+}`
+
+
+const getAllPhieuXacNhanDaXetNgiem = gql`
+query GetAllPhieuXacNhanDaXetNghiem($ngaykham: String!, $phongIds: String!){
+  getAllPhieuXacNhanDaXetNgiem(ngaykham: $ngaykham, phongIds: $phongIds){
+    _id
+    benhnhan {
+      _id
+      hoten
+      ngaysinh
+      gioitinh
+      diachi
+      sodienthoai
+      cccd
+      bhyt
+      user {
+        email
+      }
+      sinhhieu {
+        _id
+        mach
+        nhietdo
+        ha
+        chieucao
+        cannang
+        bmi
+        benhmangtinh
+      }
+    }
+    phongs {
+      _id
+      tenphong
+    }
+    trangthai
+    sothutu
+    ngaytao
+    ngaykham
+    phieuchidinhcanlamsang{
+      _id
+      bacsi{
+        _id
+        hoten
+      }
+      bhyt
+      ngaytao
+      trangthai
+      ketquacanlamsangs{
+        loaicanlamsang{
+          _id
+          tenxetnghiem
+        }
+        ketluan
+        thietbi
+        hinhanh{
+          url
+          fileName
+          type
+        }
+      }
+    }
+  }
+}`
+
+
+const getAllNhanVien = gql`
+query GetAllNhanVien{
+  getAllNhanVien{
+    _id
+    hoten
+    ngaysinh
+  	gioitinh
+    diachi
+    sodienthoai
+    cccd
+    phongs{
+      _id
+      tenphong
+    }
+    ngayBD
+    chucvu
   }
 }`

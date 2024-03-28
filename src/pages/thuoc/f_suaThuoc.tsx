@@ -11,7 +11,8 @@ function SuaThuoc({ show, onHide, thuoc, refetch }: any) {
     const [dangthuoc, setDangThuoc] = useState('');
     const [donvi, setDonVi] = useState('');
     const [hamluong, setHamLuong] = useState<number>(0.0);
-    const [gia, setGia] = useState<number>(0.0);
+    const [giaBHYT, setgiaBHYT] = useState<number>(0.0);
+    const [giaKhongBHYT, setgiaKhongBHYT] = useState<number>(0.0);
     const [soluong, setSoLuong] = useState<number>(0);
     const [bhyt, setBHYT] = useState<number>(0);
     const [nhasanxuat, setNhaSanXuat] = useState('')
@@ -25,7 +26,8 @@ function SuaThuoc({ show, onHide, thuoc, refetch }: any) {
             setDangThuoc(thuoc?.dangthuoc);
             setDonVi(thuoc?.donvi);
             setHamLuong(thuoc?.hamluong);
-            setGia(thuoc?.gia);
+            setgiaBHYT(thuoc?.giaBHYT);
+            setgiaKhongBHYT(thuoc?.giaKhongBHYT);
             setBHYT(thuoc?.bhyt == true ? 0 : 1)
             setNhaSanXuat(thuoc?.nhasanxuat);
             setHanSuDung(thuoc?.hansudung);
@@ -48,7 +50,8 @@ function SuaThuoc({ show, onHide, thuoc, refetch }: any) {
         console.log('dạng thuốc: ', dangthuoc);
         console.log('đơn vị: ', donvi);
         console.log('hàm lượng: ', hamluong);
-        console.log('giá: ', gia);
+        console.log('giá: ', giaBHYT);
+        console.log('giá Khong BHYT: ', giaKhongBHYT);
         console.log('bhyt: ', bhyt == 0 ? true : false);
         console.log('nhà sản xuất: ', nhasanxuat);
         console.log('hạn sử dụng: ', hansudung);
@@ -64,7 +67,8 @@ function SuaThuoc({ show, onHide, thuoc, refetch }: any) {
                             "dangthuoc": dangthuoc,
                             "donvi": donvi,
                             "hamluong": hamluong,
-                            "gia": gia,
+                            "giaBHYT": giaBHYT,
+                            "giaKhongBHYT": giaKhongBHYT,
                             "bhyt": bhyt == 0 ? true : false,
                             "nhasanxuat": nhasanxuat,
                             "hansudung": hansudung,
@@ -150,18 +154,6 @@ function SuaThuoc({ show, onHide, thuoc, refetch }: any) {
                             />
                         </Form.Group>
 
-
-                        <Form.Group controlId="formThuocGia" className="mt-2 mr-1" style={{ width: '15%' }}>
-                            <Form.Label>Giá</Form.Label>
-                            <Form.Control
-                                type="number"
-                                placeholder={"giá..."}
-                                value={gia}
-                                onChange={(event) => setGia(parseFloat(event.target.value))}
-                            />
-                        </Form.Group>
-
-
                         <Form.Group controlId="formThuocSoLuong" className="mt-2 mr-1" style={{ width: '15%' }}>
                             <Form.Label>Số lượng</Form.Label>
                             <Form.Control
@@ -173,19 +165,41 @@ function SuaThuoc({ show, onHide, thuoc, refetch }: any) {
                         </Form.Group>
                     </div>
 
-                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small" className="mt-2">
-                        <InputLabel id="demo-select-small-label">BHYT</InputLabel>
-                        <Select
-                            labelId="demo-select-small-label"
-                            id="demo-select-small"
-                            label="bhyt"
-                            value={bhyt}
-                            onChange={handleBHYTChange}
-                        >
-                            <MenuItem value={0}>Có</MenuItem>
-                            <MenuItem value={1}>Không</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <div className="d-flex justify-content-around">
+                        <Form.Group controlId="formThuocGia" className="mt-2 mr-1" style={{ width: '15%' }}>
+                            <Form.Label>Giá</Form.Label>
+                            <Form.Control
+                                type="number"
+                                placeholder={"giá..."}
+                                value={giaBHYT}
+                                onChange={(event) => setgiaBHYT(parseFloat(event.target.value))}
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="formThuocGiaKhongBHYT" className="mt-2 mr-1" style={{ width: '20%' }}>
+                            <Form.Label>Giá Không BHYT</Form.Label>
+                            <Form.Control
+                                type="number"
+                                placeholder={"giá không BHYT..."}
+                                value={giaKhongBHYT}
+                                onChange={(event) => setgiaKhongBHYT(parseFloat(event.target.value))}
+                            />
+                        </Form.Group>
+
+                        <FormControl sx={{ m: 1, minWidth: 120 }} size="small" className="mt-2">
+                            <Form.Label>BHYT</Form.Label>
+                            <Select
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                value={bhyt}
+                                onChange={handleBHYTChange}
+                            >
+                                <MenuItem value={0}>Có</MenuItem>
+                                <MenuItem value={1}>Không</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                    </div>
 
                     <Form.Group controlId="formThuocNhaSanXuat" className="mt-2">
                         <Form.Label>Nhà Sản Xuất</Form.Label>

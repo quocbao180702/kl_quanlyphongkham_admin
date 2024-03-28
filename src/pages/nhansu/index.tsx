@@ -15,7 +15,7 @@ function NhanSu() {
                             </li>
                             <li>
                                 <Link to="/nhansu/nhanvien" className="nav-link px-0 align-middle text-dark">
-                                    <i className="fs-4 bi-people"></i> <span className="ms-1 d-none d-sm-inline">Bệnh Nhân</span>
+                                    <i className="fs-4 bi-people"></i> <span className="ms-1 d-none d-sm-inline">Nhân Viên</span>
                                 </Link>
                             </li>
                         </ul>

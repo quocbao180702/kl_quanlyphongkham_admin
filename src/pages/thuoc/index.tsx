@@ -75,7 +75,8 @@ function ThuocPage() {
                             <th>Tên Phổ Biếnn</th>
                             <th>Dạng Thuốc</th>
                             <th>Đơn Vị</th>
-                            <th>Giá</th>
+                            <th>Giá BHYT</th>
+                            <th>Giá Không BHYT</th>
                             <th>Hàm lượng</th>
                             <th>BHYT</th>
                             <th>Nhà Sản Xuất</th>
@@ -92,7 +93,8 @@ function ThuocPage() {
                                 <td>{thuoc?.tenPhoBien}</td>
                                 <td>{thuoc?.dangthuoc}</td>
                                 <td>{thuoc?.donvi}</td>
-                                <td>{thuoc?.gia}</td>
+                                <td>{thuoc?.giaBHYT}</td>
+                                <td>{thuoc?.giaKhongBHYT}</td>
                                 <td>{thuoc?.hamluong}</td>
                                 <td>{thuoc?.bhyt ? 'Yes' : 'No'}</td>
                                 <td>{thuoc?.nhasanxuat}</td>

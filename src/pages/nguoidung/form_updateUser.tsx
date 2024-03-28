@@ -32,7 +32,6 @@ function MyVerticallyCenteredModal({ show, onHide, user }: any) {
                     "update": {
                         "id": user._id,
                         "username": username,
-                        "phoneNumber": phoneNumber,
                         "email": email,
                         "password": password,
                         "role": user?.role,
@@ -107,16 +106,6 @@ function MyVerticallyCenteredModal({ show, onHide, user }: any) {
                             placeholder={user?.username || "Enter username"}
                             value={username}
                             onChange={event => setUsername(event.target.value)}
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formUserphoneNumber">
-                        <Form.Label>Phone number</Form.Label>
-                        <Form.Control
-                            type="tel"
-                            placeholder={user?.phoneNumber || "Enter phone number"}
-                            value={phoneNumber}
-                            onChange={event => setPhoneNumber(event.target.value)}
                         />
                     </Form.Group>
                 </Form>

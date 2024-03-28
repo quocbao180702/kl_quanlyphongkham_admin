@@ -1,45 +1,44 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { MdClose } from "react-icons/md";
+import { Phong, useGetAllPhongQuery, useUpdateNhanVienMutation } from "../../graphql-definition/graphql";
 import dayjs, { Dayjs } from 'dayjs';
-import DatePickerValue from "../../components/DatePicker";
 import { Autocomplete, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
-import { ChuyenKhoa, Phong, useGetAllChuyenKhoaQuery, useGetAllPhongQuery, useUpdateBacSiMutation } from "../../graphql-definition/graphql";
+import DatePickerValue from "../../components/DatePicker";
 
-function SuaBacSi({ show, onHide, bacsi, refetch }: any) {
+function SuaNhanVien({ show, onHide, nhanvien, refetch }: any) {
 
 
-    const { data: phongData, loading: phongLoading, error: phongError } = useGetAllPhongQuery();
-    const { data: chuyenkhoaData, loading: chuyenkhoaLoading, error: chuyenkhoaError } = useGetAllChuyenKhoaQuery();
-
-    const [user, setUser] = useState('');
     const [hoten, setHoten] = useState('');
+    const [phongs, setPhongs] = useState([]);
     const [ngaysinh, setNgaySinh] = useState<Dayjs>(dayjs());
     const [ngayBD, setngayBD] = useState<Dayjs>(dayjs());
     const [gioitinh, setGioitinh] = useState(0);
     const [diachi, setDiaChi] = useState('');
     const [cccd, setCCCD] = useState('');
-    /* const [indexChuyenKhoa, setIndexChuyenKhoa] = useState<number>(0) */
-    const [chuyenkhoa, setChuyenKhoa] = useState('');
-    const [phongs, setPhongs] = useState([]);
+    const [chucvu, setChucVu] = useState(nhanvien?.chucvu || '');
+    const [sodienthoai, setSodienthoai] = useState('');
 
+    const { data: phongData, loading: phongLoading, error: phongError } = useGetAllPhongQuery();
 
     useEffect(() => {
-        if (bacsi) {
-            setHoten(bacsi?.hoten);
-            setNgaySinh(dayjs(bacsi?.ngaysinh));
-            setngayBD(dayjs(bacsi?.ngayBD));
-            setGioitinh(bacsi?.gioitinh == true ? 0 : 1)
-            setDiaChi(bacsi?.diachi);
-            setCCCD(bacsi?.cccd);
-            setUser(bacsi?.user);
-            setChuyenKhoa(bacsi?.chuyenkhoa)
-            setPhongs(bacsi?.phongs)
-            /* const index = chuyenkhoaData?.getAllChuyenKhoa.findIndex((item: ChuyenKhoa) => item._id === bacsi?.chuyenkhoa);
-            setIndexChuyenKhoa(index !== undefined ? index : 0); */
+        if (nhanvien) {
+            setHoten(nhanvien?.hoten);
+            setNgaySinh(dayjs(nhanvien?.ngaysinh));
+            setngayBD(dayjs(nhanvien?.ngayBD));
+            setGioitinh(nhanvien?.gioitinh == true ? 0 : 1)
+            setDiaChi(nhanvien?.diachi);
+            setCCCD(nhanvien?.cccd);
+            setSodienthoai(nhanvien?.sodienthoai);
+            setChucVu(nhanvien?.chucvu);
+            setPhongs(nhanvien?.phongs)
         }
-    }, [bacsi])
+    }, [nhanvien])
 
+    const handlePhongChoose = (event: ChangeEvent<unknown>, value: any) => {
+        const selectedPhongsId = value.map((phong: Phong) => phong?._id);
+        setPhongs(selectedPhongsId);
+    }
 
     const handleGenderChange = (event: SelectChangeEvent<number>) => {
         const selectedValue = Number(event.target.value);
@@ -54,54 +53,42 @@ function SuaBacSi({ show, onHide, bacsi, refetch }: any) {
         setngayBD(date.$d);
     };
 
-    const handlePhongChoose = (event: ChangeEvent<unknown>, value: any) => {
-        const selectedPhongsId = value.map((phong: Phong) => phong?._id);
-        setPhongs(selectedPhongsId);
+    const handleChucVuChange = (event: SelectChangeEvent<string>) => {
+        setChucVu(event.target.value);
     }
 
-    const handleChuyenKhoachoose = (event: ChangeEvent<unknown>, value: any) => {
-        setChuyenKhoa(value?._id);
-    }
-
-    const [updateBacSi, _] = useUpdateBacSiMutation();
+    const [updateNhanVien, _] = useUpdateNhanVienMutation();
     const HandleUpdate = async () => {
         try {
-            console.log('id: ', bacsi?._id)
-            console.log('ho ten: ', hoten)
-            console.log('ngay sinh: ', ngaysinh.format('YYYY-MM-DD'));
-            console.log('ngay bd: ', ngayBD.format('YYYY-MM-DD'))
-            console.log('gioi tinh: ', gioitinh),
-                console.log('dia chi: ', diachi)
-            console.log('cccd: ', cccd)
-            console.log(' user: ', bacsi?.user?._id),
-                console.log('phongs: ', phongs),
-                console.log(' chuyne khoa: ', chuyenkhoa)
-
-            if (bacsi?._id) {
-                const response = await updateBacSi({
+            if (nhanvien?._id) {
+                const response = await updateNhanVien({
                     variables: {
                         "input": {
-                            "id": bacsi?._id,
+                            "id": nhanvien?._id,
                             "hoten": hoten,
-                            "ngaysinh": ngaysinh.format('YYYY-MM-DD'),
-                            "gioitinh": gioitinh == 0 ? true : false,
+                            "ngaysinh": ngaysinh,
+                            "gioitinh": gioitinh ? true : false,
                             "diachi": diachi,
+                            "sodienthoai": sodienthoai,
                             "cccd": cccd,
-                            "ngayBD": ngayBD.format('YYYY-MM-DD'),
                             "phongs": phongs,
-                            "chuyenkhoa": chuyenkhoa
+                            "ngayBD": ngayBD,
+                            "chucvu": chucvu
                         }
                     }
                 })
-                refetch()
-            } else {
-                console.log('không thể thêm được dữ liệu')
+                refetch();
+                onHide();
             }
-            onHide();
-        } catch (error) {
-            console.error('Error update user:', error);
+            else {
+                console.log('Error update nhân viên');
+            }
+        }
+        catch (error) {
+            console.log(error);
         }
     }
+
 
     return (
         <Modal
@@ -109,23 +96,23 @@ function SuaBacSi({ show, onHide, bacsi, refetch }: any) {
             onHide={onHide}
             size="lg"
             aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
+            centered>
             <Modal.Header>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    {bacsi ? `Edit User: ${bacsi?.hoten}` : 'Add New User'}
+                    {nhanvien ? `Edit User: ${nhanvien?.hoten}` : 'Add New User'}
                 </Modal.Title>
                 <Button variant="link" onClick={onHide}>
                     <MdClose style={{ fontSize: '1.5rem' }} />
                 </Button>
             </Modal.Header>
+
             <Modal.Body>
                 <Form>
                     <Form.Group className="mb-2" controlId="formBacSiHoten">
                         <Form.Label>Họ tên</Form.Label>
                         <Form.Control
                             type="text"
-                            placeholder={bacsi?.hoten || "Enter họ tên"}
+                            placeholder={nhanvien?.hoten || "Enter họ tên"}
                             value={hoten}
                             onChange={event => setHoten(event.target.value)}
                         />
@@ -149,6 +136,7 @@ function SuaBacSi({ show, onHide, bacsi, refetch }: any) {
                         </Select>
                     </FormControl>
 
+
                     <Form.Group controlId="formBacSiDiaChi" className="mt-2">
                         <Form.Label>Địa chỉ</Form.Label>
                         <Form.Control
@@ -166,6 +154,16 @@ function SuaBacSi({ show, onHide, bacsi, refetch }: any) {
                             placeholder={"CCCD"}
                             value={cccd}
                             onChange={event => setCCCD(event.target.value)}
+                        />
+                    </Form.Group>
+
+                    <Form.Group controlId="formBacSiCCCD" className="mt-2">
+                        <Form.Label>SĐT</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder={"SĐT"}
+                            value={sodienthoai}
+                            onChange={event => setSodienthoai(event.target.value)}
                         />
                     </Form.Group>
 
@@ -191,20 +189,21 @@ function SuaBacSi({ show, onHide, bacsi, refetch }: any) {
                         onChange={handlePhongChoose}
                     />
 
-                    <Autocomplete
-                        key={bacsi?.chuyenkhoa}
-                        className="mt-2"
-                        id="multiple-limit-tags"
-                        options={chuyenkhoaData?.getAllChuyenKhoa || []}
-                        getOptionLabel={(option) => option?.tenkhoa}
-                        /* defaultValue={indexChuyenKhoa >= 0 ? chuyenkhoaData?.getAllChuyenKhoa[indexChuyenKhoa] : null} */
-                        /* defaultValue={chuyenkhoaData?.getAllChuyenKhoa[0]} */
-                        onChange={handleChuyenKhoachoose}
-                        renderInput={(params) => (
-                            <TextField {...params} label="Chuyên Khoa" placeholder="Chuyên Khoa..." />
-                        )}
-                        sx={{ width: '100%' }}
-                    />
+                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small" className="mt-2">
+                        <InputLabel id="demo-select-small-label">Chức vụ</InputLabel>
+                        <Select
+                            labelId="demo-select-small-label"
+                            id="demo-select-small"
+                            label="Chức Vụ"
+                            value={chucvu}
+                            onChange={handleChucVuChange}
+                        >
+                            <MenuItem value={"Tiếp Tân"}>Tiếp Tân</MenuItem>
+                            <MenuItem value={"Điều Dưỡng"}>Điều Dưỡng</MenuItem>
+                            <MenuItem value={"Dược Sĩ"}>Dược Sĩ</MenuItem>
+                        </Select>
+                    </FormControl>
+
                 </Form>
             </Modal.Body>
             <Modal.Footer>
@@ -215,7 +214,9 @@ function SuaBacSi({ show, onHide, bacsi, refetch }: any) {
                     Save Changes
                 </Button>
             </Modal.Footer>
-        </Modal>);
+
+        </Modal>
+    );
 }
 
-export default SuaBacSi;
+export default SuaNhanVien;

@@ -4,7 +4,7 @@ import XetNghiem from "./xetnghiem";
 import KhamBenhForm from "./form-khambenh";
 import SinhHieu from "./sinhhieu-tab";
 import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
-import { BenhNhan } from "../../graphql-definition/graphql";
+import { BenhNhan, useGetAllNgayVaPhongQuery, useGetAllPhieuXacNhanDaXetNghiemQuery, useUpdateTrangThaiKhamMutation } from "../../graphql-definition/graphql";
 import YeuCauCanLamSang from "./f_YeuCauCLS";
 import { AuthContext } from "../../provider/AuthContextProvider";
 import dayjs from 'dayjs'
@@ -16,6 +16,7 @@ function KhamBenh() {
 
     const { profile } = useContext(AuthContext)
     const [dataSelected, setDataSelected] = useState<BenhNhan | undefined>(undefined);
+    const [idPhieuXacNhan, setIdPhieuXacNhan] = useState('');
     const [phong, setPhong] = useState(profile?.phongs && profile.phongs.length > 0 ? profile.phongs[0]._id : "");
     const [dataAgrsChoKham, setDataAgrsChoKham] = useState({
         ngaykham: dayjs().format('YYYY-MM-DD'),
@@ -24,6 +25,41 @@ function KhamBenh() {
 
     const [isEditing, setIsEditing] = useState(true);
     const [modalShow, setModalShow] = useState(false);
+
+    const { loading: loadingChoKham, error: errorChoKham, data: dataChoKham, refetch: refetchChoKham } = useGetAllNgayVaPhongQuery({
+        variables: {
+            ngaykham: dataAgrsChoKham?.ngaykham,
+            phongIds: dataAgrsChoKham?.phongIds,
+            trangthai: "CHOKHAM"
+        },
+        skip: !dataAgrsChoKham || !dataAgrsChoKham.phongIds
+    });
+
+    const { loading: loadingCHOXETNGHIEM, error: errorCHOXETNGHIEM, data: dataCHOXETNGHIEM, refetch: refetchCHOXETNGHIEM } = useGetAllNgayVaPhongQuery({
+        variables: {
+            ngaykham: dataAgrsChoKham?.ngaykham,
+            phongIds: dataAgrsChoKham?.phongIds,
+            trangthai: "CHOXETNGHIEM"
+        },
+        skip: !dataAgrsChoKham || !dataAgrsChoKham.phongIds
+    });
+
+    const { loading: loadingDAXETNGHIEM, error: errorDAXETNGHIEM, data: dataDAXETNGHIEM, refetch: refetchDAXETNGHIEM } = useGetAllPhieuXacNhanDaXetNghiemQuery({
+        variables: {
+            ngaykham: dataAgrsChoKham?.ngaykham,
+            phongIds: dataAgrsChoKham?.phongIds
+        },
+        skip: !dataAgrsChoKham || !dataAgrsChoKham.phongIds
+    })
+
+    const { loading: loadingHOANTAT, error: errorHOANTAT, data: dataHOANTAT, refetch: refetchHOANTAT } = useGetAllNgayVaPhongQuery({
+        variables: {
+            ngaykham: dataAgrsChoKham?.ngaykham,
+            phongIds: dataAgrsChoKham?.phongIds,
+            trangthai: "HOANTAT"
+        },
+        skip: !dataAgrsChoKham || !dataAgrsChoKham.phongIds
+    });
 
     const handleEditToggle = () => {
         setIsEditing(!isEditing);
@@ -36,8 +72,9 @@ function KhamBenh() {
         setModalShow(true);
     }
 
-    const rowBenhNhanSelected = (select: BenhNhan) => {
+    const rowBenhNhanSelected = (select: BenhNhan, id: string) => {
         setDataSelected(select);
+        setIdPhieuXacNhan(id);
     }
 
     useEffect(() => {
@@ -54,9 +91,7 @@ function KhamBenh() {
     };
 
     useEffect(() => {
-        // Kiểm tra nếu profile và phongIds đều có dữ liệu
         if (profile && profile.phongs && profile.phongs[0]?._id) {
-            // Cập nhật phongIds với giá trị từ profile
             setPhong(profile.phongs[0]._id);
             setDataAgrsChoKham({
                 ngaykham: dayjs().format('YYYY-MM-DD'),
@@ -73,6 +108,23 @@ function KhamBenh() {
         return true
     }
 
+    const [updateTrangThaiKham] = useUpdateTrangThaiKhamMutation()
+
+    const handleHoanTatKham = () => {
+        console.log('id phiếu xác nhận là: ', idPhieuXacNhan)
+        if (idPhieuXacNhan) {
+            updateTrangThaiKham({
+                variables: {
+                    "id": idPhieuXacNhan,
+                    "trangthai": "HOANTAT"
+                }
+            })
+            refetchHOANTAT();
+            refetchDAXETNGHIEM();
+            refetchChoKham()
+        }
+    }
+
     return (<>
         <EditContext.Provider value={editContextValue}>
             <div className="fluit-container" style={{ height: "100px" }}>
@@ -83,13 +135,19 @@ function KhamBenh() {
                             id="fill-tab-example"
                         >
                             <Tab eventKey="chokham" title="Chờ Khám">
-                                <ChoKham dataAgrsChoKham={dataAgrsChoKham} selected={rowBenhNhanSelected} />
+                                <ChoKham data={dataChoKham} loading={loadingChoKham} error={errorChoKham} selected={rowBenhNhanSelected} />
                             </Tab>
-                            <Tab eventKey="dangkham" title="Đã Khám">
-                                {/* <ChoKham data={data} error={error} loading={loading} selected={rowBenhNhanSelected} /> */}
+                            <Tab eventKey="choxetnghiem" title="Chờ Xét Nghiệm">
+                                <ChoKham data={dataCHOXETNGHIEM} loading={loadingCHOXETNGHIEM} error={errorCHOXETNGHIEM} selected={rowBenhNhanSelected} />
                             </Tab>
-                            <Tab eventKey="choxetnghiem" title="Xét Nghiệm">
-                                {/* <ChoKham data={data} error={error} loading={loading} selected={rowBenhNhanSelected} /> */}
+                            <Tab eventKey="daxetnghiem" title="Đã Xét Nghiệm">
+                                <ChoKham data={dataDAXETNGHIEM} loading={loadingDAXETNGHIEM} error={errorDAXETNGHIEM} selected={rowBenhNhanSelected} />
+                            </Tab>
+                            <Tab eventKey="taikham" title="Tái Khám">
+                                <ChoKham data={dataHOANTAT} loading={loadingHOANTAT} error={errorHOANTAT} selected={rowBenhNhanSelected} />
+                            </Tab>
+                            <Tab eventKey="hoantat" title="Hoàn Tất">
+                                <ChoKham data={dataHOANTAT} loading={loadingHOANTAT} error={errorHOANTAT} selected={rowBenhNhanSelected} />
                             </Tab>
                         </Tabs>
                     </div>
@@ -99,6 +157,7 @@ function KhamBenh() {
                                 <Button className="mr-1" onClick={handleEditToggle}>Khám</Button>
                                 <Button className="mr-1" onClick={handleToaThuoc}>Tạo Toa Thuốc</Button>
                                 <Button className="mr-1">Xuất Toa Thuốc</Button>
+                                <Button className="mr-1" onClick={handleHoanTatKham}>Hoàn Tất Khám</Button>
                                 <Button className="mr-1" onClick={handleYeuCauXetNghiem}>Yêu Cầu Xét Nghiệm</Button>
                                 <Button className="mr-1">Hủy Khám</Button>
                             </div>
@@ -143,6 +202,9 @@ function KhamBenh() {
                     onHide={() => setModalShow(false)}
                     benhnhan={dataSelected}
                     bacsi={profile}
+                    idPhieuXacNhan={idPhieuXacNhan}
+                    refetchChoKham={refetchChoKham}
+                    refetchCHOXETNGHIEM={refetchCHOXETNGHIEM}
                 />
             </div>
         </EditContext.Provider>

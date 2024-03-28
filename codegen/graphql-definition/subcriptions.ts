@@ -5,12 +5,14 @@ subscription NewDatLich{
     newDatLich{
       _id
       benhnhan{
-        ngaysinh
+        _id
         hoten
+        ngaysinh
       }
       motabenh
       ngaydat
       ngaykham
+      trangthai
       bhyt
     }
   }

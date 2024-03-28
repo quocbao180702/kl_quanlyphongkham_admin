@@ -24,7 +24,8 @@ function ThemThuoc({ show, onHide, refetch }: any) {
                         "dangthuoc": data?.dangthuoc,
                         "donvi": data?.donvi,
                         "hamluong": parseFloat(data?.hamluong),
-                        "gia": parseFloat(data?.gia),
+                        "giaBHYT": parseFloat(data?.giaBHYT),
+                        "giaKhongBHYT": parseFloat(data?.giaKhongBHYT),
                         "bhyt": data?.bhyt == 0 ? true : false,
                         "nhasanxuat": data?.nhasanxuat,
                         "hansudung": data?.hansudung,
@@ -101,17 +102,6 @@ function ThemThuoc({ show, onHide, refetch }: any) {
                             />
                         </Form.Group>
 
-
-                        <Form.Group controlId="formThuocGia" className="mt-2 mr-1" style={{ width: '15%' }}>
-                            <Form.Label>Giá</Form.Label>
-                            <Form.Control
-                                type="number"
-                                placeholder={"giá..."}
-                                {...register('gia')}
-                            />
-                        </Form.Group>
-
-
                         <Form.Group controlId="formThuocSoLuong" className="mt-2 mr-1" style={{ width: '15%' }}>
                             <Form.Label>Số lượng</Form.Label>
                             <Form.Control
@@ -122,18 +112,39 @@ function ThemThuoc({ show, onHide, refetch }: any) {
                         </Form.Group>
                     </div>
 
-                    <FormControl sx={{ m: 1, minWidth: 120 }} size="small" className="mt-2">
-                        <InputLabel id="demo-select-small-label">BHYT</InputLabel>
-                        <Select
-                            labelId="demo-select-small-label"
-                            id="demo-select-small"
-                            label="Giới tính"
-                            {...register('bhyt')}
-                        >
-                            <MenuItem value={0}>Có</MenuItem>
-                            <MenuItem value={1}>Không</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <div className="d-flex justify-content-around">
+                        <Form.Group controlId="formThuocGia" className="mt-2 mr-1" style={{ width: '15%' }}>
+                            <Form.Label>Giá BHYT</Form.Label>
+                            <Form.Control
+                                type="number"
+                                placeholder={"giá..."}
+                                {...register('giaBHYT')}
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="formThuocGia" className="mt-2 mr-1" style={{ width: '20%' }}>
+                            <Form.Label>Giá Không BHYT</Form.Label>
+                            <Form.Control
+                                type="number"
+                                placeholder={"giá..."}
+                                {...register('giaKhongBHYT')}
+                            />
+                        </Form.Group>
+
+                        <FormControl sx={{ m: 1, minWidth: 120 }} size="small" className="mt-2">
+                            <Form.Label>BHYT</Form.Label>
+                            <Select
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                {...register('bhyt')}
+                            >
+                                <MenuItem value={0}>Có</MenuItem>
+                                <MenuItem value={1}>Không</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
+
+
 
                     <Form.Group controlId="formThuocNhaSanXuat" className="mt-2">
                         <Form.Label>Nhà Sản Xuất</Form.Label>
