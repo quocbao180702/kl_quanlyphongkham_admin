@@ -1,12 +1,14 @@
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { useCreateToaThuocMutation, useGetAllBenhQuery, useGetAllThuocQuery } from "../../graphql-definition/graphql";
+import { Button, Col, Form, Row, Table } from "react-bootstrap";
+import { DichVuInput, Thuoc, Vattuyte, useCreateHoaDonMutation, useCreateToaThuocMutation, useGetAllBenhQuery, useGetAllThuocQuery, useGetAllVattuyteQuery, useUpdateHoaDonMutation, useUpdateTrangThaiKhamMutation } from "../../graphql-definition/graphql";
 import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, Checkbox, FormControlLabel, Grid, TextField } from "@mui/material";
 import { IoAddOutline } from "react-icons/io5";
 import DatePickerValue from "../../components/DatePicker";
 import dayjs, { Dayjs } from 'dayjs';
 
-function KhamBenhForm({ dataSelected }: any) {
+
+
+function KhamBenhForm({ dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIEM, refetchHOANTAT }: any) {
     const { data: benhData, loading: benhLoading, error: benhError } = useGetAllBenhQuery();
     const { data: thuocData, loading: thuocLoading, error: thuocError } = useGetAllThuocQuery();
     const [selectedBenh, setSelectedBenh] = useState([]);
@@ -15,11 +17,37 @@ function KhamBenhForm({ dataSelected }: any) {
     const [label] = useState('ngày tái khám');
     const [ngaytaikham, setNgayTaiKham] = useState<Dayjs>(dayjs());;
     const [selectedBenhPhu, setSelectedBenhPhu] = useState([]);
-    const [selectedThuoc, setSelectedThuoc] = useState<{ id: string; soLuong: number }[]>([]);
-    const [thuocs, setThuocs] = useState<string[]>([]);
-    const [soLuong, setSoLuong] = useState<number[]>([]);
-    const [nextRowKey, setNextRowKey] = useState(1);
-    const [rows, setRows] = useState<JSX.Element[]>([]);
+    const [hangs, setHangs] = useState([{ id: 0, idThuoc: '', tenthuoc: '', giaBHYT: '', giaKhongBHYT: '', soLuong: '' }]);
+    const [selectedItems, setSelectedItems] = useState<DichVuInput[]>([]);
+
+
+    const handleThuocChange = (event: React.ChangeEvent<{}>, value: any, index: number) => {
+        const newHangs = [...hangs];
+        newHangs[index].idThuoc = value ? value._id : '';
+        newHangs[index].tenthuoc = value ? value.tenPhoBien : '';
+        newHangs[index].giaBHYT = value ? value.giaBHYT.toString() : '';
+        newHangs[index].giaKhongBHYT = value ? value.giaKhongBHYT.toString() : '';
+        setHangs(newHangs);
+    };
+
+    const handleSoLuongChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
+        const value = event.target.value;
+        const newHangs = [...hangs];
+        newHangs[index].soLuong = value;
+        setHangs(newHangs);
+    };
+
+    const themHang = () => {
+        const newId = hangs.length;
+        const newHang = { id: newId, idThuoc: '', tenthuoc: '', giaBHYT: '', giaKhongBHYT: '', soLuong: '' };
+        setHangs([...hangs, newHang]);
+    };
+
+    const xoaHang = (index: number) => {
+        const newHangs = [...hangs];
+        newHangs.splice(index, 1);
+        setHangs(newHangs);
+    };
 
     const handleBenhChange = (event: ChangeEvent<unknown>, value: any) => {
         const selectedBenhIds = value.map((benh: any) => benh?._id);
@@ -44,37 +72,34 @@ function KhamBenhForm({ dataSelected }: any) {
         setNgayTaiKham(date.$d);
     };
 
-    const handleThuocChange = (value: any, rowKey: number) => {
-        setSelectedThuoc(prevSelectedThuoc => {
-            const newSelectedThuoc = [...prevSelectedThuoc];
-            newSelectedThuoc[rowKey] = { id: value?._id || "", soLuong: newSelectedThuoc[rowKey]?.soLuong || 0 };
-            return newSelectedThuoc;
-        });
-    };
-
-    const handleSoLuongChange = (event: ChangeEvent<HTMLInputElement>, rowKey: number) => {
-        setSelectedThuoc(prevSelectedThuoc => {
-            const newSelectedThuoc = [...prevSelectedThuoc];
-            newSelectedThuoc[rowKey] = { id: newSelectedThuoc[rowKey]?.id || "", soLuong: parseInt(event.target.value) || 0 };
-            return newSelectedThuoc;
-        });
-    };
-
-    useEffect(() => {
-        const newThuocs = selectedThuoc.map(thuoc => thuoc.id);
-        const newSoLuong = selectedThuoc.map(thuoc => thuoc.soLuong);
-        setThuocs(newThuocs);
-        setSoLuong(newSoLuong);
-    }, [selectedThuoc]);
+    const { data: dateVattu, loading: loadingVattu, error: errorVattu } = useGetAllVattuyteQuery();
 
     const [createToaThuoc, _] = useCreateToaThuocMutation();
+    const [updateTrangThaiKham] = useUpdateTrangThaiKhamMutation();
+    const [createHoaDon] = useCreateHoaDonMutation();
+    const [updateHoaDon] = useUpdateHoaDonMutation();
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+
+        let thongtinthuoc: DichVuInput[] = [];
+
+        if (hangs.length > 0) {
+            thongtinthuoc = hangs.map(thongtin => ({
+                ten: thongtin?.tenthuoc || "",
+                gia: bhyt ? (parseFloat(thongtin?.giaBHYT) || 0) : (parseFloat(thongtin?.giaKhongBHYT) || 0),
+                soluong: thongtin?.soLuong ? parseInt(thongtin?.soLuong) : 1,
+                thanhtien: bhyt ? (parseFloat(thongtin?.giaBHYT) || 0) : (parseFloat(thongtin?.giaKhongBHYT) || 0) * (thongtin?.soLuong ? parseInt(thongtin.soLuong) : 1)
+            }));
+        }
+
+        const thuocs = hangs.map(thuoc => thuoc.idThuoc)
+        const soluong = hangs.map(thuoc => Number(thuoc.soLuong))
+
         console.log('data bệnh là: ', selectedBenh);
         console.log('data bệnh phụ là: ', selectedBenhPhu);
         console.log('data thuốc: ', thuocs);
-        console.log('data số lượng', soLuong);
+        console.log('data số lượng', soluong);
         console.log('bệnh nhân id:', benhnhanId);
         console.log('bhyt: ', bhyt ? true : false);
         console.log('ngày tạo: ', dayjs().format('YYYY/MM/DD'));
@@ -82,56 +107,87 @@ function KhamBenhForm({ dataSelected }: any) {
         console.log('ngày tái khám:', dayjsNgayTaiKham.format('YYYY/MM/DD'));
 
         try {
-            await createToaThuoc({
-                variables: {
-                    "input": {
-                        "benhnhan": benhnhanId,
-                        "bacsi": "65e4771ce1a675b267dd2e76",
-                        "thuocs": thuocs,
-                        "benhs": selectedBenh,
-                        "soluongs": soLuong,
-                        "bhyt": bhyt ? true : false,
-                        "ngaytaikham": dayjsNgayTaiKham,
-                        "ngaytao": dayjs().format('YYYY/MM/DD')
+            if (benhnhanId && bacsiId) {
+                const [response, update] = await Promise.all([
+                    createToaThuoc({
+                        variables: {
+                            "input": {
+                                "benhnhan": benhnhanId,
+                                "bacsi": bacsiId,
+                                "thuocs": thuocs,
+                                "benhs": selectedBenh,
+                                "soluongs": soluong,
+                                "bhyt": bhyt ? true : false,
+                                "ngaytaikham": dayjsNgayTaiKham,
+                                "ngaytao": dayjs().format('YYYY/MM/DD')
+                            }
+                        }
+                    }),
+                    updateTrangThaiKham({
+                        variables: {
+                            "id": idPhieuXacNhan,
+                            "trangthai": "HOANTAT"
+                        }
+                    })
+                ]);
+                try {
+                    const response = await createHoaDon({
+                        variables: {
+                            "input": {
+                                "benhnhan": benhnhanId,
+                                "bhyt": bhyt ? true : false,
+                                "ngaytao": dayjs().format('YYYY/MM/DD')
+                            }
+                        }
+                    })
+                    if (response?.data?.createHoadon?._id) {
+                        const update = await updateHoaDon({
+                            variables: {
+                                "input": {
+                                    "benhnhan": benhnhanId,
+                                    "bhyt": bhyt ? true : false,
+                                    "ngaytao": dayjs().format('YYYY/MM/DD'),
+                                    "id": response?.data?.createHoadon?._id,
+                                    "thuocs": thongtinthuoc,
+                                    "vattuyte": selectedItems
+                                }
+                            }
+                        })
                     }
+                    else {
+                        console.log('không tìm thấy id để update')
+                    }
+                } catch (error) {
+
                 }
-            })
+                refetchDAXETNGHIEM();
+                refetchHOANTAT
+            }
+            else {
+                console.log('Không thể tạo toa thuốc')
+            }
             setNgayTaiKham(dayjs())
         } catch (error) {
             console.log('lỗi thêm toa thuốc: ', error)
         }
     }
 
-    const handleAddRow = () => {
-        const newRowKey = nextRowKey;
-        const newRow = (
-            <Row key={newRowKey}>
-                <Col md={9}>
-                    <Autocomplete
-                        id={`multiple-limit-tags-${newRowKey}`}
-                        options={thuocData?.getAllThuoc || []}
-                        getOptionLabel={(option) => option?.tenthuoc}
-                        renderInput={(params) => (
-                            <TextField {...params} label="Thuốc" placeholder="Tên thuốc..." />
-                        )}
-                        onChange={(event, value) => handleThuocChange(value, newRowKey)}
-                        sx={{ width: '100%' }}
-                    />
-                </Col>
-                <Col md={3}>
-                    <TextField
-                        id={`soLuong-${newRowKey}`}
-                        label="Số lượng..."
-                        type="number"
-                        onChange={(event) => handleSoLuongChange(event as ChangeEvent<HTMLInputElement>, newRowKey)}
-                        style={{ width: '100%' }}
-                    />
-                </Col>
-            </Row>
-        );
-        setRows(prevRows => [...prevRows, newRow]);
-        setNextRowKey(prevKey => prevKey + 1);
+    const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>, item: Vattuyte) => {
+        const isChecked = event.target.checked;
+        if (isChecked) {
+            setSelectedItems([...selectedItems, {
+                ten: item.tenvattu,
+                gia: item.chiphi[0]?.gia,
+                soluong: item.soluong,
+                thanhtien: item.chiphi[0]?.gia * item.soluong
+            }]);
+        } else {
+            // Nếu checkbox bị bỏ chọn, loại bỏ thông tin của hàng khỏi mảng selectedItems
+            setSelectedItems(selectedItems.filter(selectedItem => selectedItem.ten !== item.tenvattu));
+        }
     };
+
+
 
     if (benhLoading) {
         return (<>
@@ -188,38 +244,81 @@ function KhamBenhForm({ dataSelected }: any) {
                 <h5>Thuốc</h5>
                 <hr />
                 <Row>
-                    <Col md={7}>
-                        <Autocomplete
-                            id="multiple-limit-tags"
-                            options={thuocData?.getAllThuoc || []}
-                            getOptionLabel={(option) => option?.tenthuoc}
-                            onChange={(value) => handleThuocChange(value, 0)}
-                            renderInput={(params) => (
-                                <TextField {...params} label="Thuốc" placeholder="Tên thuốc..." />
-                            )}
-                            sx={{ width: '100%' }}
-                        />
-                    </Col>
-                    <Col md={3}>
-                        <TextField
-                            id={`soLuong-0`}
-                            label="Số lượng..."
-                            type="number"
-                            onChange={(event) => handleSoLuongChange(event as ChangeEvent<HTMLInputElement>, 0)}
-                            style={{ width: '100%' }}
-                        />
-                    </Col>
-                    <Col md={2}>
-                        <Button onClick={handleAddRow}><IoAddOutline /></Button>
-                    </Col>
+
+                    <div>
+                        {hangs.map((hang, index) => (
+                            <Grid container spacing={2} key={hang.id}>
+                                <Grid item md={7}>
+                                    <Autocomplete
+                                        id={`multiple-limit-tags-${hang.id}`}
+                                        options={thuocData?.getAllThuoc || []}
+                                        getOptionLabel={(option) => option?.tenthuoc}
+                                        onChange={(event, value) => handleThuocChange(event, value, index)}
+                                        renderInput={(params) => (
+                                            <TextField {...params} label="Thuốc" placeholder="Tên thuốc..." />
+                                        )}
+                                        sx={{ width: '100%' }}
+                                    />
+                                </Grid>
+                                <Grid item md={3}>
+                                    <TextField
+                                        id={`soLuong-${hang.id}`}
+                                        label="Số lượng..."
+                                        type="number"
+                                        onChange={(event: ChangeEvent<HTMLInputElement>) => handleSoLuongChange(event, index)}
+                                        style={{ width: '100%' }}
+                                    />
+                                </Grid>
+                                <Grid item md={2}>
+                                    <Button onClick={() => xoaHang(index)} variant="contained" color="secondary">
+                                        Xóa
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        ))}
+                        <Button onClick={themHang} variant="contained" color="primary">
+                            Thêm hàng
+                        </Button>
+
+                    </div>
                 </Row>
-                {rows}
+
 
                 <Row>
                     <Col md={5}>
                         <DatePickerValue label={label} value={ngaytaikham} onChange={handleDateChange} />
-                        {/* <DatePicker />  */}
                     </Col>
+                </Row>
+                <hr />
+                <h5>Vật tư y tế</h5>
+                <hr />
+                <Row>
+                    <Table responsive>
+                        <thead>
+                            <tr>
+                                <th>Tên Vật Tư</th>
+                                <th>Giá</th>
+                                <th>Số Lượng</th>
+                                <th>Đơn Vị Tính</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {dateVattu?.getAllVatTuYTe?.map((item: Vattuyte) => (
+                                <tr key={item?._id} className="text-center">
+                                    <td style={{ padding: '0' }} className="align-middle">{item?.tenvattu}</td>
+                                    <td style={{ padding: '0' }} className="align-middle">{item?.chiphi[0]?.gia}</td>
+                                    <td style={{ padding: '0' }} className="align-middle">{item?.soluong}</td>
+                                    <td style={{ padding: '0' }} className="align-middle">{item?.dvt}</td>
+                                    <td style={{ padding: '0' }} className="align-middle">
+                                        <FormControlLabel
+                                            label={''}
+                                            control={<Checkbox checked={selectedItems.some(selectedItem => selectedItem.ten === item.tenvattu)} onChange={(event) => handleCheckboxChange(event, item)} />}
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
                 </Row>
                 <Button variant="primary" type="submit" className="mt-3 mx-auto w-100">
                     Hoàn tất khám

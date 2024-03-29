@@ -4,7 +4,7 @@ import XetNghiem from "./xetnghiem";
 import KhamBenhForm from "./form-khambenh";
 import SinhHieu from "./sinhhieu-tab";
 import { ChangeEvent, createContext, useContext, useEffect, useMemo, useState } from "react";
-import { BenhNhan, useGetAllNgayVaPhongQuery, useGetAllPhieuXacNhanDaXetNghiemQuery, useUpdateTrangThaiKhamMutation } from "../../graphql-definition/graphql";
+import { BenhNhan, useCreateHoaDonMutation, useGetAllNgayVaPhongQuery, useGetAllPhieuXacNhanDaXetNghiemQuery, useUpdateTrangThaiKhamMutation } from "../../graphql-definition/graphql";
 import YeuCauCanLamSang from "./f_YeuCauCLS";
 import { AuthContext } from "../../provider/AuthContextProvider";
 import dayjs from 'dayjs'
@@ -16,6 +16,7 @@ function KhamBenh() {
 
     const { profile } = useContext(AuthContext)
     const [dataSelected, setDataSelected] = useState<BenhNhan | undefined>(undefined);
+    /* const [dataCanLamSan, setCanLamSang] = useState([{ id: '', ten: '', gia: 0.0, soluong: 0, thanhtien: 0.0 }]); */
     const [idPhieuXacNhan, setIdPhieuXacNhan] = useState('');
     const [phong, setPhong] = useState(profile?.phongs && profile.phongs.length > 0 ? profile.phongs[0]._id : "");
     const [dataAgrsChoKham, setDataAgrsChoKham] = useState({
@@ -25,6 +26,7 @@ function KhamBenh() {
 
     const [isEditing, setIsEditing] = useState(true);
     const [modalShow, setModalShow] = useState(false);
+
 
     const { loading: loadingChoKham, error: errorChoKham, data: dataChoKham, refetch: refetchChoKham } = useGetAllNgayVaPhongQuery({
         variables: {
@@ -72,10 +74,15 @@ function KhamBenh() {
         setModalShow(true);
     }
 
+    
+
     const rowBenhNhanSelected = (select: BenhNhan, id: string) => {
         setDataSelected(select);
         setIdPhieuXacNhan(id);
     }
+    /* const infoCLS = (info: any) => {
+        setCanLamSang(info);
+    } */
 
     useEffect(() => {
         if (dataSelected?.sinhhieu == null) {
@@ -104,7 +111,21 @@ function KhamBenh() {
         console.log(dataAgrsChoKham?.ngaykham, dataAgrsChoKham?.phongIds)
     }, [phong])
 
+
+    /*  const [createHoadon] = useCreateHoaDonMutation(); */
     const handleToaThuoc = () => {
+        /*  if (dataSelected?._id) {
+ 
+             createHoadon({
+                 variables: {
+                     "input": {
+                         "benhnhan": dataSelected?._id,
+                         "bhyt": dataSelected?.bhyt ? true : false,
+                         "ngaytao": dayjs().format('YYYY-MM-DD')
+                     }
+                 }
+             });
+         } */
         return true
     }
 
@@ -137,21 +158,21 @@ function KhamBenh() {
                             <Tab eventKey="chokham" title="Chờ Khám">
                                 <ChoKham data={dataChoKham} loading={loadingChoKham} error={errorChoKham} selected={rowBenhNhanSelected} />
                             </Tab>
-                            <Tab eventKey="choxetnghiem" title="Chờ Xét Nghiệm">
-                                <ChoKham data={dataCHOXETNGHIEM} loading={loadingCHOXETNGHIEM} error={errorCHOXETNGHIEM} selected={rowBenhNhanSelected} />
-                            </Tab>
-                            <Tab eventKey="daxetnghiem" title="Đã Xét Nghiệm">
-                                <ChoKham data={dataDAXETNGHIEM} loading={loadingDAXETNGHIEM} error={errorDAXETNGHIEM} selected={rowBenhNhanSelected} />
-                            </Tab>
                             <Tab eventKey="taikham" title="Tái Khám">
                                 <ChoKham data={dataHOANTAT} loading={loadingHOANTAT} error={errorHOANTAT} selected={rowBenhNhanSelected} />
                             </Tab>
                             <Tab eventKey="hoantat" title="Hoàn Tất">
                                 <ChoKham data={dataHOANTAT} loading={loadingHOANTAT} error={errorHOANTAT} selected={rowBenhNhanSelected} />
                             </Tab>
+                            <Tab eventKey="choxetnghiem" title="Chờ Xét Nghiệm">
+                                <ChoKham data={dataCHOXETNGHIEM} loading={loadingCHOXETNGHIEM} error={errorCHOXETNGHIEM} selected={rowBenhNhanSelected} />
+                            </Tab>
+                            <Tab eventKey="daxetnghiem" title="Đã Xét Nghiệm">
+                                <ChoKham data={dataDAXETNGHIEM} loading={loadingDAXETNGHIEM} error={errorDAXETNGHIEM} selected={rowBenhNhanSelected} />
+                            </Tab>
                         </Tabs>
                     </div>
-                    <div className="col-7">
+                    <div className="col-6">
                         <div className="row">
                             <div className="d-flex justify-content-around align-items-center">
                                 <Button className="mr-1" onClick={handleEditToggle}>Khám</Button>
@@ -191,15 +212,21 @@ function KhamBenh() {
                             )}
                         </div>
                         <SinhHieu dataSelected={dataSelected} />
-                        <KhamBenhForm dataSelected={dataSelected} />
+                        <KhamBenhForm dataSelected={dataSelected}
+                            bacsiId={profile?._id}
+                            idPhieuXacNhan={idPhieuXacNhan}
+                            refetchDAXETNGHIEM={refetchDAXETNGHIEM}
+                            refetchHOANTAT={refetchHOANTAT}
+                        />
                     </div>
-                    <div className="col-2" >
-                        <XetNghiem />
+                    <div className="col-3" >
+                        <XetNghiem dataSelected={dataSelected} />
                     </div>
                 </div>
                 <YeuCauCanLamSang
                     show={modalShow}
                     onHide={() => setModalShow(false)}
+                    /*  info={infoCLS} */
                     benhnhan={dataSelected}
                     bacsi={profile}
                     idPhieuXacNhan={idPhieuXacNhan}

@@ -1,10 +1,8 @@
 import { Table } from 'react-bootstrap';
-import { BenhNhan, useGetAllNgayVaPhongQuery } from '../../graphql-definition/graphql';
+import { BenhNhan } from '../../graphql-definition/graphql';
 import moment from 'moment';
-import { useEffect } from 'react';
 
 function ChoKham({ data, loading, error, selected }: any) {
-    /* const [selectedRow, setSelectedRow] = useState(''); */
 
     const handleRowSelect = (benhnhan: BenhNhan, id: string) => {
         selected(benhnhan, id);

@@ -1,11 +1,11 @@
 import { Button, Form } from "react-bootstrap";
 import { FormEvent, useContext, useEffect, useMemo, useState } from "react";
-import { useUpdateSinhhieuMutation } from "../../graphql-definition/graphql";
+import { useCreateSinhHieuMutation, useUpdateSinhhieuMutation } from "../../graphql-definition/graphql";
 import { EditContext } from ".";
 
 function SinhHieu({ dataSelected }: any) {
 
-    const {isEditing,  setIsEditing}: any = useContext(EditContext);
+    const { isEditing, setIsEditing }: any = useContext(EditContext);
     const [mach, setMach] = useState<number>(0.0);
     const [nhietdo, setNhietdo] = useState<number>(0.0);
     const [ha1, setHa1] = useState<string>('');
@@ -33,12 +33,13 @@ function SinhHieu({ dataSelected }: any) {
         }
     }, [memoizedDataSelected]);
 
-    const handleCheckboxChange = () => {
-        setIsChecked((prevState: boolean) => !prevState);
+    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setIsChecked(event.target.checked);
     };
 
 
     const [updateSinhhieu] = useUpdateSinhhieuMutation()
+    const [createSinhhieu] = useCreateSinhHieuMutation()
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -56,22 +57,45 @@ function SinhHieu({ dataSelected }: any) {
         console.log('values: ', values);
 
         try {
-            await updateSinhhieu({
-                variables: {
-                    "input": {
-                        "id": dataSelected?.sinhhieu?._id,
-                        "mach": values?.mach,
-                        "nhietdo": values?.nhietdo,
-                        "ha": values?.ha,
-                        "chieucao": values?.chieucao,
-                        "cannang": values?.cannang,
-                        "bmi": values?.bmi,
-                        "benhmangtinh": values?.benhmangtinh
+            if (dataSelected?.sinhhieu?._id) {
+                await updateSinhhieu({
+                    variables: {
+                        "input": {
+                            "id": dataSelected?.sinhhieu?._id,
+                            "mach": values?.mach,
+                            "nhietdo": values?.nhietdo,
+                            "ha": values?.ha,
+                            "chieucao": values?.chieucao,
+                            "cannang": values?.cannang,
+                            "bmi": values?.bmi,
+                            "benhmangtinh": values?.benhmangtinh
+                        }
                     }
+                })
+            }
+            else {
+                if (dataSelected?._id) {
+                    await createSinhhieu({
+                        variables: {
+                            "input": {
+                                "benhnhan": dataSelected?._id,
+                                "mach": values?.mach,
+                                "nhietdo": values?.nhietdo,
+                                "ha": values?.ha,
+                                "chieucao": values?.chieucao,
+                                "cannang": values?.cannang,
+                                "bmi": values?.bmi,
+                                "benhmangtinh": values?.benhmangtinh
+                            }
+                        }
+                    })
                 }
-            })
+                else {
+                    console.log('không có id bệnh nhân');
+                }
+            }
             setIsEditing(true);
-        }catch(error){
+        } catch (error) {
             console.log('lỗi là: ', error)
         }
     };
@@ -115,7 +139,7 @@ function SinhHieu({ dataSelected }: any) {
                             type="text"
                             style={{ maxWidth: "100px" }}
                             onChange={(event) => setHa2(event.target.value)}
-                            value={/* dataSelected?.sinhhieu?.ha ? dataSelected?.sinhhieu?.ha.split('/')[1] : '' */ ha2|| ''}
+                            value={/* dataSelected?.sinhhieu?.ha ? dataSelected?.sinhhieu?.ha.split('/')[1] : '' */ ha2 || ''}
                             disabled={isEditing}
                         />
                     </div>
@@ -154,7 +178,7 @@ function SinhHieu({ dataSelected }: any) {
                         id="autoSizingCheck"
                         className="mb-2"
                         label="Mảng tính"
-                        checked={dataSelected?.sinhhieu?.benhmangtinh ? true : false}
+                        checked={isChecked}
                         onChange={handleCheckboxChange}
                         disabled={isEditing}
                     />

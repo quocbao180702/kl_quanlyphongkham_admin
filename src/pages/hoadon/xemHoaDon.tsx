@@ -4,9 +4,8 @@ import { Button, Modal } from "react-bootstrap";
 
 function XemHoaDon({ show, onHide, hoadon }: any) {
     useEffect(() => {
-        console.log('Hóa đơn: ', hoadon)
+        console.log('thong tin hóa đơn, ', hoadon)
     }, [hoadon])
-
     return (
         <Modal
             show={show}
@@ -46,22 +45,22 @@ function XemHoaDon({ show, onHide, hoadon }: any) {
                                         <td>{thuoc?.thanhtien}</td>
                                     </tr>
                                 ))}
-                                {hoadon?.canlamsangs && hoadon?.canlamsangs.map((canlamsang: any, index: number) => (
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{canlamsang?.ten}</td>
-                                        <td>{canlamsang?.soluong}</td>
-                                        <td>{canlamsang?.gia}</td>
-                                        <td>{canlamsang?.thanhtien}</td>
-                                    </tr>
-                                ))}
-                                {hoadon?.vatuyte && hoadon?.vatuyte.map((vattu: any, index: number) => (
+                                {hoadon?.vattuyte && hoadon?.vattuyte.map((vattu: any, index: number) => (
                                     <tr key={index}>
                                         <td>{index + 1}</td>
                                         <td>{vattu?.ten}</td>
                                         <td>{vattu?.soluong}</td>
                                         <td>{vattu?.gia}</td>
                                         <td>{vattu?.thanhtien}</td>
+                                    </tr>
+                                ))}
+                                {hoadon?.chitietcanlamsang && hoadon?.chitietcanlamsang.map((canlamsang: any, index: number) => (
+                                    <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{canlamsang?.ten}</td>
+                                        <td>{canlamsang?.soluong}</td>
+                                        <td>{canlamsang?.gia}</td>
+                                        <td>{canlamsang?.thanhtien}</td>
                                     </tr>
                                 ))}
                                 <tr>

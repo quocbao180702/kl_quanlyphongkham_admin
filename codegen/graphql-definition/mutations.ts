@@ -105,6 +105,12 @@ mutation CreatePhieuchidinhcanlamsang(
     createKetQuaCLSList: $ketqua
   ) {
     _id
+    ketquacanlamsangs{
+      loaicanlamsang{
+        tenxetnghiem
+        gia
+      }
+    }
   }
 }
 `
@@ -179,16 +185,26 @@ mutation DeleteThuoc($id: String!){
 
 
 const createHoadon = gql`
-mutation CreateHoaDon($input: CreateHoadonInput!){
+mutation CreateHoaDon($input:  CreateHoadonInput!){
   createHoadon(createHoadonInput: $input){
     _id
   }
 }
 `
 const updateHoadon = gql`
-mutation UpdateHoadon($input: UpdateHoadonInput!){
+mutation UpdateHoaDon($input: UpdateHoadonInput!){
   updateHoadon(updateHoadonInput: $input){
     _id
+    thanhtien
+  }
+}
+`
+
+const updatreTrangThaiHoaDon = gql`
+mutation UpdateTrangThaiHoaDon($id: String!){
+  updateTrangThaiHoaDon(id:$id){
+    _id
+    trangthai
   }
 }
 `
@@ -252,4 +268,19 @@ mutation UpdateNhanVien($input: UpdateNhanVienInput!){
 const deleteNhanVien = gql`
 mutation DeleteNhanVien($id: String!){
   deleteNhanVien(_id: $id)
+}`
+
+
+const createSinhhieu = gql`
+mutation CreateSinhHieu($input: CreateSinhhieuInput!){
+  createSinhhieu(createSinhhieuInput: $input){
+    _id
+  }
+}`
+
+const createHoadonchidinhcanlamsang = gql`
+mutation CreateHoadonchidinhcanlamsang($input: CreateHoadonchidinhcanlamsangInput!){
+  createHoadonchidinhcanlamsang(createHoadonchidinhcanlamsang: $input){
+    _id
+  }
 }`

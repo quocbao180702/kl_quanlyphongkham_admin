@@ -69,7 +69,7 @@ function DatLich() {
     const [thongbao, setThongBao] = useState('')
     const [value, setValue] = useState<string | null>();
     const [idBenhNhan, setIdBenhNhan] = useState('');
-    const [dataBenhNhan, setDataBenhNhan] = useState<BenhNhan[]>([]);
+    const [dataBenhNhan, setDataBenhNhan] = useState<any[]>([]);
 
 
     const handleDateChange = (date: any) => {

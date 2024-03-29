@@ -1,5 +1,5 @@
 import { Button, Form, Modal, Row } from "react-bootstrap";
-import { LinkImage, LoaiCanLamSang, useCreatePhieuchidinhcanlamsangMutation, useGetAllLoaiClsQuery, useUpdateTrangThaiKhamMutation } from "../../graphql-definition/graphql";
+import { DichVuInput, LinkImage, LoaiCanLamSang, useCreateHoadonchidinhcanlamsangMutation, useCreatePhieuchidinhcanlamsangMutation, useGetAllLoaiClsQuery, useUpdateTrangThaiKhamMutation } from "../../graphql-definition/graphql";
 import { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import UploadImage from "../../components/UploadImage";
@@ -16,7 +16,8 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
     const [bhyt, setBHYT] = useState(Boolean);
 
     const [createphieuchidinhCLS] = useCreatePhieuchidinhcanlamsangMutation();
-    const [updateTrangThaiKham] = useUpdateTrangThaiKhamMutation()
+    const [updateTrangThaiKham] = useUpdateTrangThaiKhamMutation();
+    const [createHoadonchidinhCLS] = useCreateHoadonchidinhcanlamsangMutation();
 
     useEffect(() => {
         if (benhnhan?._id !== undefined) {
@@ -29,11 +30,6 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
 
 
     const HandleUpdate = async () => {
-        console.log('code: ', selectedValues)
-        console.log('bac si: ', bacsi?._id);
-        console.log('benh nhan: ', benhnhanId)
-        console.log('bhyt so: ', bhyt)
-        console.log('ngaytao: ', dayjs().format('YYYY-MM-DD'))
         try {
             if (bacsi?._id && benhnhanId && bhyt && idPhieuXacNhan) {
                 const ketqua = selectedValues.map(value => ({ loaicanlamsang: value }));
@@ -45,7 +41,7 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
                                 "benhnhan": benhnhanId,
                                 "bacsi": bacsi?._id,
                                 "phieuxacnhan": idPhieuXacNhan,
-                                "bhyt": true,
+                                "bhyt": bhyt,
                                 "ngaytao": dayjs().format('YYYY-MM-DD')
                             },
                             "ketqua": ketqua
@@ -58,6 +54,30 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
                         }
                     })
                 ]);
+                try {
+                    let chitietcanlamsang: DichVuInput[] = [];
+
+                    if (response?.data?.createPhieuchidinhcanlamsang?.ketquacanlamsangs) {
+                        chitietcanlamsang = response.data.createPhieuchidinhcanlamsang.ketquacanlamsangs.map(thongtin => ({
+                            ten: thongtin?.loaicanlamsang?.tenxetnghiem || "",
+                            gia: thongtin?.loaicanlamsang?.gia || 0,
+                            soluong: 1,
+                            thanhtien: (thongtin?.loaicanlamsang?.gia || 0) * 1
+                        }));
+                    }
+
+                    await createHoadonchidinhCLS({
+                        variables: {
+                            "input": {
+                                "benhnhan": benhnhanId,
+                                "bhyt": bhyt,
+                                "chitietcanlamsang": chitietcanlamsang
+                            }
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
                 refetchCHOXETNGHIEM();
                 refetchChoKham();
             }

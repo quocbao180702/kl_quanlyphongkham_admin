@@ -359,17 +359,12 @@ query GetAllHoaDon{
       hoten
       ngaysinh
       gioitinh
+      sodienthoai
     }
     trangthai
     ngaytao
     bhyt
     thanhtien
-    canlamsangs{
-      ten
-      gia
-      soluong
-      thanhtien
-    }
     thuocs{
       ten
       gia
@@ -416,9 +411,6 @@ query GetAllPhieuXacNhanDaXetNghiem($ngaykham: String!, $phongIds: String!){
       sodienthoai
       cccd
       bhyt
-      user {
-        email
-      }
       sinhhieu {
         _id
         mach
@@ -481,5 +473,44 @@ query GetAllNhanVien{
     }
     ngayBD
     chucvu
+  }
+}`
+
+const getAllHoaDonPhieuCanLamSang = gql`
+query GetAllHoaDonPhieuCanLamSang{
+  getAllHoaDonPhieuCanLamSang{
+    _id
+    bhyt
+    benhnhan{
+      hoten
+      ngaysinh
+      gioitinh
+      sodienthoai
+    }
+    chitietcanlamsang{
+      ten
+      gia
+      soluong
+      thanhtien
+    }
+    thanhtien
+    tinhtrang
+    ngaytao
+  }
+}`
+
+
+const getAllVatTuYTe = gql`
+query GetAllVattuyte{
+  getAllVatTuYTe{
+    tenvattu
+    _id
+    tenvattu
+    chiphi{
+      bhyt
+      gia
+    }
+    soluong
+    dvt
   }
 }`

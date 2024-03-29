@@ -88,6 +88,12 @@ export type CreateHoadonInput = {
   ngaytao: Scalars['DateTime']['input'];
 };
 
+export type CreateHoadonchidinhcanlamsangInput = {
+  benhnhan: Scalars['String']['input'];
+  bhyt: Scalars['Boolean']['input'];
+  chitietcanlamsang: Array<DichVuInput>;
+};
+
 export type CreateKetquacanlamsangInput = {
   loaicanlamsang: Scalars['String']['input'];
 };
@@ -193,12 +199,22 @@ export type Hoadon = {
   _id: Scalars['ID']['output'];
   benhnhan: BenhNhan;
   bhyt: Scalars['Boolean']['output'];
-  canlamsangs: Array<DichVu>;
   ngaytao: Scalars['DateTime']['output'];
   thanhtien: Scalars['Float']['output'];
   thuocs: Array<DichVu>;
   trangthai: Scalars['Boolean']['output'];
   vattuyte: Array<DichVu>;
+};
+
+export type Hoadonchidinhcanlamsang = {
+  __typename?: 'Hoadonchidinhcanlamsang';
+  _id: Scalars['ID']['output'];
+  benhnhan: BenhNhan;
+  bhyt: Scalars['Boolean']['output'];
+  chitietcanlamsang: Array<DichVu>;
+  ngaytao: Scalars['DateTime']['output'];
+  thanhtien: Scalars['Float']['output'];
+  tinhtrang: Scalars['Boolean']['output'];
 };
 
 export type KetQuaCanLamSang = {
@@ -252,6 +268,7 @@ export type Mutation = {
   createDatLich: DatLich;
   createDichvu: Dichvu;
   createHoadon: Hoadon;
+  createHoadonchidinhcanlamsang: Hoadonchidinhcanlamsang;
   createKetquacanlamsang: KetQuaCanLamSang;
   createLoaicanlamsang: LoaiCanLamSang;
   createNhanVien: NhanVien;
@@ -302,9 +319,9 @@ export type Mutation = {
   updateSoluongThuoc: Thuoc;
   updateThuoc: Thuoc;
   updateToathuoc: Toathuoc;
-  updateTrangThai: Hoadon;
   updateTrangThaiCanLamSang: Phieuchidinhcanlamsang;
   updateTrangThaiDatLich: DatLich;
+  updateTrangThaiHoaDon: Hoadon;
   updateTrangThaiKham: PhieuXacNhan;
   updateUser: Users;
   updateVatTuYTe: Vattuyte;
@@ -344,6 +361,11 @@ export type MutationCreateDichvuArgs = {
 
 export type MutationCreateHoadonArgs = {
   createHoadonInput: CreateHoadonInput;
+};
+
+
+export type MutationCreateHoadonchidinhcanlamsangArgs = {
+  createHoadonchidinhcanlamsang: CreateHoadonchidinhcanlamsangInput;
 };
 
 
@@ -594,11 +616,6 @@ export type MutationUpdateToathuocArgs = {
 };
 
 
-export type MutationUpdateTrangThaiArgs = {
-  id: Scalars['String']['input'];
-};
-
-
 export type MutationUpdateTrangThaiCanLamSangArgs = {
   id: Scalars['String']['input'];
 };
@@ -607,6 +624,11 @@ export type MutationUpdateTrangThaiCanLamSangArgs = {
 export type MutationUpdateTrangThaiDatLichArgs = {
   id: Scalars['String']['input'];
   trangthai: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateTrangThaiHoaDonArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -787,6 +809,7 @@ export type Query = {
   getAllDatLich?: Maybe<Array<DatLich>>;
   getAllDatLichbyTrangThai?: Maybe<Array<DatLich>>;
   getAllDichVu: Array<Dichvu>;
+  getAllHoaDonPhieuCanLamSang: Array<Hoadonchidinhcanlamsang>;
   getAllHoadon: Array<Hoadon>;
   getAllLoaiCLS: Array<LoaiCanLamSang>;
   getAllNhanVien: Array<NhanVien>;
@@ -1046,7 +1069,6 @@ export type UpdateDichvuInput = {
 export type UpdateHoadonInput = {
   benhnhan?: InputMaybe<Scalars['String']['input']>;
   bhyt?: InputMaybe<Scalars['Boolean']['input']>;
-  canlamsangs: Array<DichVuInput>;
   id: Scalars['String']['input'];
   ngaytao?: InputMaybe<Scalars['DateTime']['input']>;
   thuocs: Array<DichVuInput>;
@@ -1256,7 +1278,7 @@ export type CreatePhieuchidinhcanlamsangMutationVariables = Exact<{
 }>;
 
 
-export type CreatePhieuchidinhcanlamsangMutation = { __typename?: 'Mutation', createPhieuchidinhcanlamsang: { __typename?: 'Phieuchidinhcanlamsang', _id: string } };
+export type CreatePhieuchidinhcanlamsangMutation = { __typename?: 'Mutation', createPhieuchidinhcanlamsang: { __typename?: 'Phieuchidinhcanlamsang', _id: string, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', loaicanlamsang: { __typename?: 'LoaiCanLamSang', tenxetnghiem: string, gia: number } }> } };
 
 export type UpdateKetquacanlamsangMutationVariables = Exact<{
   input: UpdateKetquacanlamsangInput;
@@ -1335,12 +1357,19 @@ export type CreateHoaDonMutationVariables = Exact<{
 
 export type CreateHoaDonMutation = { __typename?: 'Mutation', createHoadon: { __typename?: 'Hoadon', _id: string } };
 
-export type UpdateHoadonMutationVariables = Exact<{
+export type UpdateHoaDonMutationVariables = Exact<{
   input: UpdateHoadonInput;
 }>;
 
 
-export type UpdateHoadonMutation = { __typename?: 'Mutation', updateHoadon: { __typename?: 'Hoadon', _id: string } };
+export type UpdateHoaDonMutation = { __typename?: 'Mutation', updateHoadon: { __typename?: 'Hoadon', _id: string, thanhtien: number } };
+
+export type UpdateTrangThaiHoaDonMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type UpdateTrangThaiHoaDonMutation = { __typename?: 'Mutation', updateTrangThaiHoaDon: { __typename?: 'Hoadon', _id: string, trangthai: boolean } };
 
 export type UpdateTrangThaiCanLamSangMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -1406,6 +1435,20 @@ export type DeleteNhanVienMutationVariables = Exact<{
 
 
 export type DeleteNhanVienMutation = { __typename?: 'Mutation', deleteNhanVien: boolean };
+
+export type CreateSinhHieuMutationVariables = Exact<{
+  input: CreateSinhhieuInput;
+}>;
+
+
+export type CreateSinhHieuMutation = { __typename?: 'Mutation', createSinhhieu: { __typename?: 'Sinhhieu', _id: string } };
+
+export type CreateHoadonchidinhcanlamsangMutationVariables = Exact<{
+  input: CreateHoadonchidinhcanlamsangInput;
+}>;
+
+
+export type CreateHoadonchidinhcanlamsangMutation = { __typename?: 'Mutation', createHoadonchidinhcanlamsang: { __typename?: 'Hoadonchidinhcanlamsang', _id: string } };
 
 export type OnlyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1504,7 +1547,7 @@ export type FindAllRelatedKetQuaCanLamSangQuery = { __typename?: 'Query', findAl
 export type GetAllHoaDonQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllHoaDonQuery = { __typename?: 'Query', getAllHoadon: Array<{ __typename?: 'Hoadon', _id: string, trangthai: boolean, ngaytao: any, bhyt: boolean, thanhtien: number, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean }, canlamsangs: Array<{ __typename?: 'DichVu', ten: string, gia: number, soluong: number, thanhtien: number }>, thuocs: Array<{ __typename?: 'DichVu', ten: string, gia: number, soluong: number, thanhtien: number }>, vattuyte: Array<{ __typename?: 'DichVu', ten: string, gia: number, soluong: number, thanhtien: number }> }> };
+export type GetAllHoaDonQuery = { __typename?: 'Query', getAllHoadon: Array<{ __typename?: 'Hoadon', _id: string, trangthai: boolean, ngaytao: any, bhyt: boolean, thanhtien: number, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string }, thuocs: Array<{ __typename?: 'DichVu', ten: string, gia: number, soluong: number, thanhtien: number }>, vattuyte: Array<{ __typename?: 'DichVu', ten: string, gia: number, soluong: number, thanhtien: number }> }> };
 
 export type GetAllDatLichbyTrangThaiQueryVariables = Exact<{
   input: Scalars['String']['input'];
@@ -1519,12 +1562,22 @@ export type GetAllPhieuXacNhanDaXetNghiemQueryVariables = Exact<{
 }>;
 
 
-export type GetAllPhieuXacNhanDaXetNghiemQuery = { __typename?: 'Query', getAllPhieuXacNhanDaXetNgiem?: Array<{ __typename?: 'PhieuXacNhan', _id: string, trangthai: TrangThaiKham, sothutu: number, ngaytao: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, bhyt: string, user: { __typename?: 'Users', email: string }, sinhhieu?: { __typename?: 'Sinhhieu', _id: string, mach: number, nhietdo: number, ha: string, chieucao: number, cannang: number, bmi: number, benhmangtinh: boolean } | null }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, phieuchidinhcanlamsang?: { __typename?: 'Phieuchidinhcanlamsang', _id: string, bhyt: boolean, ngaytao: any, trangthai: boolean, bacsi: { __typename?: 'BacSi', _id: string, hoten: string }, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', ketluan?: string | null, thietbi?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', _id: string, tenxetnghiem: string }, hinhanh?: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } | null }> } | null }> | null };
+export type GetAllPhieuXacNhanDaXetNghiemQuery = { __typename?: 'Query', getAllPhieuXacNhanDaXetNgiem?: Array<{ __typename?: 'PhieuXacNhan', _id: string, trangthai: TrangThaiKham, sothutu: number, ngaytao: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, bhyt: string, sinhhieu?: { __typename?: 'Sinhhieu', _id: string, mach: number, nhietdo: number, ha: string, chieucao: number, cannang: number, bmi: number, benhmangtinh: boolean } | null }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, phieuchidinhcanlamsang?: { __typename?: 'Phieuchidinhcanlamsang', _id: string, bhyt: boolean, ngaytao: any, trangthai: boolean, bacsi: { __typename?: 'BacSi', _id: string, hoten: string }, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', ketluan?: string | null, thietbi?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', _id: string, tenxetnghiem: string }, hinhanh?: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } | null }> } | null }> | null };
 
 export type GetAllNhanVienQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllNhanVienQuery = { __typename?: 'Query', getAllNhanVien: Array<{ __typename?: 'NhanVien', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, ngayBD: any, chucvu: string, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }> }> };
+
+export type GetAllHoaDonPhieuCanLamSangQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllHoaDonPhieuCanLamSangQuery = { __typename?: 'Query', getAllHoaDonPhieuCanLamSang: Array<{ __typename?: 'Hoadonchidinhcanlamsang', _id: string, bhyt: boolean, thanhtien: number, tinhtrang: boolean, ngaytao: any, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string }, chitietcanlamsang: Array<{ __typename?: 'DichVu', ten: string, gia: number, soluong: number, thanhtien: number }> }> };
+
+export type GetAllVattuyteQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllVattuyteQuery = { __typename?: 'Query', getAllVatTuYTe: Array<{ __typename?: 'Vattuyte', tenvattu: string, _id: string, soluong: number, dvt: string, chiphi: Array<{ __typename?: 'ChiPhi', bhyt: boolean, gia: number }> }> };
 
 export type NewDatLichSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -1835,6 +1888,12 @@ export const CreatePhieuchidinhcanlamsangDocument = gql`
     createKetQuaCLSList: $ketqua
   ) {
     _id
+    ketquacanlamsangs {
+      loaicanlamsang {
+        tenxetnghiem
+        gia
+      }
+    }
   }
 }
     `;
@@ -2224,39 +2283,74 @@ export function useCreateHoaDonMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateHoaDonMutationHookResult = ReturnType<typeof useCreateHoaDonMutation>;
 export type CreateHoaDonMutationResult = Apollo.MutationResult<CreateHoaDonMutation>;
 export type CreateHoaDonMutationOptions = Apollo.BaseMutationOptions<CreateHoaDonMutation, CreateHoaDonMutationVariables>;
-export const UpdateHoadonDocument = gql`
-    mutation UpdateHoadon($input: UpdateHoadonInput!) {
+export const UpdateHoaDonDocument = gql`
+    mutation UpdateHoaDon($input: UpdateHoadonInput!) {
   updateHoadon(updateHoadonInput: $input) {
     _id
+    thanhtien
   }
 }
     `;
-export type UpdateHoadonMutationFn = Apollo.MutationFunction<UpdateHoadonMutation, UpdateHoadonMutationVariables>;
+export type UpdateHoaDonMutationFn = Apollo.MutationFunction<UpdateHoaDonMutation, UpdateHoaDonMutationVariables>;
 
 /**
- * __useUpdateHoadonMutation__
+ * __useUpdateHoaDonMutation__
  *
- * To run a mutation, you first call `useUpdateHoadonMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateHoadonMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateHoaDonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateHoaDonMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateHoadonMutation, { data, loading, error }] = useUpdateHoadonMutation({
+ * const [updateHoaDonMutation, { data, loading, error }] = useUpdateHoaDonMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useUpdateHoadonMutation(baseOptions?: Apollo.MutationHookOptions<UpdateHoadonMutation, UpdateHoadonMutationVariables>) {
+export function useUpdateHoaDonMutation(baseOptions?: Apollo.MutationHookOptions<UpdateHoaDonMutation, UpdateHoaDonMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateHoadonMutation, UpdateHoadonMutationVariables>(UpdateHoadonDocument, options);
+        return Apollo.useMutation<UpdateHoaDonMutation, UpdateHoaDonMutationVariables>(UpdateHoaDonDocument, options);
       }
-export type UpdateHoadonMutationHookResult = ReturnType<typeof useUpdateHoadonMutation>;
-export type UpdateHoadonMutationResult = Apollo.MutationResult<UpdateHoadonMutation>;
-export type UpdateHoadonMutationOptions = Apollo.BaseMutationOptions<UpdateHoadonMutation, UpdateHoadonMutationVariables>;
+export type UpdateHoaDonMutationHookResult = ReturnType<typeof useUpdateHoaDonMutation>;
+export type UpdateHoaDonMutationResult = Apollo.MutationResult<UpdateHoaDonMutation>;
+export type UpdateHoaDonMutationOptions = Apollo.BaseMutationOptions<UpdateHoaDonMutation, UpdateHoaDonMutationVariables>;
+export const UpdateTrangThaiHoaDonDocument = gql`
+    mutation UpdateTrangThaiHoaDon($id: String!) {
+  updateTrangThaiHoaDon(id: $id) {
+    _id
+    trangthai
+  }
+}
+    `;
+export type UpdateTrangThaiHoaDonMutationFn = Apollo.MutationFunction<UpdateTrangThaiHoaDonMutation, UpdateTrangThaiHoaDonMutationVariables>;
+
+/**
+ * __useUpdateTrangThaiHoaDonMutation__
+ *
+ * To run a mutation, you first call `useUpdateTrangThaiHoaDonMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTrangThaiHoaDonMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTrangThaiHoaDonMutation, { data, loading, error }] = useUpdateTrangThaiHoaDonMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdateTrangThaiHoaDonMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTrangThaiHoaDonMutation, UpdateTrangThaiHoaDonMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTrangThaiHoaDonMutation, UpdateTrangThaiHoaDonMutationVariables>(UpdateTrangThaiHoaDonDocument, options);
+      }
+export type UpdateTrangThaiHoaDonMutationHookResult = ReturnType<typeof useUpdateTrangThaiHoaDonMutation>;
+export type UpdateTrangThaiHoaDonMutationResult = Apollo.MutationResult<UpdateTrangThaiHoaDonMutation>;
+export type UpdateTrangThaiHoaDonMutationOptions = Apollo.BaseMutationOptions<UpdateTrangThaiHoaDonMutation, UpdateTrangThaiHoaDonMutationVariables>;
 export const UpdateTrangThaiCanLamSangDocument = gql`
     mutation UpdateTrangThaiCanLamSang($id: String!) {
   updateTrangThaiCanLamSang(id: $id) {
@@ -2553,6 +2647,72 @@ export function useDeleteNhanVienMutation(baseOptions?: Apollo.MutationHookOptio
 export type DeleteNhanVienMutationHookResult = ReturnType<typeof useDeleteNhanVienMutation>;
 export type DeleteNhanVienMutationResult = Apollo.MutationResult<DeleteNhanVienMutation>;
 export type DeleteNhanVienMutationOptions = Apollo.BaseMutationOptions<DeleteNhanVienMutation, DeleteNhanVienMutationVariables>;
+export const CreateSinhHieuDocument = gql`
+    mutation CreateSinhHieu($input: CreateSinhhieuInput!) {
+  createSinhhieu(createSinhhieuInput: $input) {
+    _id
+  }
+}
+    `;
+export type CreateSinhHieuMutationFn = Apollo.MutationFunction<CreateSinhHieuMutation, CreateSinhHieuMutationVariables>;
+
+/**
+ * __useCreateSinhHieuMutation__
+ *
+ * To run a mutation, you first call `useCreateSinhHieuMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSinhHieuMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSinhHieuMutation, { data, loading, error }] = useCreateSinhHieuMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateSinhHieuMutation(baseOptions?: Apollo.MutationHookOptions<CreateSinhHieuMutation, CreateSinhHieuMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSinhHieuMutation, CreateSinhHieuMutationVariables>(CreateSinhHieuDocument, options);
+      }
+export type CreateSinhHieuMutationHookResult = ReturnType<typeof useCreateSinhHieuMutation>;
+export type CreateSinhHieuMutationResult = Apollo.MutationResult<CreateSinhHieuMutation>;
+export type CreateSinhHieuMutationOptions = Apollo.BaseMutationOptions<CreateSinhHieuMutation, CreateSinhHieuMutationVariables>;
+export const CreateHoadonchidinhcanlamsangDocument = gql`
+    mutation CreateHoadonchidinhcanlamsang($input: CreateHoadonchidinhcanlamsangInput!) {
+  createHoadonchidinhcanlamsang(createHoadonchidinhcanlamsang: $input) {
+    _id
+  }
+}
+    `;
+export type CreateHoadonchidinhcanlamsangMutationFn = Apollo.MutationFunction<CreateHoadonchidinhcanlamsangMutation, CreateHoadonchidinhcanlamsangMutationVariables>;
+
+/**
+ * __useCreateHoadonchidinhcanlamsangMutation__
+ *
+ * To run a mutation, you first call `useCreateHoadonchidinhcanlamsangMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateHoadonchidinhcanlamsangMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createHoadonchidinhcanlamsangMutation, { data, loading, error }] = useCreateHoadonchidinhcanlamsangMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateHoadonchidinhcanlamsangMutation(baseOptions?: Apollo.MutationHookOptions<CreateHoadonchidinhcanlamsangMutation, CreateHoadonchidinhcanlamsangMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateHoadonchidinhcanlamsangMutation, CreateHoadonchidinhcanlamsangMutationVariables>(CreateHoadonchidinhcanlamsangDocument, options);
+      }
+export type CreateHoadonchidinhcanlamsangMutationHookResult = ReturnType<typeof useCreateHoadonchidinhcanlamsangMutation>;
+export type CreateHoadonchidinhcanlamsangMutationResult = Apollo.MutationResult<CreateHoadonchidinhcanlamsangMutation>;
+export type CreateHoadonchidinhcanlamsangMutationOptions = Apollo.BaseMutationOptions<CreateHoadonchidinhcanlamsangMutation, CreateHoadonchidinhcanlamsangMutationVariables>;
 export const OnlyUserDocument = gql`
     query OnlyUser {
   onlyUser {
@@ -3398,17 +3558,12 @@ export const GetAllHoaDonDocument = gql`
       hoten
       ngaysinh
       gioitinh
+      sodienthoai
     }
     trangthai
     ngaytao
     bhyt
     thanhtien
-    canlamsangs {
-      ten
-      gia
-      soluong
-      thanhtien
-    }
     thuocs {
       ten
       gia
@@ -3519,9 +3674,6 @@ export const GetAllPhieuXacNhanDaXetNghiemDocument = gql`
       sodienthoai
       cccd
       bhyt
-      user {
-        email
-      }
       sinhhieu {
         _id
         mach
@@ -3652,6 +3804,108 @@ export type GetAllNhanVienQueryHookResult = ReturnType<typeof useGetAllNhanVienQ
 export type GetAllNhanVienLazyQueryHookResult = ReturnType<typeof useGetAllNhanVienLazyQuery>;
 export type GetAllNhanVienSuspenseQueryHookResult = ReturnType<typeof useGetAllNhanVienSuspenseQuery>;
 export type GetAllNhanVienQueryResult = Apollo.QueryResult<GetAllNhanVienQuery, GetAllNhanVienQueryVariables>;
+export const GetAllHoaDonPhieuCanLamSangDocument = gql`
+    query GetAllHoaDonPhieuCanLamSang {
+  getAllHoaDonPhieuCanLamSang {
+    _id
+    bhyt
+    benhnhan {
+      hoten
+      ngaysinh
+      gioitinh
+      sodienthoai
+    }
+    chitietcanlamsang {
+      ten
+      gia
+      soluong
+      thanhtien
+    }
+    thanhtien
+    tinhtrang
+    ngaytao
+  }
+}
+    `;
+
+/**
+ * __useGetAllHoaDonPhieuCanLamSangQuery__
+ *
+ * To run a query within a React component, call `useGetAllHoaDonPhieuCanLamSangQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllHoaDonPhieuCanLamSangQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllHoaDonPhieuCanLamSangQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllHoaDonPhieuCanLamSangQuery(baseOptions?: Apollo.QueryHookOptions<GetAllHoaDonPhieuCanLamSangQuery, GetAllHoaDonPhieuCanLamSangQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllHoaDonPhieuCanLamSangQuery, GetAllHoaDonPhieuCanLamSangQueryVariables>(GetAllHoaDonPhieuCanLamSangDocument, options);
+      }
+export function useGetAllHoaDonPhieuCanLamSangLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllHoaDonPhieuCanLamSangQuery, GetAllHoaDonPhieuCanLamSangQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllHoaDonPhieuCanLamSangQuery, GetAllHoaDonPhieuCanLamSangQueryVariables>(GetAllHoaDonPhieuCanLamSangDocument, options);
+        }
+export function useGetAllHoaDonPhieuCanLamSangSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllHoaDonPhieuCanLamSangQuery, GetAllHoaDonPhieuCanLamSangQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllHoaDonPhieuCanLamSangQuery, GetAllHoaDonPhieuCanLamSangQueryVariables>(GetAllHoaDonPhieuCanLamSangDocument, options);
+        }
+export type GetAllHoaDonPhieuCanLamSangQueryHookResult = ReturnType<typeof useGetAllHoaDonPhieuCanLamSangQuery>;
+export type GetAllHoaDonPhieuCanLamSangLazyQueryHookResult = ReturnType<typeof useGetAllHoaDonPhieuCanLamSangLazyQuery>;
+export type GetAllHoaDonPhieuCanLamSangSuspenseQueryHookResult = ReturnType<typeof useGetAllHoaDonPhieuCanLamSangSuspenseQuery>;
+export type GetAllHoaDonPhieuCanLamSangQueryResult = Apollo.QueryResult<GetAllHoaDonPhieuCanLamSangQuery, GetAllHoaDonPhieuCanLamSangQueryVariables>;
+export const GetAllVattuyteDocument = gql`
+    query GetAllVattuyte {
+  getAllVatTuYTe {
+    tenvattu
+    _id
+    tenvattu
+    chiphi {
+      bhyt
+      gia
+    }
+    soluong
+    dvt
+  }
+}
+    `;
+
+/**
+ * __useGetAllVattuyteQuery__
+ *
+ * To run a query within a React component, call `useGetAllVattuyteQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllVattuyteQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllVattuyteQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllVattuyteQuery(baseOptions?: Apollo.QueryHookOptions<GetAllVattuyteQuery, GetAllVattuyteQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllVattuyteQuery, GetAllVattuyteQueryVariables>(GetAllVattuyteDocument, options);
+      }
+export function useGetAllVattuyteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllVattuyteQuery, GetAllVattuyteQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllVattuyteQuery, GetAllVattuyteQueryVariables>(GetAllVattuyteDocument, options);
+        }
+export function useGetAllVattuyteSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllVattuyteQuery, GetAllVattuyteQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllVattuyteQuery, GetAllVattuyteQueryVariables>(GetAllVattuyteDocument, options);
+        }
+export type GetAllVattuyteQueryHookResult = ReturnType<typeof useGetAllVattuyteQuery>;
+export type GetAllVattuyteLazyQueryHookResult = ReturnType<typeof useGetAllVattuyteLazyQuery>;
+export type GetAllVattuyteSuspenseQueryHookResult = ReturnType<typeof useGetAllVattuyteSuspenseQuery>;
+export type GetAllVattuyteQueryResult = Apollo.QueryResult<GetAllVattuyteQuery, GetAllVattuyteQueryVariables>;
 export const NewDatLichDocument = gql`
     subscription NewDatLich {
   newDatLich {
