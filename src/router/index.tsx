@@ -15,6 +15,7 @@ import NhanSu from "../pages/nhansu"
 import NhanVienPage from "../pages/nhanvien"
 import DatLich from "../pages/datlich"
 import HoaDonPage from "../pages/hoadon"
+import ProtectedRoutes from "./protectedRoute"
 
 export const AppRouter = () => {
 
@@ -22,19 +23,21 @@ export const AppRouter = () => {
         <>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<App />}>
-                        <Route index element={<Home />} />
-                        <Route path="datlich" element={<DatLich />} />
-                        <Route path="nguoidung" element={<NguoiDung />} />
-                        <Route path="benhnhan" element={<BenhNhan />} />
-                        <Route path="nhansu" element={<NhanSu />}>
-                            <Route path="bacsi" index element={<BacSiPage />} />
-                            <Route path="nhanvien" element={<NhanVienPage />} />
+                    <Route element={<ProtectedRoutes />}>
+                        <Route path="/" element={<App />}>
+                            <Route index element={<Home />} />
+                            <Route path="datlich" element={<DatLich />} />
+                            <Route path="nguoidung" element={<NguoiDung />} />
+                            <Route path="benhnhan" element={<BenhNhan />} />
+                            <Route path="bacsi" element={<NhanSu />}>
+                                <Route /* path="bacsi" */ index element={<BacSiPage />} />
+                                <Route path="nhanvien" element={<NhanVienPage />} />
+                            </Route>
+                            <Route path="thuoc" element={<Thuoc />} />
+                            <Route path="khambenh" element={<KhamBenh />} />
+                            <Route path="canlamsang" element={<CanLamSang />} />
+                            <Route path="hoadon" element={<HoaDonPage />} />
                         </Route>
-                        <Route path="thuoc" element={<Thuoc />} />
-                        <Route path="khambenh" element={<KhamBenh />} />
-                        <Route path="canlamsang" element={<CanLamSang />} />
-                        <Route path="hoadon" element={<HoaDonPage />} />
                     </Route>
 
                     <Route path="login" element={<Login />} />

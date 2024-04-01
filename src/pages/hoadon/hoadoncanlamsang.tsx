@@ -30,6 +30,9 @@ function HoaDonCanLamSang() {
 
     }
 
+    if(loading) return <div> ... Loading ... </div>
+
+    if(error) return <div> ... Error ... </div>
 
     return (
         <>
@@ -69,7 +72,6 @@ function HoaDonCanLamSang() {
                                     <td width={50} className="text-center" onClick={() => handleDelete(hoadon._id)}>
                                         <MdDelete />
                                     </td>
-                                    {/* <td onClick={() => handleEdit(hoadon)}><FaMarker /></td> */}
                                 </tr>
                             ))}
                         </tbody>

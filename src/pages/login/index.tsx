@@ -1,13 +1,15 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../graphql-definition/graphql";
 import { setJwtToken } from "../../utils/jwt";
 import { ApolloError } from "@apollo/client";
 import { Alert } from "@mui/material";
+import { AuthContext } from "../../provider/AuthContextProvider";
 
 
 export function Login() {
+    const { setIsAuthenticated } = useContext(AuthContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -33,6 +35,7 @@ export function Login() {
 
             if (response.data?.login) {
                 setJwtToken(response.data.login.access_token as string);
+                setIsAuthenticated(true);
                 navigate('..');
             }
         } catch (error) {

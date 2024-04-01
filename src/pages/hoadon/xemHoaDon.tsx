@@ -1,11 +1,8 @@
 import moment from "moment";
-import { useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
 
 function XemHoaDon({ show, onHide, hoadon }: any) {
-    useEffect(() => {
-        console.log('thong tin hóa đơn, ', hoadon)
-    }, [hoadon])
+
     return (
         <Modal
             show={show}
