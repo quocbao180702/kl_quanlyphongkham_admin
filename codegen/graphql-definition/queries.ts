@@ -274,6 +274,7 @@ query GetAllLoaiCLS{
     _id
     tenxetnghiem
     gia
+    loaicanlamsang
     mota
   }
 }`
@@ -300,6 +301,7 @@ query GetAllPhieuCLSbyNgay($ngaytao: DateTime!,$trangthai: Boolean!){
       loaicanlamsang{
         tenxetnghiem
         gia
+        loaicanlamsang
       }
       hinhanh{
         fileName
@@ -339,6 +341,7 @@ query FindAllRelatedKetQuaCanLamSang($input: [String!]!){
     _id
     loaicanlamsang{
       tenxetnghiem
+      loaicanlamsang
     }
     hinhanh{
       url
@@ -393,7 +396,6 @@ const getAllDatLichbyTrangThai = gql`
       ngaydat
       ngaykham
       trangthai
-      bhyt
     }
 }`
 
@@ -443,6 +445,7 @@ query GetAllPhieuXacNhanDaXetNghiem($ngaykham: String!, $phongIds: String!){
         loaicanlamsang{
           _id
           tenxetnghiem
+          loaicanlamsang
         }
         ketluan
         thietbi
@@ -514,3 +517,26 @@ query GetAllVattuyte{
     dvt
   }
 }`
+
+const getAllBlog = gql`
+query  GetAllBlogs($input: FetchPagination!){
+  countBlogs
+  getAllBlog(fetchPagination: $input){
+    _id
+    user{
+      username
+    }
+    hinhanh{
+      url
+      fileName
+      type
+    }
+    tieude
+    tomtat
+    noidung
+    luotxem
+    kichhoat
+    ngaytao
+  }
+}`
+

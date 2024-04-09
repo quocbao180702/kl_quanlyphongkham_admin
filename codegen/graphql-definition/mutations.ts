@@ -109,6 +109,7 @@ mutation CreatePhieuchidinhcanlamsang(
       loaicanlamsang{
         tenxetnghiem
         gia
+        loaicanlamsang
       }
     }
   }
@@ -283,4 +284,28 @@ mutation CreateHoadonchidinhcanlamsang($input: CreateHoadonchidinhcanlamsangInpu
   createHoadonchidinhcanlamsang(createHoadonchidinhcanlamsang: $input){
     _id
   }
+}`
+
+const createBlog = gql`
+mutation CreateBlog($input: CreateBlogInput!){
+  createBlog(createBlogInput: $input){
+    _id
+  }
+}`
+
+const updateBlog = gql`
+mutation UpdateBlog($input: UpdateBlogInput!){
+  updateBlog(updateBlogInput:$input){
+  	_id
+  }
+}`
+
+const deleteBlog = gql`
+mutation DeleteBlog($id: String!){
+  deleteBlog(id: $id)
+}`
+
+const updateKichHoat = gql`
+mutation UpdateKichHoat($id: String!){
+  updateKichHoat(_id: $id)
 }`

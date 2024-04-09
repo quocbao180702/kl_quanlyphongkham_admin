@@ -56,6 +56,19 @@ export type BenhNhan = {
   user: Users;
 };
 
+export type Blog = {
+  __typename?: 'Blog';
+  _id: Scalars['ID']['output'];
+  hinhanh: LinkImage;
+  kichhoat: Scalars['Boolean']['output'];
+  luotxem: Scalars['Int']['output'];
+  ngaytao: Scalars['DateTime']['output'];
+  noidung: Scalars['String']['output'];
+  tieude: Scalars['String']['output'];
+  tomtat?: Maybe<Scalars['String']['output']>;
+  user: Users;
+};
+
 export type ChiPhi = {
   __typename?: 'ChiPhi';
   bhyt: Scalars['Boolean']['output'];
@@ -72,6 +85,14 @@ export type ChuyenKhoa = {
   _id: Scalars['ID']['output'];
   mota: Scalars['String']['output'];
   tenkhoa: Scalars['String']['output'];
+};
+
+export type CreateBlogInput = {
+  hinhanh: LinkImageInput;
+  noidung: Scalars['String']['input'];
+  tieude: Scalars['String']['input'];
+  tomtat: Scalars['String']['input'];
+  user: Scalars['String']['input'];
 };
 
 export type CreateDichvuInput = {
@@ -151,7 +172,6 @@ export type DatLich = {
   __typename?: 'DatLich';
   _id: Scalars['ID']['output'];
   benhnhan: BenhNhan;
-  bhyt: Scalars['Boolean']['output'];
   motabenh: Scalars['String']['output'];
   ngaydat: Scalars['DateTime']['output'];
   ngaykham: Scalars['DateTime']['output'];
@@ -243,6 +263,7 @@ export type LoaiCanLamSang = {
   __typename?: 'LoaiCanLamSang';
   _id: Scalars['ID']['output'];
   gia: Scalars['Float']['output'];
+  loaicanlamsang: Scalars['String']['output'];
   mota: Scalars['String']['output'];
   tenxetnghiem: Scalars['String']['output'];
 };
@@ -264,8 +285,9 @@ export type Mutation = {
   createBacSi: BacSi;
   createBenh: Benh;
   createBenhNhan: BenhNhan;
+  createBlog: Blog;
   createChuyenKhoa: ChuyenKhoa;
-  createDatLich: DatLich;
+  createDatLich?: Maybe<DatLich>;
   createDichvu: Dichvu;
   createHoadon: Hoadon;
   createHoadonchidinhcanlamsang: Hoadonchidinhcanlamsang;
@@ -284,6 +306,7 @@ export type Mutation = {
   deleteBacSi: Scalars['Boolean']['output'];
   deleteBenh: Scalars['Boolean']['output'];
   deleteBenhNhan: Scalars['Boolean']['output'];
+  deleteBlog: Scalars['Boolean']['output'];
   deleteChuyenKhoa: Scalars['Boolean']['output'];
   deleteDatLich: Scalars['Boolean']['output'];
   deleteDichvu: Dichvu;
@@ -300,15 +323,18 @@ export type Mutation = {
   deleteUser: Scalars['Boolean']['output'];
   deleteVatTuYTe: Scalars['Boolean']['output'];
   login: LoginResponse;
+  loginwithGoogleCallback: LoginResponse;
   logout?: Maybe<Scalars['Boolean']['output']>;
   updateBacSi: BacSi;
   updateBenh: Benh;
   updateBenhNhan: BenhNhan;
+  updateBlog: Blog;
   updateChuyenKhoa: ChuyenKhoa;
   updateDatLich: DatLich;
   updateDichvu: Dichvu;
   updateHoadon: Hoadon;
   updateKetquacanlamsang: KetQuaCanLamSang;
+  updateKichHoat: Scalars['Boolean']['output'];
   updateLoaicanlamsang: LoaiCanLamSang;
   updateNhanVien: NhanVien;
   updatePhieuXacNhan: PhieuXacNhan;
@@ -341,6 +367,11 @@ export type MutationCreateBenhArgs = {
 
 export type MutationCreateBenhNhanArgs = {
   newBenhNhanInput: NewBenhNhanInput;
+};
+
+
+export type MutationCreateBlogArgs = {
+  createBlogInput: CreateBlogInput;
 };
 
 
@@ -445,6 +476,11 @@ export type MutationDeleteBenhNhanArgs = {
 };
 
 
+export type MutationDeleteBlogArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteChuyenKhoaArgs = {
   _id: Scalars['String']['input'];
 };
@@ -540,6 +576,11 @@ export type MutationUpdateBenhNhanArgs = {
 };
 
 
+export type MutationUpdateBlogArgs = {
+  updateBlogInput: UpdateBlogInput;
+};
+
+
 export type MutationUpdateChuyenKhoaArgs = {
   updateChuyenKhoaInput: UpdateChuyenKhoaInput;
 };
@@ -562,6 +603,11 @@ export type MutationUpdateHoadonArgs = {
 
 export type MutationUpdateKetquacanlamsangArgs = {
   updateKetquacanlamsangInput: UpdateKetquacanlamsangInput;
+};
+
+
+export type MutationUpdateKichHoatArgs = {
+  _id: Scalars['String']['input'];
 };
 
 
@@ -689,15 +735,16 @@ export type NewChuyenKhoaInput = {
 };
 
 export type NewDatLichInput = {
-  benhnhan: Scalars['String']['input'];
-  bhyt: Scalars['Boolean']['input'];
+  hoten: Scalars['String']['input'];
   motabenh: Scalars['String']['input'];
   ngaydat: Scalars['DateTime']['input'];
   ngaykham: Scalars['DateTime']['input'];
+  sodienthoai: Scalars['String']['input'];
 };
 
 export type NewLoaiCanLamSangInput = {
   gia: Scalars['Float']['input'];
+  loaicanlamsang: Scalars['String']['input'];
   mota: Scalars['String']['input'];
   tenxetnghiem: Scalars['String']['input'];
 };
@@ -798,12 +845,14 @@ export type Query = {
   CountBacSi: Scalars['Float']['output'];
   CountBenhNhan: Scalars['Float']['output'];
   CountThuoc: Scalars['Float']['output'];
+  countBlogs: Scalars['Float']['output'];
   countUser: Scalars['Float']['output'];
   findAllRelatedKetQuaCanLamSang?: Maybe<Array<KetQuaCanLamSang>>;
   getAllBacSi: Array<BacSi>;
   getAllBenh: Array<Benh>;
   getAllBenhNhan: Array<BenhNhan>;
   getAllBenhNhanNoPagination: Array<BenhNhan>;
+  getAllBlog: Array<Blog>;
   getAllByNgayVaPhong: Array<PhieuXacNhan>;
   getAllChuyenKhoa: Array<ChuyenKhoa>;
   getAllDatLich?: Maybe<Array<DatLich>>;
@@ -827,7 +876,9 @@ export type Query = {
   getAllVatTuYTe: Array<Vattuyte>;
   getBacSibyUserId?: Maybe<BacSi>;
   getBenhNhanbyId: BenhNhan;
+  getBenhNhanbySodienthoai?: Maybe<BenhNhan>;
   getBenhNhanbyUserId?: Maybe<BenhNhan>;
+  getLastestBlog: Array<Blog>;
   getNhanVienbyUserId?: Maybe<NhanVien>;
   getPhieuCanLamSangbyPhieuXacNhanId?: Maybe<Phieuchidinhcanlamsang>;
   getThuocPagination: Array<Thuoc>;
@@ -850,6 +901,11 @@ export type QueryGetAllBacSiArgs = {
 
 
 export type QueryGetAllBenhNhanArgs = {
+  fetchPagination: FetchPagination;
+};
+
+
+export type QueryGetAllBlogArgs = {
   fetchPagination: FetchPagination;
 };
 
@@ -898,8 +954,18 @@ export type QueryGetBenhNhanbyIdArgs = {
 };
 
 
+export type QueryGetBenhNhanbySodienthoaiArgs = {
+  sodienthoai: Scalars['String']['input'];
+};
+
+
 export type QueryGetBenhNhanbyUserIdArgs = {
   user: Scalars['String']['input'];
+};
+
+
+export type QueryGetLastestBlogArgs = {
+  limit: Scalars['Float']['input'];
 };
 
 
@@ -1042,6 +1108,15 @@ export type UpdateBenhNhanInput = {
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateBlogInput = {
+  hinhanh?: InputMaybe<LinkImageInput>;
+  id: Scalars['String']['input'];
+  noidung?: InputMaybe<Scalars['String']['input']>;
+  tieude?: InputMaybe<Scalars['String']['input']>;
+  tomtat?: InputMaybe<Scalars['String']['input']>;
+  user?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdateChuyenKhoaInput = {
   id: Scalars['String']['input'];
   mota?: InputMaybe<Scalars['String']['input']>;
@@ -1049,12 +1124,12 @@ export type UpdateChuyenKhoaInput = {
 };
 
 export type UpdateDatLichInput = {
-  benhnhan?: InputMaybe<Scalars['String']['input']>;
-  bhyt?: InputMaybe<Scalars['Boolean']['input']>;
+  hoten?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
   motabenh?: InputMaybe<Scalars['String']['input']>;
   ngaydat?: InputMaybe<Scalars['DateTime']['input']>;
   ngaykham?: InputMaybe<Scalars['DateTime']['input']>;
+  sodienthoai?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateDichvuInput = {
@@ -1086,6 +1161,7 @@ export type UpdateKetquacanlamsangInput = {
 export type UpdateLoaicanlamsangInput = {
   gia?: InputMaybe<Scalars['Float']['input']>;
   id: Scalars['String']['input'];
+  loaicanlamsang?: InputMaybe<Scalars['String']['input']>;
   mota?: InputMaybe<Scalars['String']['input']>;
   tenxetnghiem?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1278,7 +1354,7 @@ export type CreatePhieuchidinhcanlamsangMutationVariables = Exact<{
 }>;
 
 
-export type CreatePhieuchidinhcanlamsangMutation = { __typename?: 'Mutation', createPhieuchidinhcanlamsang: { __typename?: 'Phieuchidinhcanlamsang', _id: string, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', loaicanlamsang: { __typename?: 'LoaiCanLamSang', tenxetnghiem: string, gia: number } }> } };
+export type CreatePhieuchidinhcanlamsangMutation = { __typename?: 'Mutation', createPhieuchidinhcanlamsang: { __typename?: 'Phieuchidinhcanlamsang', _id: string, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', loaicanlamsang: { __typename?: 'LoaiCanLamSang', tenxetnghiem: string, gia: number, loaicanlamsang: string } }> } };
 
 export type UpdateKetquacanlamsangMutationVariables = Exact<{
   input: UpdateKetquacanlamsangInput;
@@ -1450,6 +1526,34 @@ export type CreateHoadonchidinhcanlamsangMutationVariables = Exact<{
 
 export type CreateHoadonchidinhcanlamsangMutation = { __typename?: 'Mutation', createHoadonchidinhcanlamsang: { __typename?: 'Hoadonchidinhcanlamsang', _id: string } };
 
+export type CreateBlogMutationVariables = Exact<{
+  input: CreateBlogInput;
+}>;
+
+
+export type CreateBlogMutation = { __typename?: 'Mutation', createBlog: { __typename?: 'Blog', _id: string } };
+
+export type UpdateBlogMutationVariables = Exact<{
+  input: UpdateBlogInput;
+}>;
+
+
+export type UpdateBlogMutation = { __typename?: 'Mutation', updateBlog: { __typename?: 'Blog', _id: string } };
+
+export type DeleteBlogMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteBlogMutation = { __typename?: 'Mutation', deleteBlog: boolean };
+
+export type UpdateKichHoatMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type UpdateKichHoatMutation = { __typename?: 'Mutation', updateKichHoat: boolean };
+
 export type OnlyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1517,7 +1621,7 @@ export type GetAllNgayVaPhongQuery = { __typename?: 'Query', getAllByNgayVaPhong
 export type GetAllLoaiClsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllLoaiClsQuery = { __typename?: 'Query', getAllLoaiCLS: Array<{ __typename?: 'LoaiCanLamSang', _id: string, tenxetnghiem: string, gia: number, mota: string }> };
+export type GetAllLoaiClsQuery = { __typename?: 'Query', getAllLoaiCLS: Array<{ __typename?: 'LoaiCanLamSang', _id: string, tenxetnghiem: string, gia: number, loaicanlamsang: string, mota: string }> };
 
 export type GetAllPhieuClSbyNgayQueryVariables = Exact<{
   ngaytao: Scalars['DateTime']['input'];
@@ -1525,7 +1629,7 @@ export type GetAllPhieuClSbyNgayQueryVariables = Exact<{
 }>;
 
 
-export type GetAllPhieuClSbyNgayQuery = { __typename?: 'Query', getAllPhieuCLSbyNgay: Array<{ __typename?: 'Phieuchidinhcanlamsang', _id: string, bhyt: boolean, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string }, bacsi: { __typename?: 'BacSi', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string }, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', _id: string, ketluan?: string | null, thietbi?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', tenxetnghiem: string, gia: number }, hinhanh?: { __typename?: 'LinkImage', fileName: string, url: string, type: TypeImage } | null }> }> };
+export type GetAllPhieuClSbyNgayQuery = { __typename?: 'Query', getAllPhieuCLSbyNgay: Array<{ __typename?: 'Phieuchidinhcanlamsang', _id: string, bhyt: boolean, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string }, bacsi: { __typename?: 'BacSi', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string }, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', _id: string, ketluan?: string | null, thietbi?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', tenxetnghiem: string, gia: number, loaicanlamsang: string }, hinhanh?: { __typename?: 'LinkImage', fileName: string, url: string, type: TypeImage } | null }> }> };
 
 export type GetAllPhongQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1542,7 +1646,7 @@ export type FindAllRelatedKetQuaCanLamSangQueryVariables = Exact<{
 }>;
 
 
-export type FindAllRelatedKetQuaCanLamSangQuery = { __typename?: 'Query', findAllRelatedKetQuaCanLamSang?: Array<{ __typename?: 'KetQuaCanLamSang', _id: string, thietbi?: string | null, ketluan?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', tenxetnghiem: string }, hinhanh?: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } | null }> | null };
+export type FindAllRelatedKetQuaCanLamSangQuery = { __typename?: 'Query', findAllRelatedKetQuaCanLamSang?: Array<{ __typename?: 'KetQuaCanLamSang', _id: string, thietbi?: string | null, ketluan?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', tenxetnghiem: string, loaicanlamsang: string }, hinhanh?: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } | null }> | null };
 
 export type GetAllHoaDonQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1554,7 +1658,7 @@ export type GetAllDatLichbyTrangThaiQueryVariables = Exact<{
 }>;
 
 
-export type GetAllDatLichbyTrangThaiQuery = { __typename?: 'Query', getAllDatLichbyTrangThai?: Array<{ __typename?: 'DatLich', _id: string, motabenh: string, ngaydat: any, ngaykham: any, trangthai: TrangThaiDatKham, bhyt: boolean, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any } }> | null };
+export type GetAllDatLichbyTrangThaiQuery = { __typename?: 'Query', getAllDatLichbyTrangThai?: Array<{ __typename?: 'DatLich', _id: string, motabenh: string, ngaydat: any, ngaykham: any, trangthai: TrangThaiDatKham, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any } }> | null };
 
 export type GetAllPhieuXacNhanDaXetNghiemQueryVariables = Exact<{
   ngaykham: Scalars['String']['input'];
@@ -1562,7 +1666,7 @@ export type GetAllPhieuXacNhanDaXetNghiemQueryVariables = Exact<{
 }>;
 
 
-export type GetAllPhieuXacNhanDaXetNghiemQuery = { __typename?: 'Query', getAllPhieuXacNhanDaXetNgiem?: Array<{ __typename?: 'PhieuXacNhan', _id: string, trangthai: TrangThaiKham, sothutu: number, ngaytao: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, bhyt: string, sinhhieu?: { __typename?: 'Sinhhieu', _id: string, mach: number, nhietdo: number, ha: string, chieucao: number, cannang: number, bmi: number, benhmangtinh: boolean } | null }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, phieuchidinhcanlamsang?: { __typename?: 'Phieuchidinhcanlamsang', _id: string, bhyt: boolean, ngaytao: any, trangthai: boolean, bacsi: { __typename?: 'BacSi', _id: string, hoten: string }, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', ketluan?: string | null, thietbi?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', _id: string, tenxetnghiem: string }, hinhanh?: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } | null }> } | null }> | null };
+export type GetAllPhieuXacNhanDaXetNghiemQuery = { __typename?: 'Query', getAllPhieuXacNhanDaXetNgiem?: Array<{ __typename?: 'PhieuXacNhan', _id: string, trangthai: TrangThaiKham, sothutu: number, ngaytao: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, bhyt: string, sinhhieu?: { __typename?: 'Sinhhieu', _id: string, mach: number, nhietdo: number, ha: string, chieucao: number, cannang: number, bmi: number, benhmangtinh: boolean } | null }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, phieuchidinhcanlamsang?: { __typename?: 'Phieuchidinhcanlamsang', _id: string, bhyt: boolean, ngaytao: any, trangthai: boolean, bacsi: { __typename?: 'BacSi', _id: string, hoten: string }, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', ketluan?: string | null, thietbi?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', _id: string, tenxetnghiem: string, loaicanlamsang: string }, hinhanh?: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } | null }> } | null }> | null };
 
 export type GetAllNhanVienQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1579,10 +1683,17 @@ export type GetAllVattuyteQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllVattuyteQuery = { __typename?: 'Query', getAllVatTuYTe: Array<{ __typename?: 'Vattuyte', tenvattu: string, _id: string, soluong: number, dvt: string, chiphi: Array<{ __typename?: 'ChiPhi', bhyt: boolean, gia: number }> }> };
 
+export type GetAllBlogsQueryVariables = Exact<{
+  input: FetchPagination;
+}>;
+
+
+export type GetAllBlogsQuery = { __typename?: 'Query', countBlogs: number, getAllBlog: Array<{ __typename?: 'Blog', _id: string, tieude: string, tomtat?: string | null, noidung: string, luotxem: number, kichhoat: boolean, ngaytao: any, user: { __typename?: 'Users', username: string }, hinhanh: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } }> };
+
 export type NewDatLichSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NewDatLichSubscription = { __typename?: 'Subscription', newDatLich: { __typename?: 'DatLich', _id: string, motabenh: string, ngaydat: any, ngaykham: any, trangthai: TrangThaiDatKham, bhyt: boolean, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any } } };
+export type NewDatLichSubscription = { __typename?: 'Subscription', newDatLich: { __typename?: 'DatLich', _id: string, motabenh: string, ngaydat: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any } } };
 
 
 export const LoginDocument = gql`
@@ -1892,6 +2003,7 @@ export const CreatePhieuchidinhcanlamsangDocument = gql`
       loaicanlamsang {
         tenxetnghiem
         gia
+        loaicanlamsang
       }
     }
   }
@@ -2713,6 +2825,134 @@ export function useCreateHoadonchidinhcanlamsangMutation(baseOptions?: Apollo.Mu
 export type CreateHoadonchidinhcanlamsangMutationHookResult = ReturnType<typeof useCreateHoadonchidinhcanlamsangMutation>;
 export type CreateHoadonchidinhcanlamsangMutationResult = Apollo.MutationResult<CreateHoadonchidinhcanlamsangMutation>;
 export type CreateHoadonchidinhcanlamsangMutationOptions = Apollo.BaseMutationOptions<CreateHoadonchidinhcanlamsangMutation, CreateHoadonchidinhcanlamsangMutationVariables>;
+export const CreateBlogDocument = gql`
+    mutation CreateBlog($input: CreateBlogInput!) {
+  createBlog(createBlogInput: $input) {
+    _id
+  }
+}
+    `;
+export type CreateBlogMutationFn = Apollo.MutationFunction<CreateBlogMutation, CreateBlogMutationVariables>;
+
+/**
+ * __useCreateBlogMutation__
+ *
+ * To run a mutation, you first call `useCreateBlogMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBlogMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBlogMutation, { data, loading, error }] = useCreateBlogMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateBlogMutation(baseOptions?: Apollo.MutationHookOptions<CreateBlogMutation, CreateBlogMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBlogMutation, CreateBlogMutationVariables>(CreateBlogDocument, options);
+      }
+export type CreateBlogMutationHookResult = ReturnType<typeof useCreateBlogMutation>;
+export type CreateBlogMutationResult = Apollo.MutationResult<CreateBlogMutation>;
+export type CreateBlogMutationOptions = Apollo.BaseMutationOptions<CreateBlogMutation, CreateBlogMutationVariables>;
+export const UpdateBlogDocument = gql`
+    mutation UpdateBlog($input: UpdateBlogInput!) {
+  updateBlog(updateBlogInput: $input) {
+    _id
+  }
+}
+    `;
+export type UpdateBlogMutationFn = Apollo.MutationFunction<UpdateBlogMutation, UpdateBlogMutationVariables>;
+
+/**
+ * __useUpdateBlogMutation__
+ *
+ * To run a mutation, you first call `useUpdateBlogMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateBlogMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateBlogMutation, { data, loading, error }] = useUpdateBlogMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateBlogMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBlogMutation, UpdateBlogMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateBlogMutation, UpdateBlogMutationVariables>(UpdateBlogDocument, options);
+      }
+export type UpdateBlogMutationHookResult = ReturnType<typeof useUpdateBlogMutation>;
+export type UpdateBlogMutationResult = Apollo.MutationResult<UpdateBlogMutation>;
+export type UpdateBlogMutationOptions = Apollo.BaseMutationOptions<UpdateBlogMutation, UpdateBlogMutationVariables>;
+export const DeleteBlogDocument = gql`
+    mutation DeleteBlog($id: String!) {
+  deleteBlog(id: $id)
+}
+    `;
+export type DeleteBlogMutationFn = Apollo.MutationFunction<DeleteBlogMutation, DeleteBlogMutationVariables>;
+
+/**
+ * __useDeleteBlogMutation__
+ *
+ * To run a mutation, you first call `useDeleteBlogMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBlogMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBlogMutation, { data, loading, error }] = useDeleteBlogMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteBlogMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBlogMutation, DeleteBlogMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteBlogMutation, DeleteBlogMutationVariables>(DeleteBlogDocument, options);
+      }
+export type DeleteBlogMutationHookResult = ReturnType<typeof useDeleteBlogMutation>;
+export type DeleteBlogMutationResult = Apollo.MutationResult<DeleteBlogMutation>;
+export type DeleteBlogMutationOptions = Apollo.BaseMutationOptions<DeleteBlogMutation, DeleteBlogMutationVariables>;
+export const UpdateKichHoatDocument = gql`
+    mutation UpdateKichHoat($id: String!) {
+  updateKichHoat(_id: $id)
+}
+    `;
+export type UpdateKichHoatMutationFn = Apollo.MutationFunction<UpdateKichHoatMutation, UpdateKichHoatMutationVariables>;
+
+/**
+ * __useUpdateKichHoatMutation__
+ *
+ * To run a mutation, you first call `useUpdateKichHoatMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateKichHoatMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateKichHoatMutation, { data, loading, error }] = useUpdateKichHoatMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdateKichHoatMutation(baseOptions?: Apollo.MutationHookOptions<UpdateKichHoatMutation, UpdateKichHoatMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateKichHoatMutation, UpdateKichHoatMutationVariables>(UpdateKichHoatDocument, options);
+      }
+export type UpdateKichHoatMutationHookResult = ReturnType<typeof useUpdateKichHoatMutation>;
+export type UpdateKichHoatMutationResult = Apollo.MutationResult<UpdateKichHoatMutation>;
+export type UpdateKichHoatMutationOptions = Apollo.BaseMutationOptions<UpdateKichHoatMutation, UpdateKichHoatMutationVariables>;
 export const OnlyUserDocument = gql`
     query OnlyUser {
   onlyUser {
@@ -3311,6 +3551,7 @@ export const GetAllLoaiClsDocument = gql`
     _id
     tenxetnghiem
     gia
+    loaicanlamsang
     mota
   }
 }
@@ -3369,6 +3610,7 @@ export const GetAllPhieuClSbyNgayDocument = gql`
       loaicanlamsang {
         tenxetnghiem
         gia
+        loaicanlamsang
       }
       hinhanh {
         fileName
@@ -3506,6 +3748,7 @@ export const FindAllRelatedKetQuaCanLamSangDocument = gql`
     _id
     loaicanlamsang {
       tenxetnghiem
+      loaicanlamsang
     }
     hinhanh {
       url
@@ -3624,7 +3867,6 @@ export const GetAllDatLichbyTrangThaiDocument = gql`
     ngaydat
     ngaykham
     trangthai
-    bhyt
   }
 }
     `;
@@ -3706,6 +3948,7 @@ export const GetAllPhieuXacNhanDaXetNghiemDocument = gql`
         loaicanlamsang {
           _id
           tenxetnghiem
+          loaicanlamsang
         }
         ketluan
         thietbi
@@ -3906,6 +4149,61 @@ export type GetAllVattuyteQueryHookResult = ReturnType<typeof useGetAllVattuyteQ
 export type GetAllVattuyteLazyQueryHookResult = ReturnType<typeof useGetAllVattuyteLazyQuery>;
 export type GetAllVattuyteSuspenseQueryHookResult = ReturnType<typeof useGetAllVattuyteSuspenseQuery>;
 export type GetAllVattuyteQueryResult = Apollo.QueryResult<GetAllVattuyteQuery, GetAllVattuyteQueryVariables>;
+export const GetAllBlogsDocument = gql`
+    query GetAllBlogs($input: FetchPagination!) {
+  countBlogs
+  getAllBlog(fetchPagination: $input) {
+    _id
+    user {
+      username
+    }
+    hinhanh {
+      url
+      fileName
+      type
+    }
+    tieude
+    tomtat
+    noidung
+    luotxem
+    kichhoat
+    ngaytao
+  }
+}
+    `;
+
+/**
+ * __useGetAllBlogsQuery__
+ *
+ * To run a query within a React component, call `useGetAllBlogsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllBlogsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllBlogsQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetAllBlogsQuery(baseOptions: Apollo.QueryHookOptions<GetAllBlogsQuery, GetAllBlogsQueryVariables> & ({ variables: GetAllBlogsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllBlogsQuery, GetAllBlogsQueryVariables>(GetAllBlogsDocument, options);
+      }
+export function useGetAllBlogsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllBlogsQuery, GetAllBlogsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllBlogsQuery, GetAllBlogsQueryVariables>(GetAllBlogsDocument, options);
+        }
+export function useGetAllBlogsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllBlogsQuery, GetAllBlogsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllBlogsQuery, GetAllBlogsQueryVariables>(GetAllBlogsDocument, options);
+        }
+export type GetAllBlogsQueryHookResult = ReturnType<typeof useGetAllBlogsQuery>;
+export type GetAllBlogsLazyQueryHookResult = ReturnType<typeof useGetAllBlogsLazyQuery>;
+export type GetAllBlogsSuspenseQueryHookResult = ReturnType<typeof useGetAllBlogsSuspenseQuery>;
+export type GetAllBlogsQueryResult = Apollo.QueryResult<GetAllBlogsQuery, GetAllBlogsQueryVariables>;
 export const NewDatLichDocument = gql`
     subscription NewDatLich {
   newDatLich {
@@ -3918,8 +4216,6 @@ export const NewDatLichDocument = gql`
     motabenh
     ngaydat
     ngaykham
-    trangthai
-    bhyt
   }
 }
     `;

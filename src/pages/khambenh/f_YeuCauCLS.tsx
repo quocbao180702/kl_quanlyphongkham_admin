@@ -1,17 +1,15 @@
-import { Button, Form, Modal, Row } from "react-bootstrap";
+import { Button, Form, Modal, Row, Table } from "react-bootstrap";
 import { DichVuInput, LinkImage, LoaiCanLamSang, useCreateHoadonchidinhcanlamsangMutation, useCreatePhieuchidinhcanlamsangMutation, useGetAllLoaiClsQuery, useUpdateTrangThaiKhamMutation } from "../../graphql-definition/graphql";
 import { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
-import UploadImage from "../../components/UploadImage";
-import { Box, Checkbox, FormControlLabel } from "@mui/material";
-import { message } from "antd";
+import { Checkbox, FormControlLabel } from "@mui/material";
 import dayjs, { Dayjs } from 'dayjs';
 
 function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refetchChoKham, refetchCHOXETNGHIEM }: any) {
 
     const { data, loading, error } = useGetAllLoaiClsQuery();
-    const [checked, setChecked] = useState([false, false, false, false, false]);
     const [selectedValues, setSelectedValues] = useState<string[]>([]);
+    const [selectedDichVu, setSelectedDichVu] = useState<DichVuInput[]>([]);
     const [benhnhanId, setBenhNhanId] = useState();
     const [bhyt, setBHYT] = useState(Boolean);
 
@@ -55,7 +53,7 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
                     })
                 ]);
                 try {
-                    let chitietcanlamsang: DichVuInput[] = [];
+                    /* let chitietcanlamsang: DichVuInput[] = [];
 
                     if (response?.data?.createPhieuchidinhcanlamsang?.ketquacanlamsangs) {
                         chitietcanlamsang = response.data.createPhieuchidinhcanlamsang.ketquacanlamsangs.map(thongtin => ({
@@ -64,14 +62,14 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
                             soluong: 1,
                             thanhtien: (thongtin?.loaicanlamsang?.gia || 0) * 1
                         }));
-                    }
+                    } */
 
                     await createHoadonchidinhCLS({
                         variables: {
                             "input": {
                                 "benhnhan": benhnhanId,
                                 "bhyt": bhyt,
-                                "chitietcanlamsang": chitietcanlamsang
+                                "chitietcanlamsang": selectedDichVu
                             }
                         }
                     });
@@ -91,74 +89,22 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
         onHide();
     }
 
-
-    const handleChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newChecked = [...checked];
-        newChecked[index] = event.target.checked;
-        setChecked(newChecked);
-
-        const newSelectedValues = newChecked.reduce((values: string[], isChecked, idx) => {
-            if (isChecked && data?.getAllLoaiCLS[idx]._id) {
-                values.push(data.getAllLoaiCLS[idx]._id);
-            }
-            return values;
-        }, []);
-
-        setSelectedValues(newSelectedValues);
-    };
-
-    const handleSelectAll = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const allChecked = event.target.checked;
-        setChecked(new Array(5).fill(allChecked));
-
-        if (data?.getAllLoaiCLS) {
-            const newSelectedValues = allChecked ? data?.getAllLoaiCLS?.map((item: any) => item._id) : [];
-            setSelectedValues(newSelectedValues);
+    const handleChange = (item: LoaiCanLamSang) => (event: React.ChangeEvent<HTMLInputElement>) => {
+        const isChecked = event.target.checked;
+        const chitietcanlamsang = {
+            ten: item?.tenxetnghiem || "",
+            gia: item?.gia || 0,
+            soluong: 1,
+            thanhtien: (item?.gia || 0) * 1
         }
-    };
-
-
-    const renderCheckboxes = () => {
-        if (loading) {
-            return (
-                <div className="text-center">
-                    <div className="spinner-border" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </div>
-                </div>
-            );
-        }
-        if (error) {
-            return (
-                <div>{error.message}</div>
-            );
+        if (isChecked) {
+            setSelectedValues(prevSelectedValues => [...prevSelectedValues, item?._id]);
+            setSelectedDichVu(prevSelectedDichVu => [...prevSelectedDichVu, chitietcanlamsang]);
         } else {
-            return (
-                <>
-                    <FormControlLabel
-                        className="mt-3"
-                        label="Chọn tất cả"
-                        control={
-                            <Checkbox
-                                checked={checked.every((value) => value)}
-                                indeterminate={checked.some((value) => value) && !checked.every((value) => value)}
-                                onChange={handleSelectAll}
-                            />
-                        }
-                    />
-                    {data?.getAllLoaiCLS?.map((item: LoaiCanLamSang, index: number) => (
-                        <FormControlLabel
-                            key={item?._id}
-                            label={item?.tenxetnghiem}
-                            value={item._id}
-                            control={<Checkbox checked={checked[index]} onChange={handleChange(index)} />}
-                        />
-                    ))}
-                </>
-            );
+            setSelectedValues(prevSelectedValues => prevSelectedValues.filter(value => value !== item?._id));
+            setSelectedDichVu(prevSelectedDichVu => prevSelectedDichVu.filter(value => value.ten !== item?.tenxetnghiem));
         }
     };
-
 
     return (
         <Modal
@@ -191,7 +137,31 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
                 </Row>
                 <Row>
                     <h6>Loại Xét Nghiệm</h6>
-                    {renderCheckboxes()}
+                    <Table responsive>
+                        <thead>
+                            <tr className="text-center">
+                                <th>Loại Cận Sàng</th>
+                                <th>Tên Xét Nghiệm</th>
+                                <th>Giá</th>
+                                <th>Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data?.getAllLoaiCLS.map((item: LoaiCanLamSang) => (
+                                <tr key={item._id} className="text-center">
+                                    <td style={{ padding: '0' }} className="align-middle">{item?.loaicanlamsang}</td>
+                                    <td style={{ padding: '0' }} className="align-middle">{item?.tenxetnghiem}</td>
+                                    <td style={{ padding: '0' }} className="align-middle">{item?.gia}</td>
+                                    <td style={{ padding: '0' }} className="align-middle">
+                                        <FormControlLabel
+                                            label={''}
+                                            control={<Checkbox checked={selectedValues.includes(item._id)} onChange={handleChange(item)} />}
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
                 </Row>
             </Modal.Body>
             <Modal.Footer>

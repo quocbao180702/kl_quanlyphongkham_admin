@@ -16,6 +16,9 @@ import NhanVienPage from "../pages/nhanvien"
 import DatLich from "../pages/datlich"
 import HoaDonPage from "../pages/hoadon"
 import ProtectedRoutes from "./protectedRoute"
+import Blogs from "../pages/blogs/danhsachBlog"
+import ThemBlog from "../pages/blogs/f_themblog"
+import SuaBlog from "../pages/blogs/f_suablog"
 
 export const AppRouter = () => {
 
@@ -37,6 +40,8 @@ export const AppRouter = () => {
                             <Route path="khambenh" element={<KhamBenh />} />
                             <Route path="canlamsang" element={<CanLamSang />} />
                             <Route path="hoadon" element={<HoaDonPage />} />
+                            <Route path="blogs" element={<Blogs />} />
+                            <Route path="blogs/them" element={<ThemBlog />} />
                         </Route>
                     </Route>
 

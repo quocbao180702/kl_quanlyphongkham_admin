@@ -77,8 +77,8 @@ function UploadImage({
                     <img
                         alt='img'
                         style={{
-                            width: '100%',
                             height: '100%',
+                            width: '100%',
                             objectFit: 'fill'
                         }}
                         src={getUrlImage(imageUrl)}
@@ -88,6 +88,7 @@ function UploadImage({
                 )}
             </div>
         </Upload>
+
     )
 }
 

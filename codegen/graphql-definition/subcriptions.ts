@@ -12,8 +12,6 @@ subscription NewDatLich{
       motabenh
       ngaydat
       ngaykham
-      trangthai
-      bhyt
     }
   }
 `

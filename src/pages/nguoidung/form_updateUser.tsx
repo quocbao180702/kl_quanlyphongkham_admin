@@ -76,8 +76,6 @@ function MyVerticallyCenteredModal({ show, onHide, user }: any) {
                     <UploadImage
                         linkImage={imageUrl}
                         handleUploadCallback={handleUpload}
-                        sizeHeight={200}
-                        sizeWidth={300}
                     />
                     <Form.Group className="mb-3" controlId="formUserEmail">
                         <Form.Label>Email address</Form.Label>

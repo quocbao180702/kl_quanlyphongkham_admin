@@ -22,7 +22,7 @@ function Header() {
     }
     return (
         <>
-            <nav className="navbar navbar-expand-lg" style={{backgroundColor: '#32C0F9 '}}>
+            <nav className="navbar navbar-expand-lg" style={{ backgroundColor: '#32C0F9 ' }}>
                 <a className="navbar-brand text-light" href="/">Phòng Khám</a>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -56,6 +56,9 @@ function Header() {
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link text-light" to="/hoadon">Hóa Đơn</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link text-light" to="/blogs">Blogs</Link>
                         </li>
                     </ul>
                     <ul className="navbar-nav ml-5">

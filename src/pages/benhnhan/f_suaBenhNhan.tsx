@@ -64,7 +64,7 @@ function SuaBenhNhan({ show, onHide, benhnhan, refetch }: any) {
                             "diachi": diachi,
                             "cccd": cccd,
                             "bhyt": bhyt,
-                            "user": benhnhan?.user?._id
+                            "username": benhnhan?.username
                         }
                     }
                 })

@@ -4,9 +4,9 @@ import moment from 'moment';
 
 function ChoKham({ data, loading, error, selected }: any) {
 
-    const handleRowSelect = (benhnhan: BenhNhan, id: string) => {
-        selected(benhnhan, id);
-        console.log('row selected is:', benhnhan);
+    const handleRowSelect = (benhnhan: BenhNhan, id: string, cls: any) => {
+        selected(benhnhan, id, cls);
+        console.log('row selected is:', benhnhan, cls);
     };
 
     if (loading) return <div>Loading...</div>;
@@ -27,7 +27,7 @@ function ChoKham({ data, loading, error, selected }: any) {
                 </thead>
                 <tbody>
                     {data?.getAllByNgayVaPhong && data.getAllByNgayVaPhong.length > 0 && data.getAllByNgayVaPhong.map((kb: any) => (
-                        <tr className='rowSelected' key={kb._id} onClick={() => handleRowSelect(kb?.benhnhan, kb?._id)}>
+                        <tr className='rowSelected' key={kb._id} onClick={() => handleRowSelect(kb?.benhnhan, kb?._id, undefined)}>
                             <td>{kb?.sothutu}</td>
                             <td>{kb?.benhnhan?.hoten}</td>
                             <td>{moment(kb?.benhnhan?.ngaysinh).format('YYYY/MM/DD')}</td>
@@ -37,7 +37,7 @@ function ChoKham({ data, loading, error, selected }: any) {
                         </tr>
                     ))}
                     {data?.getAllPhieuXacNhanDaXetNgiem && data.getAllPhieuXacNhanDaXetNgiem.length > 0 && data.getAllPhieuXacNhanDaXetNgiem.map((kb: any) => (
-                        <tr className='rowSelected' key={kb._id} onClick={() => handleRowSelect(kb?.benhnhan, kb?._id)}>
+                        <tr className='rowSelected' key={kb._id} onClick={() => handleRowSelect(kb?.benhnhan, kb?._id, kb?.phieuchidinhcanlamsang)}>
                             <td>{kb?.sothutu}</td>
                             <td>{kb?.benhnhan?.hoten}</td>
                             <td>{moment(kb?.benhnhan?.ngaysinh).format('YYYY/MM/DD')}</td>

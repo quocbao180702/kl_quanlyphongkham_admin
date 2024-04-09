@@ -21,7 +21,6 @@ interface Datlich {
     ngaydat: string;
     ngaykham: string;
     trangthai: string;
-    bhyt: boolean;
 }
 interface BenhNhan {
     _id: string
@@ -143,7 +142,6 @@ function DatLich() {
             setMota(selected?.motabenh);
             setNgaySinh(dayjs(selected?.benhnhan?.ngaysinh))
             setNgayKham(dayjs(selected?.ngaykham));
-            setBhyt(selected?.bhyt)
         }
     }, [selected])
 
@@ -288,7 +286,6 @@ function DatLich() {
                                 <th>Mô Tả Bệnh</th>
                                 <th>Ngày Đặt</th>
                                 <th>Ngày Khám</th>
-                                <th>BHYT</th>
                                 <th>Hủy</th>
                             </tr>
                         </thead>
@@ -301,7 +298,6 @@ function DatLich() {
                                     <td>{appointment?.motabenh || 'Unknown'}</td>
                                     <td>{moment(appointment?.ngaydat).format('YYYY-MM-DD')}</td>
                                     <td>{moment(appointment?.ngaykham).format('YYYY-MM-DD')}</td>
-                                    <td>{appointment?.bhyt ? 'Yes' : 'No'}</td>
                                     <td width={50} onClick={handleHuyKham}><MdDelete /></td>
                                 </tr>
                             ))}

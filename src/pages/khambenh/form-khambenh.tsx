@@ -8,7 +8,7 @@ import dayjs, { Dayjs } from 'dayjs';
 
 
 
-function KhamBenhForm({ dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIEM, refetchHOANTAT }: any) {
+function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIEM, refetchHOANTAT }: any) {
     const { data: benhData, loading: benhLoading, error: benhError } = useGetAllBenhQuery();
     const { data: thuocData, loading: thuocLoading, error: thuocError } = useGetAllThuocQuery();
     const [selectedBenh, setSelectedBenh] = useState([]);
@@ -35,6 +35,10 @@ function KhamBenhForm({ dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIE
         const newHangs = [...hangs];
         newHangs[index].soLuong = value;
         setHangs(newHangs);
+    };
+
+    const handleRowSelect = () => {
+        selected(undefined);
     };
 
     const themHang = () => {
@@ -158,14 +162,15 @@ function KhamBenhForm({ dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIE
                         console.log('không tìm thấy id để update')
                     }
                 } catch (error) {
-
+                    console.log(error)
                 }
                 refetchDAXETNGHIEM();
-                refetchHOANTAT
+                refetchHOANTAT()
             }
             else {
                 console.log('Không thể tạo toa thuốc')
             }
+            handleRowSelect();
             setNgayTaiKham(dayjs())
         } catch (error) {
             console.log('lỗi thêm toa thuốc: ', error)
@@ -247,8 +252,8 @@ function KhamBenhForm({ dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIE
 
                     <div>
                         {hangs.map((hang, index) => (
-                            <Grid container spacing={2} key={hang.id}>
-                                <Grid item md={7}>
+                            <Grid container spacing={3} key={hang.id}>
+                                <Grid item md={6}>
                                     <Autocomplete
                                         id={`multiple-limit-tags-${hang.id}`}
                                         options={thuocData?.getAllThuoc || []}
@@ -260,7 +265,7 @@ function KhamBenhForm({ dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIE
                                         sx={{ width: '100%' }}
                                     />
                                 </Grid>
-                                <Grid item md={3}>
+                                <Grid item md={5}>
                                     <TextField
                                         id={`soLuong-${hang.id}`}
                                         label="Số lượng..."
@@ -269,7 +274,7 @@ function KhamBenhForm({ dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIE
                                         style={{ width: '100%' }}
                                     />
                                 </Grid>
-                                <Grid item md={2}>
+                                <Grid item md={1}>
                                     <Button onClick={() => xoaHang(index)} variant="contained" color="secondary">
                                         Xóa
                                     </Button>

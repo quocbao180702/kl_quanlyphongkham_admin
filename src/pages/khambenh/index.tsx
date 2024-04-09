@@ -16,6 +16,7 @@ function KhamBenh() {
 
     const { profile } = useContext(AuthContext)
     const [dataSelected, setDataSelected] = useState<BenhNhan | undefined>(undefined);
+    const [dataCLS, setDataCLS] = useState<any | undefined>(undefined);
     /* const [dataCanLamSan, setCanLamSang] = useState([{ id: '', ten: '', gia: 0.0, soluong: 0, thanhtien: 0.0 }]); */
     const [idPhieuXacNhan, setIdPhieuXacNhan] = useState('');
     const [phong, setPhong] = useState(profile?.phongs && profile.phongs.length > 0 ? profile.phongs[0]._id : "");
@@ -74,11 +75,12 @@ function KhamBenh() {
         setModalShow(true);
     }
 
-    
 
-    const rowBenhNhanSelected = (select: BenhNhan, id: string) => {
+
+    const rowBenhNhanSelected = (select: BenhNhan, id: string, cls: any) => {
         setDataSelected(select);
         setIdPhieuXacNhan(id);
+        setDataCLS(cls)
     }
     /* const infoCLS = (info: any) => {
         setCanLamSang(info);
@@ -212,7 +214,9 @@ function KhamBenh() {
                             )}
                         </div>
                         <SinhHieu dataSelected={dataSelected} />
-                        <KhamBenhForm dataSelected={dataSelected}
+                        <KhamBenhForm
+                            selected={rowBenhNhanSelected}
+                            dataSelected={dataSelected}
                             bacsiId={profile?._id}
                             idPhieuXacNhan={idPhieuXacNhan}
                             refetchDAXETNGHIEM={refetchDAXETNGHIEM}
@@ -220,7 +224,7 @@ function KhamBenh() {
                         />
                     </div>
                     <div className="col-3" >
-                        <XetNghiem dataSelected={dataSelected} />
+                        <XetNghiem dataSelected={dataCLS} />
                     </div>
                 </div>
                 <YeuCauCanLamSang

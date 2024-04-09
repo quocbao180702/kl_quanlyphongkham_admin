@@ -1,8 +1,10 @@
-import { Button, Col, Form, Row, Tab, Table, Tabs } from "react-bootstrap";
+import { Button, Col, Form, Image, Row, Tab, Table, Tabs } from "react-bootstrap";
 import ChoXetNghiem from "./tab-choxetnghiem";
 import { KetQuaCanLamSang, LinkImage, LoaiCanLamSang, Phieuchidinhcanlamsang, TypeImage, useFindAllRelatedKetQuaCanLamSangLazyQuery, useGetAllPhieuClSbyNgayQuery, useUpdateKetquacanlamsangMutation, useUpdateTrangThaiCanLamSangMutation } from "../../graphql-definition/graphql";
 import { FormEvent, useEffect, useState } from "react";
 import dayjs, { Dayjs } from 'dayjs';
+import UploadImage from "../../components/UploadImage";
+import { getUrlImage } from "../../utils/uploadFile";
 
 
 function CanLamSang() {
@@ -12,11 +14,17 @@ function CanLamSang() {
     const [ketquaData, setketquaData] = useState<any[]>([]);
     const [id, setId] = useState('');
     const [tenLoai, setTenLoai] = useState('')
+    const [tenxetnghiem, setTenxetnghiem] = useState('');
     const [filename, setFileName] = useState('');
     const [ketluan, setKetLuan] = useState('');
     const [thietbi, setThietBi] = useState('');
-    /* const [hinhanh, setHinhAnh] = useState<LinkImage>(); */
+    const [hinhanh, setHinhAnh] = useState<LinkImage>();
 
+
+    const handleUpload = (imageData: LinkImage) => {
+        console.log(imageData);
+        setHinhAnh(imageData)
+    }
     const rowBenhNhanSelected = (select: Phieuchidinhcanlamsang) => {
         setDataSelected(select);
     }
@@ -61,10 +69,12 @@ function CanLamSang() {
     const handleSelected = (select: KetQuaCanLamSang) => {
         setKetQuaCLS(select);
         setId(select?._id);
-        setTenLoai(select?.loaicanlamsang?.tenxetnghiem || '');
+        setTenLoai(select?.loaicanlamsang?.loaicanlamsang || '');
+        setTenxetnghiem(select?.loaicanlamsang?.tenxetnghiem || '')
         setKetLuan(select?.ketluan || '');
         setThietBi(select?.thietbi || '');
         setFileName(select?.hinhanh?.fileName || '');
+        setHinhAnh(select?.hinhanh || undefined);
     }
 
     const [updateKetquacanlamsang] = useUpdateKetquacanlamsangMutation()
@@ -75,21 +85,16 @@ function CanLamSang() {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        const values: LinkImage = {
-            fileName: 'abc',
-            url: 'xyz',
-            type: TypeImage.File,
-        }
         try {
-            if (id && values && thietbi && ketluan) {
+            if (id && thietbi && ketluan && hinhanh) {
                 await updateKetquacanlamsang({
                     variables: {
                         "input": {
                             "id": id,
                             "hinhanh": {
-                                "url": values.url,
-                                "fileName": values.fileName,
-                                "type": values.type
+                                "url": hinhanh?.url,
+                                "fileName": hinhanh?.fileName,
+                                "type": hinhanh?.type
                             },
                             "ketluan": ketluan,
                             "thietbi": thietbi
@@ -155,35 +160,53 @@ function CanLamSang() {
                         <h4>Thông tin</h4>
                         <Form className="w-100" onSubmit={handleSubmit}>
                             <Row>
-                                <Col md={4}>
+                                <Col md={6}>
                                     <Form.Group className="mb-3" controlId="formBasicLoai">
                                         <Form.Label>Loại Cận Lâm Sàng</Form.Label>
-                                        <Form.Control type="text" placeholder="Loại cận lâm sàng" value={tenLoai} onChange={event => setTenLoai(event.target.value)} />
+                                        <Form.Control type="text" placeholder="Loại cận lâm sàng" value={tenLoai} readOnly={true} /* onChange={event => setTenLoai(event.target.value)} */ />
                                     </Form.Group>
                                 </Col>
-                                <Col md={4}>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3" controlId="formBasicLoai">
+                                        <Form.Label>Tên Xét Nghiệm</Form.Label>
+                                        <Form.Control type="text" placeholder="Tên xét nghiệm" value={tenxetnghiem} readOnly={true}/* onChange={event => setTenxetnghiem(event.target.value)} */ />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3" controlId="formBasicThietBi">
+                                        <Form.Label>Thiết Bị</Form.Label>
+                                        <Form.Control type="text" placeholder="Thiết bị" value={thietbi} onChange={event => setThietBi(event.target.value)} />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={6}>
                                     <Form.Group className="mb-3" controlId="formBasicKetLuan">
                                         <Form.Label>Kết Luận</Form.Label>
                                         <Form.Control type="text" placeholder="Kết luận" value={ketluan} onChange={event => setKetLuan(event.target.value)} />
 
                                     </Form.Group>
                                 </Col>
-
-                                <Col md={4}>
-                                    <Form.Group className="mb-3" controlId="formBasicThietBi">
-                                        <Form.Label>Thiết Bị</Form.Label>
-                                        <Form.Control type="text" placeholder="Thiết bị" value={thietbi} onChange={event => setThietBi(event.target.value)} />
+                            </Row>
+                            <Row className="d-flex justify-content-center">
+                                <Col md={6}>
+                                    <Form.Group className="mb-3 w-100" controlId="formBasiHinhAnh">
+                                        <Form.Label>Hình Ảnh</Form.Label>
+                                        <div style={{ position: 'relative', maxHeight: 'fit-content', overflow: 'hidden' }}>
+                                            <UploadImage
+                                                sizeWidth={100}
+                                                sizeHeight={100}
+                                                linkImage={hinhanh}
+                                                handleUploadCallback={(file: any) => {
+                                                    handleUpload(file);
+                                                }}
+                                            />
+                                        </div>
                                     </Form.Group>
                                 </Col>
                             </Row>
                             <Row className="d-flex justify-content-center">
-                                <Form.Group className="mb-3 w-50" controlId="formBasiHinhAnh">
-                                    <Form.Label>Hình Ảnh</Form.Label>
-                                    <Form.Control type="text" placeholder="Hình ảnh" value={filename} onChange={event => setFileName(event.target.value)} />
-                                </Form.Group>
-                            </Row>
-                            <Row className="d-flex justify-content-center">
-                                <Button variant="primary" type="submit">
+                                <Button className="w-10" variant="primary" type="submit">
                                     Submit
                                 </Button>
                             </Row>
@@ -195,6 +218,7 @@ function CanLamSang() {
                                 <tr>
                                     <th style={{ width: "3%" }}>#</th>
                                     <th style={{ width: "25%" }}>Loại Cận Lâm Sàng</th>
+                                    <th style={{ width: "25%" }}>Tên Xét Nghiệm</th>
                                     <th style={{ width: "20%" }}>Thiết Bị</th>
                                     <th style={{ width: "25%" }}>Kết Luận</th>
                                     <th style={{ width: "27%" }}>Hình Ảnh</th>
@@ -204,10 +228,23 @@ function CanLamSang() {
                                 {ketquaData?.map((ketqua: any, index: number) => (
                                     <tr className='rowSelected' key={ketqua._id} onClick={() => handleSelected(ketqua)}>
                                         <td>{index + 1}</td>
+                                        <td>{ketqua?.loaicanlamsang?.loaicanlamsang}</td>
                                         <td>{ketqua?.loaicanlamsang?.tenxetnghiem}</td>
                                         <td>{ketqua?.thietbi}</td>
                                         <td>{ketqua?.ketluan}</td>
-                                        <td>{ketqua?.hinhanh?.url}</td>
+                                        <td>
+                                            {ketqua?.hinhanh ?
+                                                <Image
+                                                    src={getUrlImage(ketqua?.hinhanh)}
+                                                    style={{
+                                                        width: "60px",
+                                                        height: "60px",
+                                                        objectFit: "fill",
+                                                    }}
+                                                    rounded
+                                                /> : ''
+                                            }
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
