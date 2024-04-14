@@ -16,7 +16,7 @@ function ThemBenhNhan({ show, onHide, refetch }: any) {
         setNgaySinh(date.$d);
     };
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
 
     const [createBenhNhan, _] = useCreateBenhNhanMutation();
 
@@ -48,6 +48,8 @@ function ThemBenhNhan({ show, onHide, refetch }: any) {
             else {
                 console.log('Hãy nhập đủ số trường')
             }
+            setNgaySinh(dayjs());
+            reset();
             refetch();
             onHide();
         } catch (error) {

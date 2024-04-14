@@ -1,4 +1,4 @@
-import { Button, Tab, Tabs } from "react-bootstrap";
+import { Button, Col, Row, Tab, Tabs } from "react-bootstrap";
 import ChoKham from "./tab-chokham";
 import XetNghiem from "./xetnghiem";
 import KhamBenhForm from "./form-khambenh";
@@ -150,30 +150,28 @@ function KhamBenh() {
 
     return (<>
         <EditContext.Provider value={editContextValue}>
-            <div className="fluit-container" style={{ height: "100px" }}>
+            <div className="fluit-container">
                 <div className="row">
-                    <div className="col-3">
-                        <Tabs
-                            defaultActiveKey="profile"
-                            id="fill-tab-example"
-                        >
-                            <Tab eventKey="chokham" title="Chờ Khám">
-                                <ChoKham data={dataChoKham} loading={loadingChoKham} error={errorChoKham} selected={rowBenhNhanSelected} />
-                            </Tab>
-                            <Tab eventKey="taikham" title="Tái Khám">
-                                <ChoKham data={dataHOANTAT} loading={loadingHOANTAT} error={errorHOANTAT} selected={rowBenhNhanSelected} />
-                            </Tab>
-                            <Tab eventKey="hoantat" title="Hoàn Tất">
-                                <ChoKham data={dataHOANTAT} loading={loadingHOANTAT} error={errorHOANTAT} selected={rowBenhNhanSelected} />
-                            </Tab>
-                            <Tab eventKey="choxetnghiem" title="Chờ Xét Nghiệm">
+                    <Col xs={12} md={3}>
+                        <Tabs defaultActiveKey="profile" id="fill-tab-example">
+                            <Tab eventKey="choxetnghiem" title=" Chờ Xét Nghiệm ">
                                 <ChoKham data={dataCHOXETNGHIEM} loading={loadingCHOXETNGHIEM} error={errorCHOXETNGHIEM} selected={rowBenhNhanSelected} />
                             </Tab>
-                            <Tab eventKey="daxetnghiem" title="Đã Xét Nghiệm">
+                            <Tab eventKey="daxetnghiem" title=" Đã Xét Nghiệm ">
                                 <ChoKham data={dataDAXETNGHIEM} loading={loadingDAXETNGHIEM} error={errorDAXETNGHIEM} selected={rowBenhNhanSelected} />
                             </Tab>
+                            <Tab eventKey="chokham" title=" Chờ Khám ">
+                                <ChoKham data={dataChoKham} loading={loadingChoKham} error={errorChoKham} selected={rowBenhNhanSelected} />
+                            </Tab>
+                            <Tab eventKey="taikham" title=" Tái Khám ">
+                                <ChoKham data={dataHOANTAT} loading={loadingHOANTAT} error={errorHOANTAT} selected={rowBenhNhanSelected} />
+                            </Tab>
+                            <Tab eventKey="hoantat" title=" Hoàn Tất ">
+                                <ChoKham data={dataHOANTAT} loading={loadingHOANTAT} error={errorHOANTAT} selected={rowBenhNhanSelected} />
+                            </Tab>
+
                         </Tabs>
-                    </div>
+                    </Col>
                     <div className="col-6">
                         <div className="row">
                             <div className="d-flex justify-content-around align-items-center">
@@ -185,43 +183,112 @@ function KhamBenh() {
                                 <Button className="mr-1">Hủy Khám</Button>
                             </div>
                         </div>
-                        <div className="row mt-1">
-                            {profile?.hoten && <p>Họ Tên: {profile.hoten}</p>}
-                            <p>{profile?.phongs && profile?.phongs.length > 0 ? `Phòng: ${profile.phongs[0].tenphong}` : ''}</p>
-                            {profile?.chuyenkhoa && <p>Chuyên Khoa: {profile.chuyenkhoa.tenkhoa}</p>}
-                            {profile?.gioitinh !== undefined && (
-                                <p>Giới Tính: {profile.gioitinh ? 'Nam' : 'Nữ'}</p>
-                            )}
-                            <br />
-                            <select onChange={handleSelect} value={phong}>
-                                <option value="">Phòng</option>
-                                {profile?.phongs && profile.phongs.map((phong: any) => (
-                                    <option key={phong?._id} value={phong?._id}>{phong?.tenphong}</option>
-                                ))}
-                            </select>
+                        {/* <div className="container mt-5">
+                            <ul className="nav nav-tabs" id="myTab" role="tablist">
+                                <li className="nav-item" role="presentation">
+                                    <button className="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Hồ sơ cá nhân</button>
+                                </li>
+                                <li className="nav-item" role="presentation">
+                                    <button className="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Thông tin bệnh nhân</button>
+                                </li>
+                            </ul>
+
+                            <div className="tab-content" id="myTabContent">
+                                <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                    <div className="p-3">
+                                        {profile?.hoten && <p>Họ Tên: {profile.hoten}</p>}
+                                        {profile?.phongs?.length > 0 && (
+                                            <p>Phòng: {profile.phongs[0].tenphong}</p>
+                                        )}
+                                        {profile?.chuyenkhoa && (
+                                            <p>Chuyên Khoa: {profile.chuyenkhoa.tenkhoa}</p>
+                                        )}
+                                        {profile?.gioitinh !== undefined && (
+                                            <p>Giới Tính: {profile.gioitinh ? 'Nam' : 'Nữ'}</p>
+                                        )}
+                                        <select className="form-select mt-3" onChange={handleSelect} value={phong}>
+                                            <option value="">Chọn Phòng</option>
+                                            {profile?.phongs?.map((phong: any) => (
+                                                <option key={phong._id} value={phong._id}>{phong.tenphong}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                    <div className="p-3">
+                                        {dataSelected ? (
+                                            <>
+                                                <p>Họ Tên: {dataSelected.hoten}</p>
+                                                <p>Giới Tính: {dataSelected.gioitinh ? 'Nam' : 'Nữ'}</p>
+                                                <p>Ngày Sinh: {moment(dataSelected.ngaysinh).format('YYYY-MM-DD')}</p>
+                                                <p>BHYT: {dataSelected.bhyt}</p>
+                                            </>
+                                        ) : (
+                                            <p className="text-muted">Chưa có thông tin bệnh nhân.</p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div> */}
+                        <div className="row mt-3">
+                            <div className="card w-100">
+                                <div className="card-body">
+                                    <h5 className="card-title mb-2 text-center text-uppercase">Thông Tin Bác Sĩ</h5>
+                                    {profile?.hoten && <p className="card-text">Họ Tên: {profile.hoten}</p>}
+                                    {profile?.phongs?.length > 0 && (
+                                        <p className="card-text">Phòng: {profile.phongs[0].tenphong}</p>
+                                    )}
+                                    {profile?.chuyenkhoa && (
+                                        <p className="card-text">Chuyên Khoa: {profile.chuyenkhoa.tenkhoa}</p>
+                                    )}
+                                    {profile?.gioitinh !== undefined && (
+                                        <p className="card-text">Giới Tính: {profile.gioitinh ? 'Nam' : 'Nữ'}</p>
+                                    )}
+
+                                    <div className="mt-3">
+                                        <label htmlFor="phongSelect" className="form-label mr-2">Chọn Phòng:</label>
+                                        <select className="form-select" id="phongSelect" onChange={handleSelect} value={phong}>
+                                            <option value="">--- Lựa chọn ---</option>
+                                            {profile?.phongs?.map((phong: any) => (
+                                                <option key={phong._id} value={phong._id}>
+                                                    {phong.tenphong}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="row mt-1">
-                            <h6>Bệnh Nhân Đang Khám Là: </h6>
-                            {dataSelected ? (
-                                <>
-                                    <p>Họ Tên: {dataSelected.hoten}</p>
-                                    - <p>Giới Tính {dataSelected?.gioitinh ? 'Nam' : 'Nữ'}</p>
-                                    - <p>Ngày Sinh: {moment(dataSelected?.ngaysinh).format('YYYY-MM-DD')}</p>
-                                    - <p>BHYT: {dataSelected.bhyt}</p>
-                                </>
-                            ) : (
-                                <p>Không có bệnh nhân đang khám.</p>
-                            )}
+                        <div className="row">
+                            <div className="card w-100 mt-4">
+                                <div className="card-body">
+                                    <h5 className="card-title mb-2 text-center text-uppercase">Bệnh nhân đang khám:</h5>
+                                    {dataSelected ? (
+                                        <>
+                                            <p className="card-text">Họ Tên: {dataSelected.hoten}</p>
+                                            <p className="card-text">Giới Tính: {dataSelected.gioitinh ? 'Nam' : 'Nữ'}</p>
+                                            <p className="card-text">Ngày Sinh: {moment(dataSelected.ngaysinh).format('YYYY-MM-DD')}</p>
+                                            <p className="card-text">BHYT: {dataSelected.bhyt}</p>
+                                        </>
+                                    ) : (
+                                        <p className="text-muted">Chưa có thông tin bệnh nhân.</p>
+                                    )}
+                                </div>
+                            </div>
                         </div>
-                        <SinhHieu dataSelected={dataSelected} />
-                        <KhamBenhForm
-                            selected={rowBenhNhanSelected}
-                            dataSelected={dataSelected}
-                            bacsiId={profile?._id}
-                            idPhieuXacNhan={idPhieuXacNhan}
-                            refetchDAXETNGHIEM={refetchDAXETNGHIEM}
-                            refetchHOANTAT={refetchHOANTAT}
-                        />
+                        <div className="row mt-2">
+                            <SinhHieu dataSelected={dataSelected} />
+                        </div>
+                        <div className="row mt-2">
+                            <KhamBenhForm
+                                selected={rowBenhNhanSelected}
+                                dataSelected={dataSelected}
+                                bacsiId={profile?._id}
+                                idPhieuXacNhan={idPhieuXacNhan}
+                                refetchDAXETNGHIEM={refetchDAXETNGHIEM}
+                                refetchHOANTAT={refetchHOANTAT}
+                            />
+                        </div>
                     </div>
                     <div className="col-3" >
                         <XetNghiem dataSelected={dataCLS} />
@@ -238,7 +305,7 @@ function KhamBenh() {
                     refetchCHOXETNGHIEM={refetchCHOXETNGHIEM}
                 />
             </div>
-        </EditContext.Provider>
+        </EditContext.Provider >
     </>);
 }
 

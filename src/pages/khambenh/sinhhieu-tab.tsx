@@ -1,4 +1,4 @@
-import { Button, Form, Row } from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { FormEvent, useContext, useEffect, useMemo, useState } from "react";
 import { useCreateSinhHieuMutation, useUpdateSinhhieuMutation } from "../../graphql-definition/graphql";
 import { EditContext } from ".";
@@ -6,6 +6,7 @@ import { EditContext } from ".";
 function SinhHieu({ dataSelected }: any) {
 
     const { isEditing, setIsEditing }: any = useContext(EditContext);
+    const [editSinhHieu, SetEdingSinhHieu] = useState(false);
     const [mach, setMach] = useState<number>(0.0);
     const [nhietdo, setNhietdo] = useState<number>(0.0);
     const [ha1, setHa1] = useState<string>('');
@@ -14,6 +15,10 @@ function SinhHieu({ dataSelected }: any) {
     const [cannang, setCannang] = useState<number>(0.0);
     const [bmi, setBmi] = useState<number>(0.0);
     const [isChecked, setIsChecked] = useState<boolean>(false);
+
+    useEffect(() => {
+        SetEdingSinhHieu(isEditing)
+    }, [isEditing])
 
     // Sử dụng useMemo để so sánh giá trị mới của dataSelected với giá trị cũ
     const memoizedDataSelected = useMemo(() => dataSelected, [dataSelected]);
@@ -94,99 +99,119 @@ function SinhHieu({ dataSelected }: any) {
                     console.log('không có id bệnh nhân');
                 }
             }
-            setIsEditing(true);
+            SetEdingSinhHieu(true);
         } catch (error) {
             console.log('lỗi là: ', error)
         }
     };
     return (
         <>
-            <hr />
-            <h5>Sinh hiệu</h5>
-            <hr />
-            <Form className="row" onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit}>
+                <hr />
+                <h5>Sinh hiệu</h5>
+                <hr />
                 <Row>
-                    <Form.Group className="mr-3" controlId="formGridAddress2">
-                        <Form.Label>Mạch </Form.Label>
-                        <Form.Control
-                            placeholder="mạch..."
-                            defaultValue={/* dataSelected?.sinhhieu?. */mach || ''}
-                            onChange={(event) => setMach(parseFloat(event.target.value))}
-                            disabled={isEditing}
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="mr-3" controlId="formGridAddress2">
-                        <Form.Label>Nhiệt độ</Form.Label>
-                        <Form.Control
-                            placeholder="nhiệt độ..."
-                            value={/* dataSelected?.sinhhieu?. */nhietdo || ''}
-                            onChange={(event) => setNhietdo(parseFloat(event.target.value))}
-                            disabled={isEditing}
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="mr-3" controlId="formBasicEmail">
-                        <Form.Label>HA</Form.Label>
-                        <div className="d-flex justify-content-center">
+                    <Col md={4}>
+                        <Form.Group controlId="formMach">
+                            <Form.Label>Mạch</Form.Label>
                             <Form.Control
-                                type="text"
-                                style={{ maxWidth: "100px" }}
-                                onChange={(event) => setHa1(event.target.value)}
-                                value={/* dataSelected?.sinhhieu?.ha ? dataSelected?.sinhhieu?.ha.split('/')[0] : '' */ ha1 || ''}
-                                disabled={isEditing}
+                                placeholder="Nhập mạch..."
+                                defaultValue={mach || ''}
+                                onChange={(event) => setMach(parseFloat(event.target.value))}
+                                disabled={editSinhHieu}
                             />
+                        </Form.Group>
+                    </Col>
+
+                    <Col md={4}>
+                        <Form.Group controlId="formNhietDo">
+                            <Form.Label>Nhiệt độ</Form.Label>
                             <Form.Control
-                                type="text"
-                                style={{ maxWidth: "100px" }}
-                                onChange={(event) => setHa2(event.target.value)}
-                                value={/* dataSelected?.sinhhieu?.ha ? dataSelected?.sinhhieu?.ha.split('/')[1] : '' */ ha2 || ''}
-                                disabled={isEditing}
+                                placeholder="Nhập nhiệt độ..."
+                                defaultValue={nhietdo || ''}
+                                onChange={(event) => setNhietdo(parseFloat(event.target.value))}
+                                disabled={editSinhHieu}
                             />
-                        </div>
-                    </Form.Group>
+                        </Form.Group>
+                    </Col>
 
-                    <Form.Group className="mr-3" controlId="formGridAddress2">
-                        <Form.Label>Chiều cao</Form.Label>
-                        <Form.Control placeholder="Chiều cao..."
-                            defaultValue={/* dataSelected?.sinhhieu?. */chieucao || ''}
-                            onChange={(event) => setChieucao(parseFloat(event.target.value))}
-                            disabled={isEditing}
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="mr-3" controlId="formGridAddress2">
-                        <Form.Label>Căn nặng</Form.Label>
-                        <Form.Control placeholder="Căn nặng..."
-                            defaultValue={/* dataSelected?.sinhhieu?. */cannang || ''}
-                            onChange={(event) => setCannang(parseFloat(event.target.value))}
-                            disabled={isEditing}
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="mr-3" controlId="formGridAddress2">
-                        <Form.Label>BMI</Form.Label>
-                        <Form.Control placeholder="BMI..."
-                            defaultValue={/* dataSelected?.sinhhieu?. */bmi || ''}
-                            onChange={(event) => setBmi(parseFloat(event.target.value))}
-                            disabled={isEditing}
-                        />
-                    </Form.Group>
-
-                    <Form.Group className="ml-3 d-flex justify-content-center align-items-center" controlId="formGridAddress2">
-                        <Form.Check
-                            type="checkbox"
-                            id="autoSizingCheck"
-                            className="mb-2"
-                            label="Mảng tính"
-                            checked={isChecked}
-                            onChange={handleCheckboxChange}
-                            disabled={isEditing}
-                        />
-                    </Form.Group>
+                    <Col md={4}>
+                        <Form.Group controlId="formHA">
+                            <Form.Label>HA</Form.Label>
+                            <div className="d-flex">
+                                <Form.Control
+                                    type="text"
+                                    placeholder="HA"
+                                    value={ha1 || ''}
+                                    onChange={(event) => setHa1(event.target.value)}
+                                    disabled={editSinhHieu}
+                                />
+                                <Form.Control
+                                    type="text"
+                                    placeholder="HA"
+                                    value={ha2 || ''}
+                                    onChange={(event) => setHa2(event.target.value)}
+                                    disabled={editSinhHieu}
+                                />
+                            </div>
+                        </Form.Group>
+                    </Col>
                 </Row>
-                <Row className="w-100 mt-3 justify-content-center">
-                    <Button variant="primary" type="submit">
+
+                <Row>
+                    <Col md={4}>
+                        <Form.Group controlId="formChieuCao">
+                            <Form.Label>Chiều cao</Form.Label>
+                            <Form.Control
+                                placeholder="Nhập chiều cao..."
+                                defaultValue={chieucao || ''}
+                                onChange={(event) => setChieucao(parseFloat(event.target.value))}
+                                disabled={editSinhHieu}
+                            />
+                        </Form.Group>
+                    </Col>
+
+                    <Col md={4}>
+                        <Form.Group controlId="formCanNang">
+                            <Form.Label>Cân nặng</Form.Label>
+                            <Form.Control
+                                placeholder="Nhập cân nặng..."
+                                defaultValue={cannang || ''}
+                                onChange={(event) => setCannang(parseFloat(event.target.value))}
+                                disabled={editSinhHieu}
+                            />
+                        </Form.Group>
+                    </Col>
+
+                    <Col md={4}>
+                        <Form.Group controlId="formBMI">
+                            <Form.Label>BMI</Form.Label>
+                            <Form.Control
+                                placeholder="Nhập BMI..."
+                                defaultValue={bmi || ''}
+                                onChange={(event) => setBmi(parseFloat(event.target.value))}
+                                disabled={editSinhHieu}
+                            />
+                        </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row className="justify-content-center mb-4 mt-3">
+                    <Col md={3}>
+                        <Form.Group controlId="formAutoSizingCheck">
+                            <Form.Check
+                                type="checkbox"
+                                label="Mảng tính"
+                                checked={isChecked}
+                                onChange={handleCheckboxChange}
+                                disabled={editSinhHieu}
+                            />
+                        </Form.Group>
+                    </Col>
+                </Row>
+
+                <Row className="justify-content-md-center">
+                    <Button variant="primary" type="submit" disabled={editSinhHieu}>
                         Lưu
                     </Button>
                 </Row>

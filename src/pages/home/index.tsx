@@ -11,7 +11,7 @@ function Home() {
                 <div className="row justify-content-center align-items-center" style={{height: '80vh'}}>
                     <div className="col text-center">
                         <HiOutlineUserCircle size={150} />
-                        <h3>{profile?.hoten}</h3>
+                        <h3>{profile?.hoten || profile?.role}</h3>
                     </div>
                 </div>
             </div>

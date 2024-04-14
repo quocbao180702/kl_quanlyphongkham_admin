@@ -344,6 +344,7 @@ export type Mutation = {
   updateSobenh: Sobenh;
   updateSoluongThuoc: Thuoc;
   updateThuoc: Thuoc;
+  updateTinhTrangHoaDonCLS: Hoadonchidinhcanlamsang;
   updateToathuoc: Toathuoc;
   updateTrangThaiCanLamSang: Phieuchidinhcanlamsang;
   updateTrangThaiDatLich: DatLich;
@@ -657,6 +658,11 @@ export type MutationUpdateThuocArgs = {
 };
 
 
+export type MutationUpdateTinhTrangHoaDonClsArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationUpdateToathuocArgs = {
   updateToathuocInput: UpdateToathuocInput;
 };
@@ -783,7 +789,7 @@ export type NewThuocInput = {
 };
 
 export type NewUserInput = {
-  avatar: LinkImageInput;
+  avatar?: InputMaybe<LinkImageInput>;
   email: Scalars['String']['input'];
   isLocked: Scalars['Boolean']['input'];
   password: Scalars['String']['input'];
@@ -1554,6 +1560,13 @@ export type UpdateKichHoatMutationVariables = Exact<{
 
 export type UpdateKichHoatMutation = { __typename?: 'Mutation', updateKichHoat: boolean };
 
+export type UpdateTinhTrangHoaDonClsMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type UpdateTinhTrangHoaDonClsMutation = { __typename?: 'Mutation', updateTinhTrangHoaDonCLS: { __typename?: 'Hoadonchidinhcanlamsang', _id: string } };
+
 export type OnlyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1658,7 +1671,7 @@ export type GetAllDatLichbyTrangThaiQueryVariables = Exact<{
 }>;
 
 
-export type GetAllDatLichbyTrangThaiQuery = { __typename?: 'Query', getAllDatLichbyTrangThai?: Array<{ __typename?: 'DatLich', _id: string, motabenh: string, ngaydat: any, ngaykham: any, trangthai: TrangThaiDatKham, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any } }> | null };
+export type GetAllDatLichbyTrangThaiQuery = { __typename?: 'Query', getAllDatLichbyTrangThai?: Array<{ __typename?: 'DatLich', _id: string, motabenh: string, ngaydat: any, ngaykham: any, trangthai: TrangThaiDatKham, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, sodienthoai: string, diachi: string } }> | null };
 
 export type GetAllPhieuXacNhanDaXetNghiemQueryVariables = Exact<{
   ngaykham: Scalars['String']['input'];
@@ -1693,7 +1706,7 @@ export type GetAllBlogsQuery = { __typename?: 'Query', countBlogs: number, getAl
 export type NewDatLichSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NewDatLichSubscription = { __typename?: 'Subscription', newDatLich: { __typename?: 'DatLich', _id: string, motabenh: string, ngaydat: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any } } };
+export type NewDatLichSubscription = { __typename?: 'Subscription', newDatLich: { __typename?: 'DatLich', _id: string, motabenh: string, ngaydat: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, sodienthoai: string, diachi: string } } };
 
 
 export const LoginDocument = gql`
@@ -2953,6 +2966,39 @@ export function useUpdateKichHoatMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdateKichHoatMutationHookResult = ReturnType<typeof useUpdateKichHoatMutation>;
 export type UpdateKichHoatMutationResult = Apollo.MutationResult<UpdateKichHoatMutation>;
 export type UpdateKichHoatMutationOptions = Apollo.BaseMutationOptions<UpdateKichHoatMutation, UpdateKichHoatMutationVariables>;
+export const UpdateTinhTrangHoaDonClsDocument = gql`
+    mutation UpdateTinhTrangHoaDonCLS($id: String!) {
+  updateTinhTrangHoaDonCLS(id: $id) {
+    _id
+  }
+}
+    `;
+export type UpdateTinhTrangHoaDonClsMutationFn = Apollo.MutationFunction<UpdateTinhTrangHoaDonClsMutation, UpdateTinhTrangHoaDonClsMutationVariables>;
+
+/**
+ * __useUpdateTinhTrangHoaDonClsMutation__
+ *
+ * To run a mutation, you first call `useUpdateTinhTrangHoaDonClsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTinhTrangHoaDonClsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTinhTrangHoaDonClsMutation, { data, loading, error }] = useUpdateTinhTrangHoaDonClsMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdateTinhTrangHoaDonClsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTinhTrangHoaDonClsMutation, UpdateTinhTrangHoaDonClsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateTinhTrangHoaDonClsMutation, UpdateTinhTrangHoaDonClsMutationVariables>(UpdateTinhTrangHoaDonClsDocument, options);
+      }
+export type UpdateTinhTrangHoaDonClsMutationHookResult = ReturnType<typeof useUpdateTinhTrangHoaDonClsMutation>;
+export type UpdateTinhTrangHoaDonClsMutationResult = Apollo.MutationResult<UpdateTinhTrangHoaDonClsMutation>;
+export type UpdateTinhTrangHoaDonClsMutationOptions = Apollo.BaseMutationOptions<UpdateTinhTrangHoaDonClsMutation, UpdateTinhTrangHoaDonClsMutationVariables>;
 export const OnlyUserDocument = gql`
     query OnlyUser {
   onlyUser {
@@ -3862,6 +3908,8 @@ export const GetAllDatLichbyTrangThaiDocument = gql`
       _id
       hoten
       ngaysinh
+      sodienthoai
+      diachi
     }
     motabenh
     ngaydat
@@ -4212,6 +4260,8 @@ export const NewDatLichDocument = gql`
       _id
       hoten
       ngaysinh
+      sodienthoai
+      diachi
     }
     motabenh
     ngaydat

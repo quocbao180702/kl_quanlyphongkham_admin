@@ -1,14 +1,17 @@
 import { useSubscription } from "@apollo/client";
-import { Button, Col, Form, InputGroup, Row, Table } from "react-bootstrap";
+import { Badge, Button, Card, Col, Form, InputGroup, ListGroup, Row, Table } from "react-bootstrap";
 import moment from "moment";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { newDatLichSubscription } from "../../../codegen/graphql-definition/subcriptions";
-import { Phong, useCreatePhieuXacNhanMutation, useDeleteDatlichMutation, useGetAllBenhNhanNoPaginationQuery, useGetAllBenhNhanQuery, useGetAllDatLichbyTrangThaiQuery, useGetAllPhongQuery, useUpdateTrangThaiDatLichMutation } from "../../graphql-definition/graphql";
+import { TrangThaiDatKham, TrangThaiKham, useCreatePhieuXacNhanMutation, useDeleteDatlichMutation, useGetAllBenhNhanNoPaginationQuery, useGetAllDatLichbyTrangThaiQuery, useGetAllPhongQuery, useUpdateTrangThaiDatLichMutation } from "../../graphql-definition/graphql";
 import { MdDelete } from "react-icons/md";
-import { Alert, Autocomplete, Checkbox, FormControlLabel, Paper, TableCell, TableRow, TextField } from "@mui/material";
+import { Alert, Checkbox, FormControlLabel } from "@mui/material";
 import DatePickerValue from "../../components/DatePicker";
 import dayjs, { Dayjs } from 'dayjs';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+
+
+import "./style.css";
 
 interface Datlich {
     _id: string;
@@ -16,25 +19,13 @@ interface Datlich {
         _id: string;
         hoten: string;
         ngaysinh: string;
+        sodienthoai: string;
+        diachi: string;
     };
     motabenh: string;
     ngaydat: string;
     ngaykham: string;
     trangthai: string;
-}
-interface BenhNhan {
-    _id: string
-    hoten: string
-    ngaysinh: any
-    gioitinh: boolean
-    diachi: string
-    cccd: string
-    bhyt: string
-    user: {
-        _id: string
-        phoneNumber: string
-        email: string
-    }
 }
 
 const columns: GridColDef[] = [
@@ -51,6 +42,17 @@ const columns: GridColDef[] = [
     },
 ];
 
+const columnsDatLich: GridColDef[] = [
+    { field: 'stt', headerName: 'STT', width: 50 },
+    { field: 'benhnhan?.hoten', headerName: 'Họ Tên', width: 150 },
+    { field: 'benhnhan?.ngaysinh', headerName: 'Ngày Sinh', width: 90 },
+    { field: 'motabenh', headerName: 'Mô Tả Bệnh', width: 90 },
+    { field: 'ngaydat', headerName: 'Ngày Đặt', width: 150 },
+    { field: 'ngaykham', headerName: 'Ngày Khám', width: 90 },
+    { field: 'trangthai', headerName: "Trạng Thái", width: 90 },
+    { field: 'huy', headerName: "Hủy", width: 90 }
+]
+
 function DatLich() {
     const [datlich, setDatlich] = useState<Datlich[]>([]);
     const [selectedValues, setSelectedValues] = useState<string[]>([]);
@@ -58,15 +60,14 @@ function DatLich() {
     const [hoten, setHoten] = useState('');
     const [ngaysinh, setNgaySinh] = useState<Dayjs>(dayjs());
     const [ngaykham, setNgayKham] = useState<Dayjs>(dayjs());
-    const [phongs, setPhongs] = useState([]);
+    const [phoneNumber, setPhoneNumber] = useState('')
+    const [diachi, setDiaChi] = useState('');
     const [bhyt, setBhyt] = useState<boolean>();
     const [mota, setMota] = useState('');
     const [isChecked, setIsChecked] = useState<boolean>(false);
-    const [checkedItems, setCheckedItems] = useState<string[]>([]);
     const [showWarning, setshowWarning] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [thongbao, setThongBao] = useState('')
-    const [value, setValue] = useState<string | null>();
     const [idBenhNhan, setIdBenhNhan] = useState('');
     const [dataBenhNhan, setDataBenhNhan] = useState<any[]>([]);
 
@@ -140,8 +141,10 @@ function DatLich() {
         if (selected) {
             setHoten(selected?.benhnhan?.hoten);
             setMota(selected?.motabenh);
+            setPhoneNumber(selected?.benhnhan?.sodienthoai)
             setNgaySinh(dayjs(selected?.benhnhan?.ngaysinh))
             setNgayKham(dayjs(selected?.ngaykham));
+            setDiaChi(selected?.benhnhan?.diachi)
         }
     }, [selected])
 
@@ -149,8 +152,10 @@ function DatLich() {
     const handleRowClick = (params: any) => {
         setIdBenhNhan(params.id);
         setHoten(params.row.hoten);
+        setPhoneNumber(params.row.sodienthoai)
         setNgaySinh(dayjs(params.row.ngaysinh));
-        setBhyt(params.row.bhyt ? true : false)
+        setDiaChi(params?.row.diachi)
+        setDataSelected(undefined)
     };
 
     const handleCheckboxChange = () => {
@@ -255,7 +260,7 @@ function DatLich() {
 
     return (
         <>
-            <Row>
+            <Row className="mt-3">
                 {showWarning && (
                     <>
                         <div style={{ position: 'fixed', zIndex: 2 }}>
@@ -276,43 +281,88 @@ function DatLich() {
                     </>
                 )}
 
-                <Col sm={3}>
-                    <Table striped bordered hover responsive>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Họ Tên</th>
-                                <th>Ngày Sinh</th>
-                                <th>Mô Tả Bệnh</th>
-                                <th>Ngày Đặt</th>
-                                <th>Ngày Khám</th>
-                                <th>Hủy</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {datlich.filter(appointment => appointment).map((appointment: any, index: number) => (
-                                <tr className='rowSelected' key={appointment._id} onClick={() => setDataSelected(appointment)}>
-                                    <td>{index + 1}</td>
-                                    <td>{appointment?.benhnhan?.hoten || 'Unknown'}</td>
-                                    <td>{moment(appointment?.benhnhan?.ngaysinh).format('YYYY-MM-DD') || 'Unknown'}</td>
-                                    <td>{appointment?.motabenh || 'Unknown'}</td>
-                                    <td>{moment(appointment?.ngaydat).format('YYYY-MM-DD')}</td>
-                                    <td>{moment(appointment?.ngaykham).format('YYYY-MM-DD')}</td>
-                                    <td width={50} onClick={handleHuyKham}><MdDelete /></td>
+                <Col sm={3} className="border-right">
+                    <h6 className="title">Danh Sách Yêu Cầu Khám</h6>
+                    <div className="table-container">
+                        <Table className="table-striped bordered hover responsive">
+                            <thead className="sticky-thead" style={{ backgroundColor: '#f8f9fa' }}>
+                                <tr className="text-center text-dark">
+                                    <th className="text-break">STT</th>
+                                    <th className="text-break">Họ Tên</th>
+                                    <th className="text-break">Ngày Sinh</th>
+                                    <th className="text-break">Mô Tả Bệnh</th>
+                                   {/*  <th className="text-break">Ngày Đặt</th>
+                                    <th className="text-break">Ngày Khám</th> */}
+                                    <th className="text-break">Trạng Thái</th>
+                                    <th className="text-break">Hủy</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </Table>
+                            </thead>
+                            <tbody className="scrollable-tbody">
+                                {datlich.filter(appointment => appointment).map((appointment: any, index: number) => (
+                                    <tr className='text-center rowSelected' key={appointment._id} onClick={() => setDataSelected(appointment)}>
+                                        <td>{index + 1}</td>
+                                        <td className="text-break">{appointment?.benhnhan?.hoten || 'Unknown'}</td>
+                                        <td className="text-break">{moment(appointment?.benhnhan?.ngaysinh).format('YYYY-MM-DD') || 'Unknown'}</td>
+                                        <td>{appointment?.motabenh || 'Unknown'}</td>
+                                        {/* <td className="text-break">{moment(appointment?.ngaydat).format('YYYY-MM-DD')}</td>
+                                        <td className="text-break">{moment(appointment?.ngaykham).format('YYYY-MM-DD')}</td> */}
+                                        <td style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} className="text-break">{appointment?.trangthai === TrangThaiDatKham.Dangxet ? <Badge bg="warning">Chưa Duyệt</Badge> : <Badge bg="success">Đã Duyệt</Badge>}</td>
+                                        <td onClick={handleHuyKham}><MdDelete /></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </div>
                 </Col>
                 <Col sm={6}>
-                    <Row>
+                    <div>
                         <div className="w-100">
-                            <h3>Thông Tin</h3>
+                            <h3 className="title text-center">Thông Tin</h3>
                         </div>
                         <div className="w-100">
                             <Form className="text-center">
                                 <Row>
                                     <Col xs={6}>
+                                        <Card className="w-100" style={{ marginTop: '1rem', boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}>
+                                            <Card.Header className="middle-align"> <h6 className="title">Thông Tin Bệnh Nhân</h6></Card.Header>
+                                            <ListGroup variant="flush">
+                                                <ListGroup.Item style={{ padding: '1rem 1.25rem', borderBottom: '1px solid #f8f9fa' }}>
+                                                    <strong>Họ tên:</strong> {hoten}
+                                                </ListGroup.Item>
+                                                <ListGroup.Item style={{ padding: '1rem 1.25rem', borderBottom: '1px solid #f8f9fa' }}>
+                                                    <strong>Số điện thoại:</strong> {phoneNumber}
+                                                </ListGroup.Item>
+                                                <ListGroup.Item style={{ padding: '1rem 1.25rem', borderBottom: '1px solid #f8f9fa' }}>
+                                                    <strong>Ngày sinh:</strong> {moment(ngaysinh.toDate()).format("YYYY-MM-DD")}
+                                                </ListGroup.Item>
+                                                <ListGroup.Item style={{ padding: '1rem 1.25rem' }}>
+                                                    <strong>Địa chỉ:</strong> {diachi}
+                                                </ListGroup.Item>
+                                            </ListGroup>
+                                        </Card>
+                                    </Col>
+                                    <Col xs={6}>
+                                        <Form.Group className="mb-3" controlId="formUserDescription">
+                                            <Form.Label>Mô Tả Bệnh</Form.Label>
+                                            <Form.Control
+                                                as="textarea" rows={8}
+                                                placeholder={mota || "Mô tả ..."}
+                                                value={mota}
+                                                readOnly
+                                            />
+                                        </Form.Group>
+
+                                        {/* <Form.Group controlId="formNgaysinh" className="mt-2">
+                                            <DatePickerValue label={'Ngày Sinh'} value={ngaysinh} onChange={handleDateChange} />
+                                        </Form.Group> */}
+                                        <div className="w-100 d-flex justify-content-center">
+                                            <Form.Group controlId="formNgaykham" className="mt-2">
+                                                <DatePickerValue label={'Ngày Khám'} value={ngaykham} onChange={handleDateNgayKhamChange} />
+                                            </Form.Group>
+                                        </div>
+
+                                    </Col>
+                                    {/* <Col xs={6}>
                                         <Form.Group className="mb-3" controlId="formUserEmail">
                                             <Form.Label>Bệnh Nhân</Form.Label>
                                             <Form.Control
@@ -322,27 +372,26 @@ function DatLich() {
                                                 readOnly
                                             />
                                         </Form.Group>
-
                                     </Col>
                                     <Col xs={6}>
-                                        <Form.Group className="mb-3" controlId="formUserDescription">
-                                            <Form.Label>Mô Tả</Form.Label>
+                                        <Form.Group className="mb-3" controlId="formUserEmail">
+                                            <Form.Label>Số Điện Thoại</Form.Label>
                                             <Form.Control
-                                                as="textarea" rows={3}
-                                                placeholder={mota || "Mô tả ..."}
-                                                value={mota}
+                                                type="tel"
+                                                placeholder={phoneNumber || "Số điện thoại ..."}
+                                                value={phoneNumber}
                                                 readOnly
                                             />
                                         </Form.Group>
-                                    </Col>
+                                    </Col> */}
                                 </Row>
-                                <Row>
-                                    <Col xs={5}>
+                                {/* <Row>
+                                    <Col xs={6}>
                                         <Form.Group controlId="formNgaysinh" className="mt-2">
                                             <DatePickerValue label={'Ngày Sinh'} value={ngaysinh} onChange={handleDateChange} />
                                         </Form.Group>
                                     </Col>
-                                    <Col xs={5}>
+                                    <Col xs={6}>
                                         <Form.Group controlId="formNgaykham" className="mt-2">
                                             <DatePickerValue label={'Ngày Khám'} value={ngaykham} onChange={handleDateNgayKhamChange} />
                                         </Form.Group>
@@ -359,11 +408,11 @@ function DatLich() {
                                             />
                                         </div>
                                     </Col>
-                                </Row>
+                                </Row> */}
                             </Form>
                         </div>
-                    </Row>
-                    <Row>
+                    </div>
+                    <Row className="mt-3">
                         <div className="mt-3 w-100 d-flex justify-content-around">
                             <Button className="me-1" onClick={handleXacNhan}>Xác Nhận</Button>
                             <Button className="me-1" onClick={handleTaoXacNhan}>Tạo Xác Nhận</Button>
@@ -371,7 +420,7 @@ function DatLich() {
                         </div>
                     </Row>
                     <Row className="mt-3">
-                        <div className="w-100 d-flex justify-content-between">
+                        {/* <div className="w-100 d-flex justify-content-between">
                             <div className="d-flex justify-content-start">
                                 <InputGroup>
                                     <InputGroup.Text id="basic-addon1">Họ Tên</InputGroup.Text>
@@ -398,7 +447,7 @@ function DatLich() {
                                     />
                                 </InputGroup>
                             </div>
-                        </div>
+                        </div> */}
                         <div style={{ height: 400, width: '100%' }}>
                             <DataGrid
                                 rows={dataBenhNhan}
@@ -411,8 +460,8 @@ function DatLich() {
                 </Col>
 
 
-                <Col sm={3}>
-                    <h5>Danh sách phòng</h5>
+                <Col sm={3} className="border-left">
+                    <h5 className="title">Danh sách phòng</h5>
                     <Table responsive>
                         <thead>
                             <tr>

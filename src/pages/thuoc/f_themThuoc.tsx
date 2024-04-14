@@ -10,7 +10,7 @@ import { Thuoc, useCreateThuocMutation } from "../../graphql-definition/graphql"
 function ThemThuoc({ show, onHide, refetch }: any) {
 
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
 
     const [createThuoc, _] = useCreateThuocMutation();
     const handleAdd: SubmitHandler<any> = async (data: any) => {
@@ -33,6 +33,7 @@ function ThemThuoc({ show, onHide, refetch }: any) {
                     }
                 }
             })
+            reset()
             refetch()
             onHide()
         } catch (error) {

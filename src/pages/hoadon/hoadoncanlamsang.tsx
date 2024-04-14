@@ -1,17 +1,17 @@
-import { Button, Row, Table } from "react-bootstrap";
+import { Badge, Button, Row, Table } from "react-bootstrap";
 import XemHoaDon from "./xemHoaDon";
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import moment from "moment";
 import { LiaEyeSolid } from "react-icons/lia";
-import { useGetAllHoaDonPhieuCanLamSangQuery } from "../../graphql-definition/graphql";
+import { useGetAllHoaDonPhieuCanLamSangQuery, useUpdateTinhTrangHoaDonClsMutation } from "../../graphql-definition/graphql";
 
 function HoaDonCanLamSang() {
 
     const [show, setModalShow] = useState(false)
     const [selectedHoadon, setSelectedHoadon] = useState({})
 
-    const { data, loading, error } = useGetAllHoaDonPhieuCanLamSangQuery()
+    const { data, loading, error, refetch } = useGetAllHoaDonPhieuCanLamSangQuery()
 
     const handleAdd = () => {
 
@@ -22,17 +22,27 @@ function HoaDonCanLamSang() {
         setModalShow(true)
     }
 
-    const handleTrangThai = (id: string) => {
-
+    const [updateTrangThaiHoaDonCLS, _] = useUpdateTinhTrangHoaDonClsMutation();
+    const handleTrangThai = async (id: string) => {
+        try {
+            const response = await updateTrangThaiHoaDonCLS({
+                variables: {
+                    id: id
+                }
+            })
+            refetch();
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const handleDelete = (id: string) => {
 
     }
 
-    if(loading) return <div> ... Loading ... </div>
+    if (loading) return <div> ... Loading ... </div>
 
-    if(error) return <div> ... Error ... </div>
+    if (error) return <div> ... Error ... </div>
 
     return (
         <>
@@ -51,7 +61,7 @@ function HoaDonCanLamSang() {
                             <tr>
                                 <th>Họ Tên</th>
                                 <th>Ngày Sinh</th>
-                                <th>Số Điện Thoại</th>
+                                <th>Giới Tính</th>
                                 <th>Ngày Tạo</th>
                                 <th>BHYT</th>
                                 <th>Thành Tiên</th>
@@ -68,7 +78,7 @@ function HoaDonCanLamSang() {
                                     <td>{hoadon?.bhyt ? 'Có' : 'Không'}</td>
                                     <td>{hoadon?.thanhtien}</td>
                                     <td width={50} className="text-center" onClick={() => handleXem(hoadon)}><LiaEyeSolid /></td>
-                                    <td width={150} className="text-center" onClick={() => handleTrangThai(hoadon?._id)}>{hoadon?.trangthai ? 'Đã Thanh Toán' : 'Chưa Thanh Toán'}</td>
+                                    <td width={150} className="text-center" onClick={() => handleTrangThai(hoadon?._id)}>{hoadon?.tinhtrang ? <Badge bg="success">Đã Thanh Toán</Badge> : <Badge bg="warning">Chưa Thanh Toán</Badge>}</td>
                                     <td width={50} className="text-center" onClick={() => handleDelete(hoadon._id)}>
                                         <MdDelete />
                                     </td>

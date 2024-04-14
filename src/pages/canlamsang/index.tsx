@@ -86,15 +86,15 @@ function CanLamSang() {
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         try {
-            if (id && thietbi && ketluan && hinhanh) {
+            if (id && thietbi && ketluan) {
                 await updateKetquacanlamsang({
                     variables: {
                         "input": {
                             "id": id,
                             "hinhanh": {
-                                "url": hinhanh?.url,
-                                "fileName": hinhanh?.fileName,
-                                "type": hinhanh?.type
+                                "url": hinhanh?.url || "xyz",
+                                "fileName": hinhanh?.fileName || "xyz",
+                                "type": hinhanh?.type || TypeImage.File
                             },
                             "ketluan": ketluan,
                             "thietbi": thietbi
@@ -148,7 +148,7 @@ function CanLamSang() {
                         </Tab>
                     </Tabs>
                 </div>
-                <div className="col-7">
+                {/*  <div className="col-7">
                     <div className="row">
                         <div className="d-flex justify-content-around align-items-center">
                             <Button className="mr-1">Khám</Button>
@@ -163,13 +163,13 @@ function CanLamSang() {
                                 <Col md={6}>
                                     <Form.Group className="mb-3" controlId="formBasicLoai">
                                         <Form.Label>Loại Cận Lâm Sàng</Form.Label>
-                                        <Form.Control type="text" placeholder="Loại cận lâm sàng" value={tenLoai} readOnly={true} /* onChange={event => setTenLoai(event.target.value)} */ />
+                                        <Form.Control type="text" placeholder="Loại cận lâm sàng" value={tenLoai} readOnly={true} />
                                     </Form.Group>
                                 </Col>
                                 <Col md={6}>
                                     <Form.Group className="mb-3" controlId="formBasicLoai">
                                         <Form.Label>Tên Xét Nghiệm</Form.Label>
-                                        <Form.Control type="text" placeholder="Tên xét nghiệm" value={tenxetnghiem} readOnly={true}/* onChange={event => setTenxetnghiem(event.target.value)} */ />
+                                        <Form.Control type="text" placeholder="Tên xét nghiệm" value={tenxetnghiem} readOnly={true} />
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -250,9 +250,109 @@ function CanLamSang() {
                             </tbody>
                         </Table>
                     </div>
+                </div> */}
+                <div className="col-7">
+                    <div className="d-flex justify-content-around align-items-center mt-2">
+                        <Button className="btn btn-primary">Khám</Button>
+                        <Button className="btn btn-primary" onClick={guiMau}>Gửi mẫu</Button>
+                        <Button className="btn btn-primary" onClick={handleHuyKham}>Hủy Khám</Button>
+                    </div>
+
+                    <div className="mt-3">
+                        <h4>Thông tin</h4>
+                        <Form onSubmit={handleSubmit}>
+                            <Row>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3" controlId="formBasicLoai">
+                                        <Form.Label>Loại Cận Lâm Sàng</Form.Label>
+                                        <Form.Control type="text" placeholder="Loại cận lâm sàng" value={tenLoai} readOnly />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3" controlId="formBasicTenXetNghiem">
+                                        <Form.Label>Tên Xét Nghiệm</Form.Label>
+                                        <Form.Control type="text" placeholder="Tên xét nghiệm" value={tenxetnghiem} readOnly />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3" controlId="formBasicThietBi">
+                                        <Form.Label>Thiết Bị</Form.Label>
+                                        <Form.Control type="text" placeholder="Thiết bị" value={thietbi} onChange={event => setThietBi(event.target.value)} />
+                                    </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3" controlId="formBasicKetLuan">
+                                        <Form.Label>Kết Luận</Form.Label>
+                                        <Form.Control type="text" placeholder="Kết luận" value={ketluan} onChange={event => setKetLuan(event.target.value)} />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Row className="d-flex justify-content-center">
+                                <Form.Group className="mb-3" controlId="formBasicHinhAnh">
+                                    <Form.Label>Hình Ảnh</Form.Label>
+                                    <div style={{ position: 'relative', maxHeight: 'fit-content', overflow: 'hidden' }}>
+                                        <UploadImage
+                                            sizeWidth={100}
+                                            sizeHeight={100}
+                                            linkImage={hinhanh}
+                                            handleUploadCallback={(file: any) => {
+                                                handleUpload(file);
+                                            }}
+                                        />
+                                    </div>
+                                </Form.Group>
+                            </Row>
+                            <Row>
+                                <Col className="d-flex justify-content-center" md={12}>
+                                    <Button variant="primary" type="submit" className="w-50">
+                                        Hoàn tất
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </div>
+                    <div className="row mt-2">
+                        <Table striped bordered hover responsive>
+                            <thead>
+                                <tr>
+                                    <th style={{ width: "3%" }}>#</th>
+                                    <th style={{ width: "20%" }}>Loại Cận Lâm Sàng</th>
+                                    <th style={{ width: "20%" }}>Tên Xét Nghiệm</th>
+                                    <th style={{ width: "15%" }}>Thiết Bị</th>
+                                    <th style={{ width: "22%" }}>Kết Luận</th>
+                                    <th  style={{ width: "20%" }}>Hình Ảnh</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {ketquaData?.map((ketqua: any, index: number) => (
+                                    <tr className='rowSelected' key={ketqua._id} onClick={() => handleSelected(ketqua)}>
+                                        <td>{index + 1}</td>
+                                        <td>{ketqua?.loaicanlamsang?.loaicanlamsang}</td>
+                                        <td>{ketqua?.loaicanlamsang?.tenxetnghiem}</td>
+                                        <td>{ketqua?.thietbi}</td>
+                                        <td>{ketqua?.ketluan}</td>
+                                        <td className="text-center">
+                                            {ketqua?.hinhanh?.url !== "xyz" && ketqua?.hinhanh &&
+                                                <Image
+                                                    src={getUrlImage(ketqua?.hinhanh)}
+                                                    style={{
+                                                        width: "60px",
+                                                        height: "60px",
+                                                        objectFit: "fill",
+                                                    }}
+                                                    rounded
+                                                />
+                                            }
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </div>
                 </div>
                 <div className="col-2" >
-                    {/* <XetNghiem /> */}
                 </div>
             </div>
         </div>

@@ -1,3 +1,4 @@
+import { FaUserDoctor, FaUserNurse } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 
@@ -10,12 +11,12 @@ function NhanSu() {
                         <ul className="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start text-light" id="menu">
                             <li>
                                 <Link to="/bacsi" className="nav-link px-0 align-middle text-dark">
-                                    <i className="fs-4 bi-people"></i> <span className="ms-1 d-none d-sm-inline">Bác Sĩ</span>
+                                    <i className="fs-4 bi-people"></i> <span className="ms-1 d-none d-sm-inline"><FaUserDoctor /> Bác Sĩ</span>
                                 </Link>
                             </li>
                             <li>
                                 <Link to="/bacsi/nhanvien" className="nav-link px-0 align-middle text-dark">
-                                    <i className="fs-4 bi-people"></i> <span className="ms-1 d-none d-sm-inline">Nhân Viên</span>
+                                    <i className="fs-4 bi-people"></i> <span className="ms-1 d-none d-sm-inline"><FaUserNurse /> Nhân Viên</span>
                                 </Link>
                             </li>
                         </ul>

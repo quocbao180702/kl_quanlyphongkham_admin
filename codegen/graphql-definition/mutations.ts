@@ -309,3 +309,10 @@ const updateKichHoat = gql`
 mutation UpdateKichHoat($id: String!){
   updateKichHoat(_id: $id)
 }`
+
+const updateTinhTrangHoaDonCLS = gql`
+mutation UpdateTinhTrangHoaDonCLS($id: String!){
+  updateTinhTrangHoaDonCLS(id: $id){
+    _id
+  }
+}`

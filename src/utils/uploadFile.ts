@@ -11,8 +11,8 @@ export const backendUrlFile = {
 const backendUpload = {
     /* image: `${import.meta.env.BACKEND_URL || window.location.origin}${'/file-upload/PhongKhamImageUpload'}`, */
     image: `http://localhost:3000/file-upload/PhongKhamImageUpload`
-   /*  video: 'http://localhost:3000/file-upload/PhongKhamImageUpload',
-    document: 'http://localhost:3000/file-upload/PhongKhamImageUpload' */
+    /*  video: 'http://localhost:3000/file-upload/PhongKhamImageUpload',
+     document: 'http://localhost:3000/file-upload/PhongKhamImageUpload' */
 }
 
 export async function uploadFile(
@@ -67,7 +67,7 @@ export async function uploadMultiFile(
             .post(backendUpload[typeFile], formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
-                   /*  'access-token': localStorage.getItem('access-token') */
+                    /*  'access-token': localStorage.getItem('access-token') */
                 }
             })
             .then((response) => {
@@ -93,4 +93,15 @@ export function getUrlImage(linkImage: any) {
         return `${backendUrlFile.image}/${fileName}`
     }
     return url
+}
+
+export async function deleteImage(linkImage: any) {
+    const { url, fileName, type } = linkImage
+    try {
+        if (type === 'FILE') {
+            const response = await axios.delete(`${backendUrlFile.image}/${fileName}`)
+        }
+    } catch (error) {
+        throw new Error(`${error}`);
+    }
 }

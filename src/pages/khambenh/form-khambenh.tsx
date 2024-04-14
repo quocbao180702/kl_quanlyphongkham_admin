@@ -1,10 +1,12 @@
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import { DichVuInput, Thuoc, Vattuyte, useCreateHoaDonMutation, useCreateToaThuocMutation, useGetAllBenhQuery, useGetAllThuocQuery, useGetAllVattuyteQuery, useUpdateHoaDonMutation, useUpdateTrangThaiKhamMutation } from "../../graphql-definition/graphql";
-import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useEffect, useMemo, useState } from "react";
 import { Autocomplete, Checkbox, FormControlLabel, Grid, TextField } from "@mui/material";
 import { IoAddOutline } from "react-icons/io5";
 import DatePickerValue from "../../components/DatePicker";
 import dayjs, { Dayjs } from 'dayjs';
+import { EditContext } from ".";
+import { GrAddCircle, GrSubtractCircle } from "react-icons/gr";
 
 
 
@@ -19,6 +21,13 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
     const [selectedBenhPhu, setSelectedBenhPhu] = useState([]);
     const [hangs, setHangs] = useState([{ id: 0, idThuoc: '', tenthuoc: '', giaBHYT: '', giaKhongBHYT: '', soLuong: '' }]);
     const [selectedItems, setSelectedItems] = useState<DichVuInput[]>([]);
+
+    const { isEditing, setIsEditing }: any = useContext(EditContext);
+    const [editKham, setEditKham] = useState(false);
+
+    useEffect(() => {
+        setEditKham(isEditing);
+    }, [isEditing])
 
 
     const handleThuocChange = (event: React.ChangeEvent<{}>, value: any, index: number) => {
@@ -165,7 +174,8 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                     console.log(error)
                 }
                 refetchDAXETNGHIEM();
-                refetchHOANTAT()
+                refetchHOANTAT();
+                setEditKham(true);
             }
             else {
                 console.log('Không thể tạo toa thuốc')
@@ -215,45 +225,49 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
 
     return (
         <>
-            <Form onSubmit={handleSubmit} className="w-100">
-                <hr />
-                <h5>Bệnh</h5>
-                <hr />
-                <Row>
-                    <Autocomplete
-                        multiple
-                        id="multiple-limit-tags"
-                        options={benhData?.getAllBenh || []}
-                        getOptionLabel={(option) => option.tenbenh}
-                        onChange={handleBenhChange}
-                        renderInput={(params) => (
-                            <TextField {...params} label="Bệnh Chính" placeholder="Tên bệnh" />
-                        )}
-                        sx={{ width: '75%' }}
-                    />
+            <Form
+                onSubmit={handleSubmit}
+                className={`w-100`}
+            >
+                <fieldset disabled={editKham}>
+                    <hr />
+                    <h5>Bệnh</h5>
+                    <hr />
+                    <div className="d-flex justify-content-center">
+                        <Autocomplete
+                            multiple
+                            id="multiple-limit-tags"
+                            options={benhData?.getAllBenh || []}
+                            getOptionLabel={(option) => option.tenbenh}
+                            onChange={handleBenhChange}
+                            renderInput={(params) => (
+                                <TextField {...params} label="Bệnh Chính" placeholder="Tên bệnh" />
+                            )}
+                            sx={{ width: '75%' }}
+                        />
 
-                    <Autocomplete
-                        multiple
-                        className="mt-3"
-                        id="multiple-limit-tags"
-                        options={benhData?.getAllBenh || []}
-                        getOptionLabel={(option) => option.tenbenh}
-                        onChange={handleBenhPhuChange}
-                        renderInput={(params) => (
-                            <TextField {...params} label="Bệnh Phụ" placeholder="Tên bệnh" />
-                        )}
-                        sx={{ width: '75%' }}
-                    />
-                </Row>
-                <hr />
-                <h5>Thuốc</h5>
-                <hr />
-                <Row>
-
+                        <Autocomplete
+                            multiple
+                            id="multiple-limit-tags"
+                            options={benhData?.getAllBenh || []}
+                            getOptionLabel={(option) => option.tenbenh}
+                            onChange={handleBenhPhuChange}
+                            renderInput={(params) => (
+                                <TextField {...params} label="Bệnh Phụ" placeholder="Tên bệnh" />
+                            )}
+                            sx={{ width: '75%' }}
+                        />
+                    </div>
+                    {/* <Row> */}
+                    {/* </Row> */}
+                    <hr />
+                    <h5>Thuốc</h5>
+                    <hr />
+                    {/* <Row> */}
                     <div>
                         {hangs.map((hang, index) => (
                             <Grid container spacing={3} key={hang.id}>
-                                <Grid item md={6}>
+                                <Grid item md={7}>
                                     <Autocomplete
                                         id={`multiple-limit-tags-${hang.id}`}
                                         options={thuocData?.getAllThuoc || []}
@@ -265,7 +279,7 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                                         sx={{ width: '100%' }}
                                     />
                                 </Grid>
-                                <Grid item md={5}>
+                                <Grid item md={3}>
                                     <TextField
                                         id={`soLuong-${hang.id}`}
                                         label="Số lượng..."
@@ -274,60 +288,62 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                                         style={{ width: '100%' }}
                                     />
                                 </Grid>
-                                <Grid item md={1}>
+                                <Grid item md={2}>
                                     <Button onClick={() => xoaHang(index)} variant="contained" color="secondary">
-                                        Xóa
+                                        <GrSubtractCircle color="red" />
                                     </Button>
                                 </Grid>
                             </Grid>
                         ))}
                         <Button onClick={themHang} variant="contained" color="primary">
-                            Thêm hàng
+                            <GrAddCircle color="red" />
                         </Button>
 
                     </div>
-                </Row>
+                    {/* </Row> */}
 
 
-                <Row>
-                    <Col md={5}>
-                        <DatePickerValue label={label} value={ngaytaikham} onChange={handleDateChange} />
-                    </Col>
-                </Row>
-                <hr />
-                <h5>Vật tư y tế</h5>
-                <hr />
-                <Row>
-                    <Table responsive>
-                        <thead>
-                            <tr>
-                                <th>Tên Vật Tư</th>
-                                <th>Giá</th>
-                                <th>Số Lượng</th>
-                                <th>Đơn Vị Tính</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {dateVattu?.getAllVatTuYTe?.map((item: Vattuyte) => (
-                                <tr key={item?._id} className="text-center">
-                                    <td style={{ padding: '0' }} className="align-middle">{item?.tenvattu}</td>
-                                    <td style={{ padding: '0' }} className="align-middle">{item?.chiphi[0]?.gia}</td>
-                                    <td style={{ padding: '0' }} className="align-middle">{item?.soluong}</td>
-                                    <td style={{ padding: '0' }} className="align-middle">{item?.dvt}</td>
-                                    <td style={{ padding: '0' }} className="align-middle">
-                                        <FormControlLabel
-                                            label={''}
-                                            control={<Checkbox checked={selectedItems.some(selectedItem => selectedItem.ten === item.tenvattu)} onChange={(event) => handleCheckboxChange(event, item)} />}
-                                        />
-                                    </td>
+                    <Row>
+                        <Col md={5}>
+                            <DatePickerValue label={label} value={ngaytaikham} onChange={handleDateChange} />
+                        </Col>
+                    </Row>
+                    <hr />
+                    <h5>Vật tư y tế</h5>
+                    <hr />
+                    <div>
+                        <Table responsive bordered hover>
+                            <thead>
+                                <tr className="text-center table-primary">
+                                    <th>Tên Vật Tư</th>
+                                    <th>Giá</th>
+                                    <th>Số Lượng</th>
+                                    <th>Đơn Vị Tính</th>
+                                    <th>Thao Tác</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </Row>
-                <Button variant="primary" type="submit" className="mt-3 mx-auto w-100">
-                    Hoàn tất khám
-                </Button>
+                            </thead>
+                            <tbody>
+                                {dateVattu?.getAllVatTuYTe?.map((item: Vattuyte) => (
+                                    <tr key={item?._id} className="text-center">
+                                        <td style={{ padding: '0' }} className="align-middle">{item?.tenvattu}</td>
+                                        <td style={{ padding: '0' }} className="align-middle">{item?.chiphi[0]?.gia}</td>
+                                        <td style={{ padding: '0' }} className="align-middle">{item?.soluong}</td>
+                                        <td style={{ padding: '0' }} className="align-middle">{item?.dvt}</td>
+                                        <td style={{ padding: '0' }} className="align-middle">
+                                            <FormControlLabel
+                                                label={''}
+                                                control={<Checkbox checked={selectedItems.some(selectedItem => selectedItem.ten === item.tenvattu)} onChange={(event) => handleCheckboxChange(event, item)} />}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </div>
+                    <Button variant="primary" type="submit" className="mt-3 mx-auto w-100">
+                        Hoàn tất khám
+                    </Button>
+                </fieldset>
             </Form>
         </>
     );

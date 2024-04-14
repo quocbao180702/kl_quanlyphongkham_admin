@@ -391,6 +391,8 @@ const getAllDatLichbyTrangThai = gql`
         _id
         hoten
         ngaysinh
+        sodienthoai
+        diachi
       }
       motabenh
       ngaydat

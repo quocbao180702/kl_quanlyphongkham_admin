@@ -1,0 +1,30 @@
+.navbar-custom {
+    background-color: #32C0F9;
+}
+
+.nav-item {
+    margin: 0 10px;
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+    transform: translateY(-2px);
+}
+
+.nav-link {
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #fff;
+    color: #32C0F9;
+}
+
+.nav-link:active {
+    background-color: #fff;
+    /* color: #32C0F9; */
+}

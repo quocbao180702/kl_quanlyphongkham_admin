@@ -10,7 +10,7 @@ import Pagination from "../../components/pagination";
 
 function ThuocPage() {
 
-    const [take, setTake] = useState(2);
+    const [take, setTake] = useState(10);
     const [skip, setSkip] =  useState(0);
     const { data, loading, error, refetch } = useGetThuocPaginationQuery({
         variables: {
@@ -66,7 +66,7 @@ function ThuocPage() {
                     <Button className="mr-3 btn-outline-danger">Xuất PDF</Button>
                 </div>
             </Row>
-            <Row className="mt-3">
+            <div className="mt-3">
                 <Table responsive striped bordered hover>
                     <thead>
                         <tr>
@@ -107,7 +107,7 @@ function ThuocPage() {
                     </tbody>
                 </Table>
                 <Pagination count={data?.CountThuoc as number} take={take} skip={handleChangPage} page={page}/>
-            </Row>
+            </div>
             <ThemThuoc 
                 show={modalAdd}
                 onHide={() => setModalAdd(false)}

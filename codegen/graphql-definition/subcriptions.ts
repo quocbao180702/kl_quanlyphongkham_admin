@@ -8,6 +8,8 @@ subscription NewDatLich{
         _id
         hoten
         ngaysinh
+        sodienthoai
+        diachi
       }
       motabenh
       ngaydat

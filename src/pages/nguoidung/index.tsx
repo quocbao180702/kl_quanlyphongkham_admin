@@ -5,7 +5,7 @@ import { CiLock, CiUnlock } from 'react-icons/ci';
 import { LinkImage, Users, useDeleteUserMutation, useGetAllUserQuery, useXulyKhoaMutation } from '../../graphql-definition/graphql';
 import { useEffect, useState } from 'react';
 import MyVerticallyCenteredModal from './form_updateUser'; import ThemNguoiDung from './f_themUser';
-import { getUrlImage } from '../../utils/uploadFile';
+import { deleteImage, getUrlImage } from '../../utils/uploadFile';
 import Pagination from '../../components/pagination';
 ;
 
@@ -35,9 +35,10 @@ function NguoiDung() {
 
     const [deleteUser] = useDeleteUserMutation();
 
-    const handleDelete = async (id: string) => {
+    const handleDelete = async (id: string, avatar: LinkImage) => {
         try {
             await deleteUser({ variables: { id } });
+            await deleteImage(avatar)
             refetch();
         } catch (error) {
             console.error('Error deleting user:', error);
@@ -107,7 +108,7 @@ function NguoiDung() {
                                 <td>{user.email}</td>
                                 <td>{user.role}</td>
                                 <td onClick={() => handleKhoa(user._id)}>{user.isLocked ? <CiLock /> : <CiUnlock />}</td>
-                                <td onClick={() => handleDelete(user._id)}>
+                                <td onClick={() => handleDelete(user._id, user?.avatar)}>
                                     <MdDelete />
                                 </td>
                                 <td onClick={() => handleEdit(user)}><FaMarker /></td>

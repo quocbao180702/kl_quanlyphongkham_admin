@@ -124,14 +124,14 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
             </Modal.Header>
             <Modal.Body>
                 <Row>
-                    <h6>Bệnh Nhân</h6>
-                    Bệnh nhân: {benhnhan?.hoten} - {benhnhan?.gioitinh ? 'Nam' : 'Nữ'} - {benhnhan?.diachi}- {benhnhan?.user?.phoneNumber}
+                    <h6 className="mr-2">Bệnh Nhân: </h6>
+                    {benhnhan?.hoten} - {benhnhan?.gioitinh ? 'Nam' : 'Nữ'} - {benhnhan?.diachi}- {benhnhan?.user?.phoneNumber}
                     <hr />
                     <div style={{ border: "1px solid black" }}></div>
                 </Row>
                 <Row>
-                    <h6>Bác Sĩ</h6>
-                    Bác sĩ: {bacsi?.hoten} - {bacsi?.phongs?.tenphong} - {bacsi?.chuyenkhoa?.tenkhoa} - {bacsi?.user?.phoneNumber}
+                    <h6 className="mr-2">Bác Sĩ: </h6>
+                    {bacsi?.hoten} - {bacsi?.phongs?.tenphong} - {bacsi?.chuyenkhoa?.tenkhoa} - {bacsi?.user?.phoneNumber}
                     <hr />
                     <div style={{ border: "1px solid black" }}></div>
                 </Row>

@@ -1,13 +1,20 @@
-import { Link } from "react-router-dom";
-import { getJwtToken } from "../../utils/jwt";
-import { jwtDecode } from "jwt-decode";
-import { useContext, useEffect, useState } from "react";
-import { useLogoutMutation } from "../../graphql-definition/graphql";
+import { Link, NavLink } from "react-router-dom";
+import { useContext } from "react";
+import { UserRole, useLogoutMutation } from "../../graphql-definition/graphql";
 import { AuthContext } from "../../provider/AuthContextProvider";
+import { GiMedicines } from "react-icons/gi";
+import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
+import { TfiWrite } from "react-icons/tfi";
+import { PiCalendarCheckThin, PiStethoscopeLight } from "react-icons/pi";
+import { IoHomeOutline } from "react-icons/io5";
+import { ImLab } from "react-icons/im";
+import { MdOutlinePeopleAlt } from "react-icons/md";
+import { FaPeopleGroup, FaRegUser } from "react-icons/fa6";
 
+import "./style.css"
 
 function Header() {
-    const { isAuthenticated, logoutClient } = useContext(AuthContext)
+    const { isAuthenticated, logoutClient, profile } = useContext(AuthContext)
     const [logoutServer, _] = useLogoutMutation()
 
     const logout = async () => {
@@ -22,62 +29,84 @@ function Header() {
     }
     return (
         <>
-            <nav className="navbar navbar-expand-lg" style={{ backgroundColor: '#32C0F9 ' }}>
-                <a className="navbar-brand text-light" href="/">Phòng Khám</a>
+            <nav className="navbar navbar-expand-lg navbar-custom">
+                <a className="navbar-brand text-uppercase text-light fw-bold" href="/">Clinic</a>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
 
                 <div className="collapse navbar-collapse " id="navbarSupportedContent">
-                    <ul className="navbar-nav mr-auto ">
+                    <ul className="navbar-nav mr-auto w-100 justify-content-center">
                         <li className="nav-item active">
-                            <Link className="nav-link text-light" to="/">Home <span className="sr-only">(current)</span></Link>
+                            <Link className="nav-link text-uppercase middle-align" to="/"><IoHomeOutline /> Home{/* {<span className="sr-only">(current)</span>} */}</Link>
+                        </li>
+                        {
+                            (profile?.user?.role === UserRole.Staff || profile?.role === UserRole.Admin) && (
+                                <>
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-uppercase middle-align" to="/datlich"><PiCalendarCheckThin /> Đặt Lịch</Link>
+                                    </li>
+                                </>
+                            )
+                        }
+                        {
+                            (profile?.user?.role === UserRole.Doctor || profile?.role === UserRole.Admin) && (
+                                <>
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-uppercase" to="/khambenh"><PiStethoscopeLight /> Khám Bệnh</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-uppercase" to="/canlamsang"><ImLab /> Cận Lâm Sàng</Link>
+                                    </li>
+                                </>
+                            )
+                        }
+                        {
+                            profile?.role === UserRole.Admin && (
+                                <>
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-uppercase" to="/bacsi"><FaPeopleGroup />Nhân Sự</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-uppercase" to="/nguoidung"><FaRegUser size={14} /> Người Dùng</Link>
+                                    </li>
+                                </>
+                            )
+                        }
+                        <li className="nav-item">
+                            <Link className="nav-link text-uppercase" to="/benhnhan"><MdOutlinePeopleAlt size={19} /> Bệnh Nhân</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link text-light" to="/datlich">Đặt Lịch</Link>
+                            <Link className="nav-link text-uppercase" to="/thuoc"><GiMedicines /> Thuốc</Link>
                         </li>
+                        {
+                            (profile?.user?.role === UserRole.Staff || profile?.role === UserRole.Admin) && (
+                                <li className="nav-item">
+                                    <Link className="nav-link text-uppercase" to="/hoadon"><LiaFileInvoiceDollarSolid /> Hóa Đơn</Link>
+                                </li>
+                            )
+                        }
                         <li className="nav-item">
-                            <Link className="nav-link text-light" to="/khambenh">Khám Bệnh</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link text-light" to="/canlamsang">Cận Lâm Sàng</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link text-light" to="/bacsi">Nhân Sự</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link text-light" to="/benhnhan">Bệnh Nhân</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link text-light" to="/nguoidung">Người Dùng</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link text-light" to="/thuoc">Thuốc</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link text-light" to="/hoadon">Hóa Đơn</Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link text-light" to="/blogs">Blogs</Link>
+                            <Link className="nav-link text-uppercase middle-align" to="/blogs"><TfiWrite /> Blogs</Link>
                         </li>
                     </ul>
                     <ul className="navbar-nav ml-5">
                         {isAuthenticated ? (
                             <>
                                 <li className="nav-item">
-                                    <Link className="nav-link text-light" to="/profile">Profile</Link>
+                                    <Link className="nav-link text-uppercase" to="/profile">Profile</Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link text-light" to="#" onClick={logout}>Logout</Link>
+                                    <Link className="nav-link text-uppercase" to="#" onClick={logout}>Logout</Link>
                                 </li>
                             </>
                         ) : (
                             <>
                                 <li className="nav-item">
-                                    <Link className="nav-link text-light" to="/login">Login</Link>
+                                    <Link className="nav-link text-uppercase" to="/login">Login</Link>
                                 </li>
                                 <li className="nav-item">
-                                    <Link className="nav-link text-light" to="/register">Register</Link>
+                                    <Link className="nav-link text-uppercase" to="/register">Register</Link>
                                 </li>
                             </>
                         )}
