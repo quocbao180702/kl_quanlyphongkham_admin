@@ -26,6 +26,7 @@ interface Datlich {
     ngaydat: string;
     ngaykham: string;
     trangthai: string;
+    email: string;
 }
 
 const columns: GridColDef[] = [
@@ -69,6 +70,7 @@ function DatLich() {
     const [showSuccess, setShowSuccess] = useState(false);
     const [thongbao, setThongBao] = useState('')
     const [idBenhNhan, setIdBenhNhan] = useState('');
+    const [email, setEmail] = useState('')
     const [dataBenhNhan, setDataBenhNhan] = useState<any[]>([]);
 
 
@@ -144,7 +146,8 @@ function DatLich() {
             setPhoneNumber(selected?.benhnhan?.sodienthoai)
             setNgaySinh(dayjs(selected?.benhnhan?.ngaysinh))
             setNgayKham(dayjs(selected?.ngaykham));
-            setDiaChi(selected?.benhnhan?.diachi)
+            setDiaChi(selected?.benhnhan?.diachi);
+            setEmail(selected?.email);
         }
     }, [selected])
 
@@ -206,16 +209,17 @@ function DatLich() {
                             benhnhan: selected?.benhnhan?._id,
                             phongs: selectedValues,
                             ngaykham: dayjs(ngaykham).format('YYYY-MM-DD'),
-                            ngaytao: dayjs().format('YYYY-MM-DD')
+                            ngaytao: dayjs().format('YYYY-MM-DD'),
+                            email: selected?.email || ''
                         }
                     }
                 }),
-                updateTrangThaiDatLich({
+                selected?._id !== undefined ? updateTrangThaiDatLich({
                     variables: {
-                        id: selected?._id,
+                        id: selected._id,
                         trangthai: "XACNHAN"
-                    }
-                })
+                    },
+                }) : null
             ]);
             existingDatLichrefetch();
             setThongBao('Đã tạo phiếu xác nhận cho bệnh nhân ' + selected?.benhnhan?.hoten + ' lúc: ' + dayjs(ngaykham).format('YYYY-MM-DD'));
@@ -238,7 +242,8 @@ function DatLich() {
                             "benhnhan": idBenhNhan,
                             "phongs": selectedValues,
                             "ngaykham": ngaykham,
-                            "ngaytao": dayjs().format('YYYY-MM-DD')
+                            "ngaytao": dayjs().format('YYYY-MM-DD'),
+                            "email": email || ''
                         }
                     }
                 })
@@ -291,7 +296,7 @@ function DatLich() {
                                     <th className="text-break">Họ Tên</th>
                                     <th className="text-break">Ngày Sinh</th>
                                     <th className="text-break">Mô Tả Bệnh</th>
-                                   {/*  <th className="text-break">Ngày Đặt</th>
+                                    {/*  <th className="text-break">Ngày Đặt</th>
                                     <th className="text-break">Ngày Khám</th> */}
                                     <th className="text-break">Trạng Thái</th>
                                     <th className="text-break">Hủy</th>

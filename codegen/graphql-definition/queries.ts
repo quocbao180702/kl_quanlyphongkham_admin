@@ -398,6 +398,7 @@ const getAllDatLichbyTrangThai = gql`
       ngaydat
       ngaykham
       trangthai
+      email
     }
 }`
 
@@ -542,3 +543,24 @@ query  GetAllBlogs($input: FetchPagination!){
   }
 }`
 
+
+const getBlogbyId = gql`
+query GetBlogbyId($id: String!){
+  getBlogbyId(id: $id){
+  	_id
+    user{
+      username
+    }
+    tieude
+    tomtat
+    noidung
+    hinhanh{
+      fileName
+      url
+      type
+    }
+    luotxem
+    ngaytao
+    kichhoat
+  }
+}`

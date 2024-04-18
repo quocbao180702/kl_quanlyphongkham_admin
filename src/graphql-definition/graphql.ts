@@ -121,6 +121,7 @@ export type CreateKetquacanlamsangInput = {
 
 export type CreatePhieuXacNhanInput = {
   benhnhan: Scalars['String']['input'];
+  email: Scalars['String']['input'];
   ngaykham: Scalars['DateTime']['input'];
   ngaytao: Scalars['DateTime']['input'];
   phongs: Array<Scalars['String']['input']>;
@@ -172,6 +173,7 @@ export type DatLich = {
   __typename?: 'DatLich';
   _id: Scalars['ID']['output'];
   benhnhan: BenhNhan;
+  email: Scalars['String']['output'];
   motabenh: Scalars['String']['output'];
   ngaydat: Scalars['DateTime']['output'];
   ngaykham: Scalars['DateTime']['output'];
@@ -741,6 +743,7 @@ export type NewChuyenKhoaInput = {
 };
 
 export type NewDatLichInput = {
+  email: Scalars['String']['input'];
   hoten: Scalars['String']['input'];
   motabenh: Scalars['String']['input'];
   ngaydat: Scalars['DateTime']['input'];
@@ -866,6 +869,7 @@ export type Query = {
   getAllDichVu: Array<Dichvu>;
   getAllHoaDonPhieuCanLamSang: Array<Hoadonchidinhcanlamsang>;
   getAllHoadon: Array<Hoadon>;
+  getAllHoadonByBenhNhan: Array<Hoadon>;
   getAllLoaiCLS: Array<LoaiCanLamSang>;
   getAllNhanVien: Array<NhanVien>;
   getAllPhieuCLS: Array<Phieuchidinhcanlamsang>;
@@ -878,12 +882,14 @@ export type Query = {
   getAllSoBenh: Array<Sobenh>;
   getAllThuoc: Array<Thuoc>;
   getAllToaThuoc: Array<Toathuoc>;
+  getAllToaThuocbyBenhNhan: Array<Toathuoc>;
   getAllUsers: Array<Users>;
   getAllVatTuYTe: Array<Vattuyte>;
   getBacSibyUserId?: Maybe<BacSi>;
   getBenhNhanbyId: BenhNhan;
   getBenhNhanbySodienthoai?: Maybe<BenhNhan>;
   getBenhNhanbyUserId?: Maybe<BenhNhan>;
+  getBlogbyId: Blog;
   getLastestBlog: Array<Blog>;
   getNhanVienbyUserId?: Maybe<NhanVien>;
   getPhieuCanLamSangbyPhieuXacNhanId?: Maybe<Phieuchidinhcanlamsang>;
@@ -928,6 +934,11 @@ export type QueryGetAllDatLichbyTrangThaiArgs = {
 };
 
 
+export type QueryGetAllHoadonByBenhNhanArgs = {
+  benhnhanId: Scalars['String']['input'];
+};
+
+
 export type QueryGetAllPhieuClSbyNgayArgs = {
   ngaytao: Scalars['DateTime']['input'];
   trangthai: Scalars['Boolean']['input'];
@@ -941,6 +952,11 @@ export type QueryGetAllPhieuXacNhanDaXetNgiemArgs = {
 
 
 export type QueryGetAllSinhHieuByBenhNhanArgs = {
+  benhnhanId: Scalars['String']['input'];
+};
+
+
+export type QueryGetAllToaThuocbyBenhNhanArgs = {
   benhnhanId: Scalars['String']['input'];
 };
 
@@ -967,6 +983,11 @@ export type QueryGetBenhNhanbySodienthoaiArgs = {
 
 export type QueryGetBenhNhanbyUserIdArgs = {
   user: Scalars['String']['input'];
+};
+
+
+export type QueryGetBlogbyIdArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -1032,6 +1053,7 @@ export type Sobenh = {
 export type Subscription = {
   __typename?: 'Subscription';
   newDatLich: DatLich;
+  newPhieuXacNhan: PhieuXacNhan;
 };
 
 export type Thuoc = {
@@ -1130,6 +1152,7 @@ export type UpdateChuyenKhoaInput = {
 };
 
 export type UpdateDatLichInput = {
+  email?: InputMaybe<Scalars['String']['input']>;
   hoten?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
   motabenh?: InputMaybe<Scalars['String']['input']>;
@@ -1188,6 +1211,7 @@ export type UpdateNhanVienInput = {
 
 export type UpdatePhieuXacNhanInput = {
   benhnhan?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
   ngaykham?: InputMaybe<Scalars['DateTime']['input']>;
   ngaytao?: InputMaybe<Scalars['DateTime']['input']>;
@@ -1671,7 +1695,7 @@ export type GetAllDatLichbyTrangThaiQueryVariables = Exact<{
 }>;
 
 
-export type GetAllDatLichbyTrangThaiQuery = { __typename?: 'Query', getAllDatLichbyTrangThai?: Array<{ __typename?: 'DatLich', _id: string, motabenh: string, ngaydat: any, ngaykham: any, trangthai: TrangThaiDatKham, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, sodienthoai: string, diachi: string } }> | null };
+export type GetAllDatLichbyTrangThaiQuery = { __typename?: 'Query', getAllDatLichbyTrangThai?: Array<{ __typename?: 'DatLich', _id: string, motabenh: string, ngaydat: any, ngaykham: any, trangthai: TrangThaiDatKham, email: string, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, sodienthoai: string, diachi: string } }> | null };
 
 export type GetAllPhieuXacNhanDaXetNghiemQueryVariables = Exact<{
   ngaykham: Scalars['String']['input'];
@@ -1703,10 +1727,22 @@ export type GetAllBlogsQueryVariables = Exact<{
 
 export type GetAllBlogsQuery = { __typename?: 'Query', countBlogs: number, getAllBlog: Array<{ __typename?: 'Blog', _id: string, tieude: string, tomtat?: string | null, noidung: string, luotxem: number, kichhoat: boolean, ngaytao: any, user: { __typename?: 'Users', username: string }, hinhanh: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } }> };
 
+export type GetBlogbyIdQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type GetBlogbyIdQuery = { __typename?: 'Query', getBlogbyId: { __typename?: 'Blog', _id: string, tieude: string, tomtat?: string | null, noidung: string, luotxem: number, ngaytao: any, kichhoat: boolean, user: { __typename?: 'Users', username: string }, hinhanh: { __typename?: 'LinkImage', fileName: string, url: string, type: TypeImage } } };
+
 export type NewDatLichSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type NewDatLichSubscription = { __typename?: 'Subscription', newDatLich: { __typename?: 'DatLich', _id: string, motabenh: string, ngaydat: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, sodienthoai: string, diachi: string } } };
+export type NewDatLichSubscription = { __typename?: 'Subscription', newDatLich: { __typename?: 'DatLich', _id: string, motabenh: string, ngaydat: any, ngaykham: any, email: string, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, sodienthoai: string, diachi: string } } };
+
+export type NewPhieuXacNhanSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NewPhieuXacNhanSubscription = { __typename?: 'Subscription', newPhieuXacNhan: { __typename?: 'PhieuXacNhan', _id: string, trangthai: TrangThaiKham, sothutu: number, ngaytao: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, bhyt: string, sinhhieu?: { __typename?: 'Sinhhieu', _id: string, mach: number, nhietdo: number, ha: string, chieucao: number, cannang: number, bmi: number, benhmangtinh: boolean } | null }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }> } };
 
 
 export const LoginDocument = gql`
@@ -3915,6 +3951,7 @@ export const GetAllDatLichbyTrangThaiDocument = gql`
     ngaydat
     ngaykham
     trangthai
+    email
   }
 }
     `;
@@ -4252,6 +4289,60 @@ export type GetAllBlogsQueryHookResult = ReturnType<typeof useGetAllBlogsQuery>;
 export type GetAllBlogsLazyQueryHookResult = ReturnType<typeof useGetAllBlogsLazyQuery>;
 export type GetAllBlogsSuspenseQueryHookResult = ReturnType<typeof useGetAllBlogsSuspenseQuery>;
 export type GetAllBlogsQueryResult = Apollo.QueryResult<GetAllBlogsQuery, GetAllBlogsQueryVariables>;
+export const GetBlogbyIdDocument = gql`
+    query GetBlogbyId($id: String!) {
+  getBlogbyId(id: $id) {
+    _id
+    user {
+      username
+    }
+    tieude
+    tomtat
+    noidung
+    hinhanh {
+      fileName
+      url
+      type
+    }
+    luotxem
+    ngaytao
+    kichhoat
+  }
+}
+    `;
+
+/**
+ * __useGetBlogbyIdQuery__
+ *
+ * To run a query within a React component, call `useGetBlogbyIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBlogbyIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBlogbyIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetBlogbyIdQuery(baseOptions: Apollo.QueryHookOptions<GetBlogbyIdQuery, GetBlogbyIdQueryVariables> & ({ variables: GetBlogbyIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBlogbyIdQuery, GetBlogbyIdQueryVariables>(GetBlogbyIdDocument, options);
+      }
+export function useGetBlogbyIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBlogbyIdQuery, GetBlogbyIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBlogbyIdQuery, GetBlogbyIdQueryVariables>(GetBlogbyIdDocument, options);
+        }
+export function useGetBlogbyIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetBlogbyIdQuery, GetBlogbyIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetBlogbyIdQuery, GetBlogbyIdQueryVariables>(GetBlogbyIdDocument, options);
+        }
+export type GetBlogbyIdQueryHookResult = ReturnType<typeof useGetBlogbyIdQuery>;
+export type GetBlogbyIdLazyQueryHookResult = ReturnType<typeof useGetBlogbyIdLazyQuery>;
+export type GetBlogbyIdSuspenseQueryHookResult = ReturnType<typeof useGetBlogbyIdSuspenseQuery>;
+export type GetBlogbyIdQueryResult = Apollo.QueryResult<GetBlogbyIdQuery, GetBlogbyIdQueryVariables>;
 export const NewDatLichDocument = gql`
     subscription NewDatLich {
   newDatLich {
@@ -4266,6 +4357,7 @@ export const NewDatLichDocument = gql`
     motabenh
     ngaydat
     ngaykham
+    email
   }
 }
     `;
@@ -4291,3 +4383,60 @@ export function useNewDatLichSubscription(baseOptions?: Apollo.SubscriptionHookO
       }
 export type NewDatLichSubscriptionHookResult = ReturnType<typeof useNewDatLichSubscription>;
 export type NewDatLichSubscriptionResult = Apollo.SubscriptionResult<NewDatLichSubscription>;
+export const NewPhieuXacNhanDocument = gql`
+    subscription NewPhieuXacNhan {
+  newPhieuXacNhan {
+    _id
+    benhnhan {
+      _id
+      hoten
+      ngaysinh
+      gioitinh
+      diachi
+      sodienthoai
+      cccd
+      bhyt
+      sinhhieu {
+        _id
+        mach
+        nhietdo
+        ha
+        chieucao
+        cannang
+        bmi
+        benhmangtinh
+      }
+    }
+    phongs {
+      _id
+      tenphong
+    }
+    trangthai
+    sothutu
+    ngaytao
+    ngaykham
+  }
+}
+    `;
+
+/**
+ * __useNewPhieuXacNhanSubscription__
+ *
+ * To run a query within a React component, call `useNewPhieuXacNhanSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useNewPhieuXacNhanSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewPhieuXacNhanSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNewPhieuXacNhanSubscription(baseOptions?: Apollo.SubscriptionHookOptions<NewPhieuXacNhanSubscription, NewPhieuXacNhanSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<NewPhieuXacNhanSubscription, NewPhieuXacNhanSubscriptionVariables>(NewPhieuXacNhanDocument, options);
+      }
+export type NewPhieuXacNhanSubscriptionHookResult = ReturnType<typeof useNewPhieuXacNhanSubscription>;
+export type NewPhieuXacNhanSubscriptionResult = Apollo.SubscriptionResult<NewPhieuXacNhanSubscription>;

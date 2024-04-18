@@ -9,6 +9,8 @@ import YeuCauCanLamSang from "./f_YeuCauCLS";
 import { AuthContext } from "../../provider/AuthContextProvider";
 import dayjs from 'dayjs'
 import moment from "moment";
+import { useSubscription } from "@apollo/client";
+import { newPhieuXacNhanSubscription } from "../../../codegen/graphql-definition/subcriptions";
 
 export const EditContext = createContext({});
 
@@ -29,6 +31,10 @@ function KhamBenh() {
     const [modalShow, setModalShow] = useState(false);
 
 
+    const { data: newPhieuXacNhan, error: newPhieuXacNhanError } = useSubscription(newPhieuXacNhanSubscription);
+
+
+
     const { loading: loadingChoKham, error: errorChoKham, data: dataChoKham, refetch: refetchChoKham } = useGetAllNgayVaPhongQuery({
         variables: {
             ngaykham: dataAgrsChoKham?.ngaykham,
@@ -37,6 +43,10 @@ function KhamBenh() {
         },
         skip: !dataAgrsChoKham || !dataAgrsChoKham.phongIds
     });
+
+    useEffect(() => {
+        refetchChoKham()
+    }, [newPhieuXacNhan])
 
     const { loading: loadingCHOXETNGHIEM, error: errorCHOXETNGHIEM, data: dataCHOXETNGHIEM, refetch: refetchCHOXETNGHIEM } = useGetAllNgayVaPhongQuery({
         variables: {

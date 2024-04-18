@@ -9,6 +9,8 @@ function ChoKham({ data, loading, error, selected }: any) {
         console.log('row selected is:', benhnhan, cls);
     };
 
+    
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error...{error.message}</div>;
 
