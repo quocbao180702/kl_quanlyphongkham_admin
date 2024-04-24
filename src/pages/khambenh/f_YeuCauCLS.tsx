@@ -63,16 +63,18 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
                             thanhtien: (thongtin?.loaicanlamsang?.gia || 0) * 1
                         }));
                     } */
-
-                    await createHoadonchidinhCLS({
-                        variables: {
-                            "input": {
-                                "benhnhan": benhnhanId,
-                                "bhyt": bhyt,
-                                "chitietcanlamsang": selectedDichVu
+                    if (response?.data?.createPhieuchidinhcanlamsang?._id) {
+                        await createHoadonchidinhCLS({
+                            variables: {
+                                "input": {
+                                    "benhnhan": benhnhanId,
+                                    "idPhieuCLS": response?.data?.createPhieuchidinhcanlamsang?._id,
+                                    "bhyt": bhyt,
+                                    "chitietcanlamsang": selectedDichVu
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 } catch (error) {
                     console.log(error);
                 }

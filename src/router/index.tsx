@@ -19,6 +19,7 @@ import ProtectedRoutes from "./protectedRoute"
 import Blogs from "../pages/blogs/danhsachBlog"
 import ThemBlog from "../pages/blogs/f_themblog"
 import SuaBlog from "../pages/blogs/f_suablog"
+import BaoCao from "../pages/baocao/page"
 
 export const AppRouter = () => {
 
@@ -36,6 +37,7 @@ export const AppRouter = () => {
                                 <Route /* path="bacsi" */ index element={<BacSiPage />} />
                                 <Route path="nhanvien" element={<NhanVienPage />} />
                             </Route>
+                            <Route path="baocao" element={<BaoCao />} />
                             <Route path="thuoc" element={<Thuoc />} />
                             <Route path="khambenh" element={<KhamBenh />} />
                             <Route path="canlamsang" element={<CanLamSang />} />

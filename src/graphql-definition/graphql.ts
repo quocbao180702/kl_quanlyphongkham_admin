@@ -113,6 +113,7 @@ export type CreateHoadonchidinhcanlamsangInput = {
   benhnhan: Scalars['String']['input'];
   bhyt: Scalars['Boolean']['input'];
   chitietcanlamsang: Array<DichVuInput>;
+  idPhieuCLS: Scalars['String']['input'];
 };
 
 export type CreateKetquacanlamsangInput = {
@@ -234,6 +235,7 @@ export type Hoadonchidinhcanlamsang = {
   benhnhan: BenhNhan;
   bhyt: Scalars['Boolean']['output'];
   chitietcanlamsang: Array<DichVu>;
+  idPhieuCLS?: Maybe<Scalars['String']['output']>;
   ngaytao: Scalars['DateTime']['output'];
   thanhtien: Scalars['Float']['output'];
   tinhtrang: Scalars['Boolean']['output'];
@@ -282,6 +284,24 @@ export type LoginUserInput = {
   username: Scalars['String']['input'];
 };
 
+export type MongthRange = {
+  __typename?: 'MongthRange';
+  month: Scalars['Float']['output'];
+  tongtien: Scalars['Float']['output'];
+};
+
+export type MonthRange = {
+  __typename?: 'MonthRange';
+  count: Scalars['Float']['output'];
+  month: Scalars['Float']['output'];
+};
+
+export type MonthRangeCls = {
+  __typename?: 'MonthRangeCLS';
+  month: Scalars['Float']['output'];
+  tongtien: Scalars['Float']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createBacSi: BacSi;
@@ -327,6 +347,7 @@ export type Mutation = {
   login: LoginResponse;
   loginwithGoogleCallback: LoginResponse;
   logout?: Maybe<Scalars['Boolean']['output']>;
+  registerUser: Users;
   updateBacSi: BacSi;
   updateBenh: Benh;
   updateBenhNhan: BenhNhan;
@@ -352,7 +373,9 @@ export type Mutation = {
   updateTrangThaiDatLich: DatLich;
   updateTrangThaiHoaDon: Hoadon;
   updateTrangThaiKham: PhieuXacNhan;
+  updateTrangThaiThongTinUser: Users;
   updateUser: Users;
+  updateUserbySoDienThoai?: Maybe<BenhNhan>;
   updateVatTuYTe: Vattuyte;
   xulyKhoa: Users;
 };
@@ -564,6 +587,11 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationRegisterUserArgs = {
+  registerInput: RegisterInput;
+};
+
+
 export type MutationUpdateBacSiArgs = {
   input: UpdateBacSiInput;
 };
@@ -672,6 +700,7 @@ export type MutationUpdateToathuocArgs = {
 
 export type MutationUpdateTrangThaiCanLamSangArgs = {
   id: Scalars['String']['input'];
+  trangthai: Scalars['String']['input'];
 };
 
 
@@ -692,8 +721,19 @@ export type MutationUpdateTrangThaiKhamArgs = {
 };
 
 
+export type MutationUpdateTrangThaiThongTinUserArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
+};
+
+
+export type MutationUpdateUserbySoDienThoaiArgs = {
+  sodienthoai: Scalars['String']['input'];
+  user: Scalars['String']['input'];
 };
 
 
@@ -838,7 +878,7 @@ export type Phieuchidinhcanlamsang = {
   ketquacanlamsangs: Array<KetQuaCanLamSang>;
   ngaytao: Scalars['DateTime']['output'];
   phieuxacnhan: PhieuXacNhan;
-  trangthai: Scalars['Boolean']['output'];
+  trangthai: TrangThaiCls;
 };
 
 export type Phong = {
@@ -853,8 +893,12 @@ export type Query = {
   __typename?: 'Query';
   CountBacSi: Scalars['Float']['output'];
   CountBenhNhan: Scalars['Float']['output'];
+  CountChuyenKhoa: Scalars['Float']['output'];
+  CountNhanVien: Scalars['Float']['output'];
+  CountPhong: Scalars['Float']['output'];
   CountThuoc: Scalars['Float']['output'];
   countBlogs: Scalars['Float']['output'];
+  countPhieuXacNhanByDate: Scalars['Float']['output'];
   countUser: Scalars['Float']['output'];
   findAllRelatedKetQuaCanLamSang?: Maybe<Array<KetQuaCanLamSang>>;
   getAllBacSi: Array<BacSi>;
@@ -893,12 +937,23 @@ export type Query = {
   getLastestBlog: Array<Blog>;
   getNhanVienbyUserId?: Maybe<NhanVien>;
   getPhieuCanLamSangbyPhieuXacNhanId?: Maybe<Phieuchidinhcanlamsang>;
+  getStartAndEndOfMonth: Array<MonthRange>;
   getThuocPagination: Array<Thuoc>;
   getThuocbyIds: Array<Thuoc>;
+  getTongTienbyMonth: Array<MongthRange>;
+  getTongTienbyMonthCLS: Array<MonthRangeCls>;
+  getTotalThanhTienByDate: Scalars['Float']['output'];
+  getTotalThanhTienCLSByDate: Scalars['Float']['output'];
   getUserByEmail: Users;
   getUserById: Users;
   getUserByUsername?: Maybe<Users>;
   onlyUser?: Maybe<OnlyUser>;
+};
+
+
+export type QueryCountPhieuXacNhanByDateArgs = {
+  end: Scalars['DateTime']['input'];
+  start: Scalars['DateTime']['input'];
 };
 
 
@@ -941,7 +996,7 @@ export type QueryGetAllHoadonByBenhNhanArgs = {
 
 export type QueryGetAllPhieuClSbyNgayArgs = {
   ngaytao: Scalars['DateTime']['input'];
-  trangthai: Scalars['Boolean']['input'];
+  trangthai: Scalars['String']['input'];
 };
 
 
@@ -1006,6 +1061,11 @@ export type QueryGetPhieuCanLamSangbyPhieuXacNhanIdArgs = {
 };
 
 
+export type QueryGetStartAndEndOfMonthArgs = {
+  year: Scalars['Float']['input'];
+};
+
+
 export type QueryGetThuocPaginationArgs = {
   fetchPagination: FetchPagination;
 };
@@ -1013,6 +1073,28 @@ export type QueryGetThuocPaginationArgs = {
 
 export type QueryGetThuocbyIdsArgs = {
   ids: Array<Scalars['String']['input']>;
+};
+
+
+export type QueryGetTongTienbyMonthArgs = {
+  year: Scalars['Float']['input'];
+};
+
+
+export type QueryGetTongTienbyMonthClsArgs = {
+  year: Scalars['Float']['input'];
+};
+
+
+export type QueryGetTotalThanhTienByDateArgs = {
+  end: Scalars['DateTime']['input'];
+  start: Scalars['DateTime']['input'];
+};
+
+
+export type QueryGetTotalThanhTienClsByDateArgs = {
+  end: Scalars['DateTime']['input'];
+  start: Scalars['DateTime']['input'];
 };
 
 
@@ -1027,6 +1109,13 @@ export type QueryGetUserByIdArgs = {
 
 
 export type QueryGetUserByUsernameArgs = {
+  username: Scalars['String']['input'];
+};
+
+export type RegisterInput = {
+  avatar?: InputMaybe<LinkImageInput>;
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
   username: Scalars['String']['input'];
 };
 
@@ -1084,6 +1173,12 @@ export type Toathuoc = {
   soluongs: Array<Scalars['Int']['output']>;
   thuocs: Array<Thuoc>;
 };
+
+export enum TrangThaiCls {
+  Chokham = 'CHOKHAM',
+  Daxetnghiem = 'DAXETNGHIEM',
+  Thanhtoan = 'THANHTOAN'
+}
 
 export enum TrangThaiDatKham {
   Dangxet = 'DANGXET',
@@ -1479,10 +1574,11 @@ export type UpdateTrangThaiHoaDonMutation = { __typename?: 'Mutation', updateTra
 
 export type UpdateTrangThaiCanLamSangMutationVariables = Exact<{
   id: Scalars['String']['input'];
+  trangthai: Scalars['String']['input'];
 }>;
 
 
-export type UpdateTrangThaiCanLamSangMutation = { __typename?: 'Mutation', updateTrangThaiCanLamSang: { __typename?: 'Phieuchidinhcanlamsang', _id: string, trangthai: boolean } };
+export type UpdateTrangThaiCanLamSangMutation = { __typename?: 'Mutation', updateTrangThaiCanLamSang: { __typename?: 'Phieuchidinhcanlamsang', _id: string, trangthai: TrangThaiCls } };
 
 export type DeleteHoaDonMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -1610,6 +1706,26 @@ export type GetAllBacSiQueryVariables = Exact<{
 
 export type GetAllBacSiQuery = { __typename?: 'Query', CountBacSi: number, getAllBacSi: Array<{ __typename?: 'BacSi', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, ngayBD: any, user: { __typename?: 'Users', _id: string, username: string, email: string }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, chuyenkhoa: { __typename?: 'ChuyenKhoa', _id: string, tenkhoa: string } }> };
 
+export type CountBacSiQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CountBacSiQuery = { __typename?: 'Query', CountBacSi: number };
+
+export type CountNhanVienQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CountNhanVienQuery = { __typename?: 'Query', CountNhanVien: number };
+
+export type CountPhongQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CountPhongQuery = { __typename?: 'Query', CountPhong: number };
+
+export type CountChuyenKhoaQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CountChuyenKhoaQuery = { __typename?: 'Query', CountChuyenKhoa: number };
+
 export type GetAllBenhNhanQueryVariables = Exact<{
   input: FetchPagination;
 }>;
@@ -1662,7 +1778,7 @@ export type GetAllLoaiClsQuery = { __typename?: 'Query', getAllLoaiCLS: Array<{ 
 
 export type GetAllPhieuClSbyNgayQueryVariables = Exact<{
   ngaytao: Scalars['DateTime']['input'];
-  trangthai: Scalars['Boolean']['input'];
+  trangthai: Scalars['String']['input'];
 }>;
 
 
@@ -1703,7 +1819,7 @@ export type GetAllPhieuXacNhanDaXetNghiemQueryVariables = Exact<{
 }>;
 
 
-export type GetAllPhieuXacNhanDaXetNghiemQuery = { __typename?: 'Query', getAllPhieuXacNhanDaXetNgiem?: Array<{ __typename?: 'PhieuXacNhan', _id: string, trangthai: TrangThaiKham, sothutu: number, ngaytao: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, bhyt: string, sinhhieu?: { __typename?: 'Sinhhieu', _id: string, mach: number, nhietdo: number, ha: string, chieucao: number, cannang: number, bmi: number, benhmangtinh: boolean } | null }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, phieuchidinhcanlamsang?: { __typename?: 'Phieuchidinhcanlamsang', _id: string, bhyt: boolean, ngaytao: any, trangthai: boolean, bacsi: { __typename?: 'BacSi', _id: string, hoten: string }, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', ketluan?: string | null, thietbi?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', _id: string, tenxetnghiem: string, loaicanlamsang: string }, hinhanh?: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } | null }> } | null }> | null };
+export type GetAllPhieuXacNhanDaXetNghiemQuery = { __typename?: 'Query', getAllPhieuXacNhanDaXetNgiem?: Array<{ __typename?: 'PhieuXacNhan', _id: string, trangthai: TrangThaiKham, sothutu: number, ngaytao: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, bhyt: string, sinhhieu?: { __typename?: 'Sinhhieu', _id: string, mach: number, nhietdo: number, ha: string, chieucao: number, cannang: number, bmi: number, benhmangtinh: boolean } | null }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, phieuchidinhcanlamsang?: { __typename?: 'Phieuchidinhcanlamsang', _id: string, bhyt: boolean, ngaytao: any, trangthai: TrangThaiCls, bacsi: { __typename?: 'BacSi', _id: string, hoten: string }, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', ketluan?: string | null, thietbi?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', _id: string, tenxetnghiem: string, loaicanlamsang: string }, hinhanh?: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } | null }> } | null }> | null };
 
 export type GetAllNhanVienQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1713,7 +1829,7 @@ export type GetAllNhanVienQuery = { __typename?: 'Query', getAllNhanVien: Array<
 export type GetAllHoaDonPhieuCanLamSangQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllHoaDonPhieuCanLamSangQuery = { __typename?: 'Query', getAllHoaDonPhieuCanLamSang: Array<{ __typename?: 'Hoadonchidinhcanlamsang', _id: string, bhyt: boolean, thanhtien: number, tinhtrang: boolean, ngaytao: any, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string }, chitietcanlamsang: Array<{ __typename?: 'DichVu', ten: string, gia: number, soluong: number, thanhtien: number }> }> };
+export type GetAllHoaDonPhieuCanLamSangQuery = { __typename?: 'Query', getAllHoaDonPhieuCanLamSang: Array<{ __typename?: 'Hoadonchidinhcanlamsang', _id: string, bhyt: boolean, thanhtien: number, tinhtrang: boolean, ngaytao: any, idPhieuCLS?: string | null, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string }, chitietcanlamsang: Array<{ __typename?: 'DichVu', ten: string, gia: number, soluong: number, thanhtien: number }> }> };
 
 export type GetAllVattuyteQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1733,6 +1849,51 @@ export type GetBlogbyIdQueryVariables = Exact<{
 
 
 export type GetBlogbyIdQuery = { __typename?: 'Query', getBlogbyId: { __typename?: 'Blog', _id: string, tieude: string, tomtat?: string | null, noidung: string, luotxem: number, ngaytao: any, kichhoat: boolean, user: { __typename?: 'Users', username: string }, hinhanh: { __typename?: 'LinkImage', fileName: string, url: string, type: TypeImage } } };
+
+export type CountPhieuXacNhanByDateQueryVariables = Exact<{
+  start: Scalars['DateTime']['input'];
+  end: Scalars['DateTime']['input'];
+}>;
+
+
+export type CountPhieuXacNhanByDateQuery = { __typename?: 'Query', countPhieuXacNhanByDate: number };
+
+export type GetTotalThanhTienByDateQueryVariables = Exact<{
+  start: Scalars['DateTime']['input'];
+  end: Scalars['DateTime']['input'];
+}>;
+
+
+export type GetTotalThanhTienByDateQuery = { __typename?: 'Query', getTotalThanhTienByDate: number };
+
+export type GetTotalThanhTienClsByDateQueryVariables = Exact<{
+  start: Scalars['DateTime']['input'];
+  end: Scalars['DateTime']['input'];
+}>;
+
+
+export type GetTotalThanhTienClsByDateQuery = { __typename?: 'Query', getTotalThanhTienCLSByDate: number };
+
+export type GetStartAndEndOfMonthQueryVariables = Exact<{
+  year: Scalars['Float']['input'];
+}>;
+
+
+export type GetStartAndEndOfMonthQuery = { __typename?: 'Query', getStartAndEndOfMonth: Array<{ __typename?: 'MonthRange', month: number, count: number }> };
+
+export type GetTongTienbyMonthQueryVariables = Exact<{
+  year: Scalars['Float']['input'];
+}>;
+
+
+export type GetTongTienbyMonthQuery = { __typename?: 'Query', getTongTienbyMonth: Array<{ __typename?: 'MongthRange', month: number, tongtien: number }> };
+
+export type GetTongTienbyMonthClsQueryVariables = Exact<{
+  year: Scalars['Float']['input'];
+}>;
+
+
+export type GetTongTienbyMonthClsQuery = { __typename?: 'Query', getTongTienbyMonthCLS: Array<{ __typename?: 'MonthRangeCLS', month: number, tongtien: number }> };
 
 export type NewDatLichSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -2513,8 +2674,8 @@ export type UpdateTrangThaiHoaDonMutationHookResult = ReturnType<typeof useUpdat
 export type UpdateTrangThaiHoaDonMutationResult = Apollo.MutationResult<UpdateTrangThaiHoaDonMutation>;
 export type UpdateTrangThaiHoaDonMutationOptions = Apollo.BaseMutationOptions<UpdateTrangThaiHoaDonMutation, UpdateTrangThaiHoaDonMutationVariables>;
 export const UpdateTrangThaiCanLamSangDocument = gql`
-    mutation UpdateTrangThaiCanLamSang($id: String!) {
-  updateTrangThaiCanLamSang(id: $id) {
+    mutation UpdateTrangThaiCanLamSang($id: String!, $trangthai: String!) {
+  updateTrangThaiCanLamSang(id: $id, trangthai: $trangthai) {
     _id
     trangthai
   }
@@ -2536,6 +2697,7 @@ export type UpdateTrangThaiCanLamSangMutationFn = Apollo.MutationFunction<Update
  * const [updateTrangThaiCanLamSangMutation, { data, loading, error }] = useUpdateTrangThaiCanLamSangMutation({
  *   variables: {
  *      id: // value for 'id'
+ *      trangthai: // value for 'trangthai'
  *   },
  * });
  */
@@ -3267,6 +3429,154 @@ export type GetAllBacSiQueryHookResult = ReturnType<typeof useGetAllBacSiQuery>;
 export type GetAllBacSiLazyQueryHookResult = ReturnType<typeof useGetAllBacSiLazyQuery>;
 export type GetAllBacSiSuspenseQueryHookResult = ReturnType<typeof useGetAllBacSiSuspenseQuery>;
 export type GetAllBacSiQueryResult = Apollo.QueryResult<GetAllBacSiQuery, GetAllBacSiQueryVariables>;
+export const CountBacSiDocument = gql`
+    query CountBacSi {
+  CountBacSi
+}
+    `;
+
+/**
+ * __useCountBacSiQuery__
+ *
+ * To run a query within a React component, call `useCountBacSiQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCountBacSiQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCountBacSiQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCountBacSiQuery(baseOptions?: Apollo.QueryHookOptions<CountBacSiQuery, CountBacSiQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CountBacSiQuery, CountBacSiQueryVariables>(CountBacSiDocument, options);
+      }
+export function useCountBacSiLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CountBacSiQuery, CountBacSiQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CountBacSiQuery, CountBacSiQueryVariables>(CountBacSiDocument, options);
+        }
+export function useCountBacSiSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CountBacSiQuery, CountBacSiQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CountBacSiQuery, CountBacSiQueryVariables>(CountBacSiDocument, options);
+        }
+export type CountBacSiQueryHookResult = ReturnType<typeof useCountBacSiQuery>;
+export type CountBacSiLazyQueryHookResult = ReturnType<typeof useCountBacSiLazyQuery>;
+export type CountBacSiSuspenseQueryHookResult = ReturnType<typeof useCountBacSiSuspenseQuery>;
+export type CountBacSiQueryResult = Apollo.QueryResult<CountBacSiQuery, CountBacSiQueryVariables>;
+export const CountNhanVienDocument = gql`
+    query CountNhanVien {
+  CountNhanVien
+}
+    `;
+
+/**
+ * __useCountNhanVienQuery__
+ *
+ * To run a query within a React component, call `useCountNhanVienQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCountNhanVienQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCountNhanVienQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCountNhanVienQuery(baseOptions?: Apollo.QueryHookOptions<CountNhanVienQuery, CountNhanVienQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CountNhanVienQuery, CountNhanVienQueryVariables>(CountNhanVienDocument, options);
+      }
+export function useCountNhanVienLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CountNhanVienQuery, CountNhanVienQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CountNhanVienQuery, CountNhanVienQueryVariables>(CountNhanVienDocument, options);
+        }
+export function useCountNhanVienSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CountNhanVienQuery, CountNhanVienQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CountNhanVienQuery, CountNhanVienQueryVariables>(CountNhanVienDocument, options);
+        }
+export type CountNhanVienQueryHookResult = ReturnType<typeof useCountNhanVienQuery>;
+export type CountNhanVienLazyQueryHookResult = ReturnType<typeof useCountNhanVienLazyQuery>;
+export type CountNhanVienSuspenseQueryHookResult = ReturnType<typeof useCountNhanVienSuspenseQuery>;
+export type CountNhanVienQueryResult = Apollo.QueryResult<CountNhanVienQuery, CountNhanVienQueryVariables>;
+export const CountPhongDocument = gql`
+    query CountPhong {
+  CountPhong
+}
+    `;
+
+/**
+ * __useCountPhongQuery__
+ *
+ * To run a query within a React component, call `useCountPhongQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCountPhongQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCountPhongQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCountPhongQuery(baseOptions?: Apollo.QueryHookOptions<CountPhongQuery, CountPhongQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CountPhongQuery, CountPhongQueryVariables>(CountPhongDocument, options);
+      }
+export function useCountPhongLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CountPhongQuery, CountPhongQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CountPhongQuery, CountPhongQueryVariables>(CountPhongDocument, options);
+        }
+export function useCountPhongSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CountPhongQuery, CountPhongQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CountPhongQuery, CountPhongQueryVariables>(CountPhongDocument, options);
+        }
+export type CountPhongQueryHookResult = ReturnType<typeof useCountPhongQuery>;
+export type CountPhongLazyQueryHookResult = ReturnType<typeof useCountPhongLazyQuery>;
+export type CountPhongSuspenseQueryHookResult = ReturnType<typeof useCountPhongSuspenseQuery>;
+export type CountPhongQueryResult = Apollo.QueryResult<CountPhongQuery, CountPhongQueryVariables>;
+export const CountChuyenKhoaDocument = gql`
+    query CountChuyenKhoa {
+  CountChuyenKhoa
+}
+    `;
+
+/**
+ * __useCountChuyenKhoaQuery__
+ *
+ * To run a query within a React component, call `useCountChuyenKhoaQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCountChuyenKhoaQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCountChuyenKhoaQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCountChuyenKhoaQuery(baseOptions?: Apollo.QueryHookOptions<CountChuyenKhoaQuery, CountChuyenKhoaQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CountChuyenKhoaQuery, CountChuyenKhoaQueryVariables>(CountChuyenKhoaDocument, options);
+      }
+export function useCountChuyenKhoaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CountChuyenKhoaQuery, CountChuyenKhoaQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CountChuyenKhoaQuery, CountChuyenKhoaQueryVariables>(CountChuyenKhoaDocument, options);
+        }
+export function useCountChuyenKhoaSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CountChuyenKhoaQuery, CountChuyenKhoaQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CountChuyenKhoaQuery, CountChuyenKhoaQueryVariables>(CountChuyenKhoaDocument, options);
+        }
+export type CountChuyenKhoaQueryHookResult = ReturnType<typeof useCountChuyenKhoaQuery>;
+export type CountChuyenKhoaLazyQueryHookResult = ReturnType<typeof useCountChuyenKhoaLazyQuery>;
+export type CountChuyenKhoaSuspenseQueryHookResult = ReturnType<typeof useCountChuyenKhoaSuspenseQuery>;
+export type CountChuyenKhoaQueryResult = Apollo.QueryResult<CountChuyenKhoaQuery, CountChuyenKhoaQueryVariables>;
 export const GetAllBenhNhanDocument = gql`
     query getAllBenhNhan($input: FetchPagination!) {
   CountBenhNhan
@@ -3671,7 +3981,7 @@ export type GetAllLoaiClsLazyQueryHookResult = ReturnType<typeof useGetAllLoaiCl
 export type GetAllLoaiClsSuspenseQueryHookResult = ReturnType<typeof useGetAllLoaiClsSuspenseQuery>;
 export type GetAllLoaiClsQueryResult = Apollo.QueryResult<GetAllLoaiClsQuery, GetAllLoaiClsQueryVariables>;
 export const GetAllPhieuClSbyNgayDocument = gql`
-    query GetAllPhieuCLSbyNgay($ngaytao: DateTime!, $trangthai: Boolean!) {
+    query GetAllPhieuCLSbyNgay($ngaytao: DateTime!, $trangthai: String!) {
   getAllPhieuCLSbyNgay(ngaytao: $ngaytao, trangthai: $trangthai) {
     _id
     benhnhan {
@@ -4152,6 +4462,7 @@ export const GetAllHoaDonPhieuCanLamSangDocument = gql`
     thanhtien
     tinhtrang
     ngaytao
+    idPhieuCLS
   }
 }
     `;
@@ -4343,6 +4654,246 @@ export type GetBlogbyIdQueryHookResult = ReturnType<typeof useGetBlogbyIdQuery>;
 export type GetBlogbyIdLazyQueryHookResult = ReturnType<typeof useGetBlogbyIdLazyQuery>;
 export type GetBlogbyIdSuspenseQueryHookResult = ReturnType<typeof useGetBlogbyIdSuspenseQuery>;
 export type GetBlogbyIdQueryResult = Apollo.QueryResult<GetBlogbyIdQuery, GetBlogbyIdQueryVariables>;
+export const CountPhieuXacNhanByDateDocument = gql`
+    query CountPhieuXacNhanByDate($start: DateTime!, $end: DateTime!) {
+  countPhieuXacNhanByDate(start: $start, end: $end)
+}
+    `;
+
+/**
+ * __useCountPhieuXacNhanByDateQuery__
+ *
+ * To run a query within a React component, call `useCountPhieuXacNhanByDateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCountPhieuXacNhanByDateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCountPhieuXacNhanByDateQuery({
+ *   variables: {
+ *      start: // value for 'start'
+ *      end: // value for 'end'
+ *   },
+ * });
+ */
+export function useCountPhieuXacNhanByDateQuery(baseOptions: Apollo.QueryHookOptions<CountPhieuXacNhanByDateQuery, CountPhieuXacNhanByDateQueryVariables> & ({ variables: CountPhieuXacNhanByDateQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CountPhieuXacNhanByDateQuery, CountPhieuXacNhanByDateQueryVariables>(CountPhieuXacNhanByDateDocument, options);
+      }
+export function useCountPhieuXacNhanByDateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CountPhieuXacNhanByDateQuery, CountPhieuXacNhanByDateQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CountPhieuXacNhanByDateQuery, CountPhieuXacNhanByDateQueryVariables>(CountPhieuXacNhanByDateDocument, options);
+        }
+export function useCountPhieuXacNhanByDateSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CountPhieuXacNhanByDateQuery, CountPhieuXacNhanByDateQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CountPhieuXacNhanByDateQuery, CountPhieuXacNhanByDateQueryVariables>(CountPhieuXacNhanByDateDocument, options);
+        }
+export type CountPhieuXacNhanByDateQueryHookResult = ReturnType<typeof useCountPhieuXacNhanByDateQuery>;
+export type CountPhieuXacNhanByDateLazyQueryHookResult = ReturnType<typeof useCountPhieuXacNhanByDateLazyQuery>;
+export type CountPhieuXacNhanByDateSuspenseQueryHookResult = ReturnType<typeof useCountPhieuXacNhanByDateSuspenseQuery>;
+export type CountPhieuXacNhanByDateQueryResult = Apollo.QueryResult<CountPhieuXacNhanByDateQuery, CountPhieuXacNhanByDateQueryVariables>;
+export const GetTotalThanhTienByDateDocument = gql`
+    query GetTotalThanhTienByDate($start: DateTime!, $end: DateTime!) {
+  getTotalThanhTienByDate(start: $start, end: $end)
+}
+    `;
+
+/**
+ * __useGetTotalThanhTienByDateQuery__
+ *
+ * To run a query within a React component, call `useGetTotalThanhTienByDateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTotalThanhTienByDateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTotalThanhTienByDateQuery({
+ *   variables: {
+ *      start: // value for 'start'
+ *      end: // value for 'end'
+ *   },
+ * });
+ */
+export function useGetTotalThanhTienByDateQuery(baseOptions: Apollo.QueryHookOptions<GetTotalThanhTienByDateQuery, GetTotalThanhTienByDateQueryVariables> & ({ variables: GetTotalThanhTienByDateQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTotalThanhTienByDateQuery, GetTotalThanhTienByDateQueryVariables>(GetTotalThanhTienByDateDocument, options);
+      }
+export function useGetTotalThanhTienByDateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTotalThanhTienByDateQuery, GetTotalThanhTienByDateQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTotalThanhTienByDateQuery, GetTotalThanhTienByDateQueryVariables>(GetTotalThanhTienByDateDocument, options);
+        }
+export function useGetTotalThanhTienByDateSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetTotalThanhTienByDateQuery, GetTotalThanhTienByDateQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTotalThanhTienByDateQuery, GetTotalThanhTienByDateQueryVariables>(GetTotalThanhTienByDateDocument, options);
+        }
+export type GetTotalThanhTienByDateQueryHookResult = ReturnType<typeof useGetTotalThanhTienByDateQuery>;
+export type GetTotalThanhTienByDateLazyQueryHookResult = ReturnType<typeof useGetTotalThanhTienByDateLazyQuery>;
+export type GetTotalThanhTienByDateSuspenseQueryHookResult = ReturnType<typeof useGetTotalThanhTienByDateSuspenseQuery>;
+export type GetTotalThanhTienByDateQueryResult = Apollo.QueryResult<GetTotalThanhTienByDateQuery, GetTotalThanhTienByDateQueryVariables>;
+export const GetTotalThanhTienClsByDateDocument = gql`
+    query getTotalThanhTienCLSByDate($start: DateTime!, $end: DateTime!) {
+  getTotalThanhTienCLSByDate(start: $start, end: $end)
+}
+    `;
+
+/**
+ * __useGetTotalThanhTienClsByDateQuery__
+ *
+ * To run a query within a React component, call `useGetTotalThanhTienClsByDateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTotalThanhTienClsByDateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTotalThanhTienClsByDateQuery({
+ *   variables: {
+ *      start: // value for 'start'
+ *      end: // value for 'end'
+ *   },
+ * });
+ */
+export function useGetTotalThanhTienClsByDateQuery(baseOptions: Apollo.QueryHookOptions<GetTotalThanhTienClsByDateQuery, GetTotalThanhTienClsByDateQueryVariables> & ({ variables: GetTotalThanhTienClsByDateQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTotalThanhTienClsByDateQuery, GetTotalThanhTienClsByDateQueryVariables>(GetTotalThanhTienClsByDateDocument, options);
+      }
+export function useGetTotalThanhTienClsByDateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTotalThanhTienClsByDateQuery, GetTotalThanhTienClsByDateQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTotalThanhTienClsByDateQuery, GetTotalThanhTienClsByDateQueryVariables>(GetTotalThanhTienClsByDateDocument, options);
+        }
+export function useGetTotalThanhTienClsByDateSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetTotalThanhTienClsByDateQuery, GetTotalThanhTienClsByDateQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTotalThanhTienClsByDateQuery, GetTotalThanhTienClsByDateQueryVariables>(GetTotalThanhTienClsByDateDocument, options);
+        }
+export type GetTotalThanhTienClsByDateQueryHookResult = ReturnType<typeof useGetTotalThanhTienClsByDateQuery>;
+export type GetTotalThanhTienClsByDateLazyQueryHookResult = ReturnType<typeof useGetTotalThanhTienClsByDateLazyQuery>;
+export type GetTotalThanhTienClsByDateSuspenseQueryHookResult = ReturnType<typeof useGetTotalThanhTienClsByDateSuspenseQuery>;
+export type GetTotalThanhTienClsByDateQueryResult = Apollo.QueryResult<GetTotalThanhTienClsByDateQuery, GetTotalThanhTienClsByDateQueryVariables>;
+export const GetStartAndEndOfMonthDocument = gql`
+    query getStartAndEndOfMonth($year: Float!) {
+  getStartAndEndOfMonth(year: $year) {
+    month
+    count
+  }
+}
+    `;
+
+/**
+ * __useGetStartAndEndOfMonthQuery__
+ *
+ * To run a query within a React component, call `useGetStartAndEndOfMonthQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStartAndEndOfMonthQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStartAndEndOfMonthQuery({
+ *   variables: {
+ *      year: // value for 'year'
+ *   },
+ * });
+ */
+export function useGetStartAndEndOfMonthQuery(baseOptions: Apollo.QueryHookOptions<GetStartAndEndOfMonthQuery, GetStartAndEndOfMonthQueryVariables> & ({ variables: GetStartAndEndOfMonthQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetStartAndEndOfMonthQuery, GetStartAndEndOfMonthQueryVariables>(GetStartAndEndOfMonthDocument, options);
+      }
+export function useGetStartAndEndOfMonthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStartAndEndOfMonthQuery, GetStartAndEndOfMonthQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetStartAndEndOfMonthQuery, GetStartAndEndOfMonthQueryVariables>(GetStartAndEndOfMonthDocument, options);
+        }
+export function useGetStartAndEndOfMonthSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetStartAndEndOfMonthQuery, GetStartAndEndOfMonthQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetStartAndEndOfMonthQuery, GetStartAndEndOfMonthQueryVariables>(GetStartAndEndOfMonthDocument, options);
+        }
+export type GetStartAndEndOfMonthQueryHookResult = ReturnType<typeof useGetStartAndEndOfMonthQuery>;
+export type GetStartAndEndOfMonthLazyQueryHookResult = ReturnType<typeof useGetStartAndEndOfMonthLazyQuery>;
+export type GetStartAndEndOfMonthSuspenseQueryHookResult = ReturnType<typeof useGetStartAndEndOfMonthSuspenseQuery>;
+export type GetStartAndEndOfMonthQueryResult = Apollo.QueryResult<GetStartAndEndOfMonthQuery, GetStartAndEndOfMonthQueryVariables>;
+export const GetTongTienbyMonthDocument = gql`
+    query GetTongTienbyMonth($year: Float!) {
+  getTongTienbyMonth(year: $year) {
+    month
+    tongtien
+  }
+}
+    `;
+
+/**
+ * __useGetTongTienbyMonthQuery__
+ *
+ * To run a query within a React component, call `useGetTongTienbyMonthQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTongTienbyMonthQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTongTienbyMonthQuery({
+ *   variables: {
+ *      year: // value for 'year'
+ *   },
+ * });
+ */
+export function useGetTongTienbyMonthQuery(baseOptions: Apollo.QueryHookOptions<GetTongTienbyMonthQuery, GetTongTienbyMonthQueryVariables> & ({ variables: GetTongTienbyMonthQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTongTienbyMonthQuery, GetTongTienbyMonthQueryVariables>(GetTongTienbyMonthDocument, options);
+      }
+export function useGetTongTienbyMonthLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTongTienbyMonthQuery, GetTongTienbyMonthQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTongTienbyMonthQuery, GetTongTienbyMonthQueryVariables>(GetTongTienbyMonthDocument, options);
+        }
+export function useGetTongTienbyMonthSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetTongTienbyMonthQuery, GetTongTienbyMonthQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTongTienbyMonthQuery, GetTongTienbyMonthQueryVariables>(GetTongTienbyMonthDocument, options);
+        }
+export type GetTongTienbyMonthQueryHookResult = ReturnType<typeof useGetTongTienbyMonthQuery>;
+export type GetTongTienbyMonthLazyQueryHookResult = ReturnType<typeof useGetTongTienbyMonthLazyQuery>;
+export type GetTongTienbyMonthSuspenseQueryHookResult = ReturnType<typeof useGetTongTienbyMonthSuspenseQuery>;
+export type GetTongTienbyMonthQueryResult = Apollo.QueryResult<GetTongTienbyMonthQuery, GetTongTienbyMonthQueryVariables>;
+export const GetTongTienbyMonthClsDocument = gql`
+    query GetTongTienbyMonthCLS($year: Float!) {
+  getTongTienbyMonthCLS(year: $year) {
+    month
+    tongtien
+  }
+}
+    `;
+
+/**
+ * __useGetTongTienbyMonthClsQuery__
+ *
+ * To run a query within a React component, call `useGetTongTienbyMonthClsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTongTienbyMonthClsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTongTienbyMonthClsQuery({
+ *   variables: {
+ *      year: // value for 'year'
+ *   },
+ * });
+ */
+export function useGetTongTienbyMonthClsQuery(baseOptions: Apollo.QueryHookOptions<GetTongTienbyMonthClsQuery, GetTongTienbyMonthClsQueryVariables> & ({ variables: GetTongTienbyMonthClsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTongTienbyMonthClsQuery, GetTongTienbyMonthClsQueryVariables>(GetTongTienbyMonthClsDocument, options);
+      }
+export function useGetTongTienbyMonthClsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTongTienbyMonthClsQuery, GetTongTienbyMonthClsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTongTienbyMonthClsQuery, GetTongTienbyMonthClsQueryVariables>(GetTongTienbyMonthClsDocument, options);
+        }
+export function useGetTongTienbyMonthClsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetTongTienbyMonthClsQuery, GetTongTienbyMonthClsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTongTienbyMonthClsQuery, GetTongTienbyMonthClsQueryVariables>(GetTongTienbyMonthClsDocument, options);
+        }
+export type GetTongTienbyMonthClsQueryHookResult = ReturnType<typeof useGetTongTienbyMonthClsQuery>;
+export type GetTongTienbyMonthClsLazyQueryHookResult = ReturnType<typeof useGetTongTienbyMonthClsLazyQuery>;
+export type GetTongTienbyMonthClsSuspenseQueryHookResult = ReturnType<typeof useGetTongTienbyMonthClsSuspenseQuery>;
+export type GetTongTienbyMonthClsQueryResult = Apollo.QueryResult<GetTongTienbyMonthClsQuery, GetTongTienbyMonthClsQueryVariables>;
 export const NewDatLichDocument = gql`
     subscription NewDatLich {
   newDatLich {

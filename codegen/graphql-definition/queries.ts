@@ -137,6 +137,26 @@ query GetAllBacSi($input: FetchPagination!){
 }
 `
 
+const CountBacSi = gql`
+query CountBacSi{
+  CountBacSi
+}`
+
+
+const CountNhanVien = gql`
+query CountNhanVien{
+  CountNhanVien
+}`
+
+const CountPhont = gql`
+query CountPhong{
+  CountPhong
+}`
+
+const CountChuyenKhoa = gql`
+query CountChuyenKhoa{
+  CountChuyenKhoa
+}`
 
 const getAllBenhNhan = gql`
 query getAllBenhNhan($input: FetchPagination!){
@@ -280,7 +300,7 @@ query GetAllLoaiCLS{
 }`
 
 const getAllPhieuCLSbyNgay = gql`
-query GetAllPhieuCLSbyNgay($ngaytao: DateTime!,$trangthai: Boolean!){
+query GetAllPhieuCLSbyNgay($ngaytao: DateTime!,$trangthai: String!){
   getAllPhieuCLSbyNgay(ngaytao: $ngaytao, trangthai: $trangthai){
       _id
     benhnhan{
@@ -502,6 +522,7 @@ query GetAllHoaDonPhieuCanLamSang{
     thanhtien
     tinhtrang
     ngaytao
+    idPhieuCLS
   }
 }`
 
@@ -562,5 +583,47 @@ query GetBlogbyId($id: String!){
     luotxem
     ngaytao
     kichhoat
+  }
+}`
+
+
+const countPhieuXacNhanByDate = gql`
+query CountPhieuXacNhanByDate($start: DateTime!, $end: DateTime!){
+  countPhieuXacNhanByDate(start: $start, end: $end)
+}`
+
+
+const getTotalThanhTienByDate = gql`
+query GetTotalThanhTienByDate($start: DateTime!, $end: DateTime!){
+  getTotalThanhTienByDate(start: $start, end: $end)
+}`
+
+const getTotalThanhTienCLSByDate = gql`
+query getTotalThanhTienCLSByDate($start: DateTime!, $end: DateTime!){
+  getTotalThanhTienCLSByDate(start: $start, end: $end)
+}`
+
+const getStartAndEndOfMonth = gql`
+query getStartAndEndOfMonth($year: Float!){
+  getStartAndEndOfMonth(year: $year){
+    month
+    count
+  }
+}`
+
+const getTongTienbyMonth = gql`
+query GetTongTienbyMonth($year: Float!){
+  getTongTienbyMonth(year: $year){
+    month
+    tongtien
+  }
+}
+`
+
+const getTongTienbyMonthCLS = gql`
+query GetTongTienbyMonthCLS($year: Float!){
+  getTongTienbyMonthCLS(year: $year){
+    month
+    tongtien
   }
 }`

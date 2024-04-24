@@ -32,14 +32,14 @@ function CanLamSang() {
     const { loading, error, data, refetch } = useGetAllPhieuClSbyNgayQuery({
         variables: {
             ngaytao: dayjs().format('YYYY-MM-DD'),
-            trangthai: false
+            trangthai: "CHOKHAM"
         }
     })
 
     const { loading: loadingDaXetNghiem, error: errorDaXetNghiem, data: dataDaXetNghiem, refetch: refetchDatXetNghiem } = useGetAllPhieuClSbyNgayQuery({
         variables: {
             ngaytao: dayjs().format('YYYY-MM-DD'),
-            trangthai: true
+            trangthai: "DAXETNGHIEM"
         }
     })
 
@@ -115,7 +115,8 @@ function CanLamSang() {
             if (dataSelected?._id) {
                 const response = await updateTrangThai({
                     variables: {
-                        "id": dataSelected?._id
+                        "id": dataSelected?._id,
+                        "trangthai": "DAXETNGHIEM"
                     }
                 })
                 setDataSelected(undefined)

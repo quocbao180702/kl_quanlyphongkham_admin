@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import moment from "moment";
 import { LiaEyeSolid } from "react-icons/lia";
-import { useGetAllHoaDonPhieuCanLamSangQuery, useUpdateTinhTrangHoaDonClsMutation } from "../../graphql-definition/graphql";
+import { useGetAllHoaDonPhieuCanLamSangQuery, useUpdateTinhTrangHoaDonClsMutation, useUpdateTrangThaiCanLamSangMutation } from "../../graphql-definition/graphql";
 
 function HoaDonCanLamSang() {
 
@@ -23,18 +23,29 @@ function HoaDonCanLamSang() {
     }
 
     const [updateTrangThaiHoaDonCLS, _] = useUpdateTinhTrangHoaDonClsMutation();
-    const handleTrangThai = async (id: string) => {
+    const [updateTrangThaiCLS] = useUpdateTrangThaiCanLamSangMutation();
+    const handleTrangThai = async (id: string, idPhieuCLS: string) => {
         try {
-            const response = await updateTrangThaiHoaDonCLS({
-                variables: {
-                    id: id
-                }
-            })
+            console.log('phiếu chỉ định cận lâm sàng: ', idPhieuCLS)
+            const [response, update] = await Promise.all([
+                updateTrangThaiHoaDonCLS({
+                    variables: {
+                        id: id
+                    }
+                }),
+                updateTrangThaiCLS({
+                    variables: {
+                        id: idPhieuCLS,
+                        trangthai: "CHOKHAM"
+                    }
+                })
+            ])
             refetch();
         } catch (error) {
             console.log(error);
         }
     }
+
 
     const handleDelete = (id: string) => {
 
@@ -78,7 +89,7 @@ function HoaDonCanLamSang() {
                                     <td>{hoadon?.bhyt ? 'Có' : 'Không'}</td>
                                     <td>{hoadon?.thanhtien}</td>
                                     <td width={50} className="text-center" onClick={() => handleXem(hoadon)}><LiaEyeSolid /></td>
-                                    <td width={150} className="text-center" onClick={() => handleTrangThai(hoadon?._id)}>{hoadon?.tinhtrang ? <Badge bg="success">Đã Thanh Toán</Badge> : <Badge bg="warning">Chưa Thanh Toán</Badge>}</td>
+                                    <td width={150} className="text-center" onClick={() => handleTrangThai(hoadon?._id, hoadon?.idPhieuCLS)}>{hoadon?.tinhtrang ? <Badge bg="success">Đã Thanh Toán</Badge> : <Badge bg="warning">Chưa Thanh Toán</Badge>}</td>
                                     <td width={50} className="text-center" onClick={() => handleDelete(hoadon._id)}>
                                         <MdDelete />
                                     </td>

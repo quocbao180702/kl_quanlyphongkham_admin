@@ -72,6 +72,7 @@ function DatLich() {
     const [idBenhNhan, setIdBenhNhan] = useState('');
     const [email, setEmail] = useState('')
     const [dataBenhNhan, setDataBenhNhan] = useState<any[]>([]);
+    const [searchText, setSearchText] = useState("");
 
 
     const handleDateChange = (date: any) => {
@@ -263,6 +264,14 @@ function DatLich() {
         }
     }
 
+    const filteredRows = dataBenhNhan.filter(row =>
+        Object.values(row).some(
+            value =>
+                typeof value === "string" &&
+                value.toLowerCase().includes(searchText.toLowerCase())
+        )
+    );
+
     return (
         <>
             <Row className="mt-3">
@@ -425,17 +434,19 @@ function DatLich() {
                         </div>
                     </Row>
                     <Row className="mt-3">
-                        {/* <div className="w-100 d-flex justify-content-between">
+                        <div className="w-100 d-flex justify-content-between">
                             <div className="d-flex justify-content-start">
                                 <InputGroup>
-                                    <InputGroup.Text id="basic-addon1">Họ Tên</InputGroup.Text>
+                                    <InputGroup.Text id="basic-addon1">Tìm Kiếm</InputGroup.Text>
                                     <Form.Control
-                                        placeholder="Họ Tên"
-                                        aria-label="Họ Tên"
+                                        placeholder="tìm kiếm"
+                                        aria-label="Tìm Kiếm"
                                         aria-describedby="basic-addon1"
+                                        value={searchText}
+                                        onChange={(e) => setSearchText(e.target.value)}
                                     />
                                 </InputGroup>
-                                <InputGroup>
+                                {/* <InputGroup>
                                     <InputGroup.Text id="basic-addon1">Ngày Sinh</InputGroup.Text>
                                     <Form.Control
                                         placeholder="Ngày Sinh"
@@ -450,15 +461,17 @@ function DatLich() {
                                         aria-label="CCCD"
                                         aria-describedby="basic-addon1"
                                     />
-                                </InputGroup>
+                                </InputGroup> */}
                             </div>
-                        </div> */}
+                        </div>
                         <div style={{ height: 400, width: '100%' }}>
                             <DataGrid
-                                rows={dataBenhNhan}
+                                /*  rows={dataBenhNhan} */
+                                rows={filteredRows}
                                 columns={columns}
                                 getRowId={(row) => row?._id}
                                 onRowClick={handleRowClick}
+                                autoPageSize
                             />
                         </div>
                     </Row>

@@ -1,7 +1,7 @@
 import moment from "moment";
-import { Button, Row, Table } from "react-bootstrap";
+import { Badge, Button, Row, Table } from "react-bootstrap";
 import { MdDelete } from "react-icons/md";
-import { useDeleteHoaDonMutation, useGetAllHoaDonQuery, useUpdateTrangThaiCanLamSangMutation } from "../../graphql-definition/graphql";
+import { useDeleteHoaDonMutation, useGetAllHoaDonQuery, useUpdateTrangThaiHoaDonMutation } from "../../graphql-definition/graphql";
 import { useState } from "react";
 import XemHoaDon from "./xemHoaDon";
 import { LiaEyeSolid } from "react-icons/lia";
@@ -31,10 +31,11 @@ function Hoadon() {
     }
 
 
-    const [updateTrangThai] = useUpdateTrangThaiCanLamSangMutation()
+    const [updateTrangThai] = useUpdateTrangThaiHoaDonMutation()
 
     const handleTrangThai = async (id: string) => {
         try {
+            console.log('id hóa đơn là: ', id)
             await updateTrangThai({
                 variables: {
                     id
@@ -85,7 +86,7 @@ function Hoadon() {
                                 <td>{hoadon?.bhyt ? 'Có' : 'Không'}</td>
                                 <td>{hoadon?.thanhtien}</td>
                                 <td width={50} className="text-center" onClick={() => handleXem(hoadon)}><LiaEyeSolid /></td>
-                                <td width={150} className="text-center" onClick={() => handleTrangThai(hoadon?._id)}>{hoadon?.trangthai ? 'Đã Thanh Toán' : 'Chưa Thanh Toán'}</td>
+                                <td width={150} className="text-center" onClick={() => handleTrangThai(hoadon?._id)}>{hoadon?.trangthai ? <Badge bg="success">Đã Thanh Toán</Badge> : <Badge bg="warning">Chưa Thanh Toán</Badge>}</td>
                                 <td width={50} className="text-center" onClick={() => handleDelete(hoadon._id)}>
                                     <MdDelete />
                                 </td>

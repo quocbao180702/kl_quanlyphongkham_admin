@@ -1,7 +1,7 @@
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import { DichVuInput, Thuoc, Vattuyte, useCreateHoaDonMutation, useCreateToaThuocMutation, useGetAllBenhQuery, useGetAllThuocQuery, useGetAllVattuyteQuery, useUpdateHoaDonMutation, useUpdateTrangThaiKhamMutation } from "../../graphql-definition/graphql";
 import { ChangeEvent, FormEvent, useContext, useEffect, useMemo, useState } from "react";
-import { Autocomplete, Checkbox, FormControlLabel, Grid, TextField } from "@mui/material";
+import { Alert, Autocomplete, Checkbox, FormControlLabel, Grid, TextField } from "@mui/material";
 import { IoAddOutline } from "react-icons/io5";
 import DatePickerValue from "../../components/DatePicker";
 import dayjs, { Dayjs } from 'dayjs';
@@ -10,7 +10,7 @@ import { GrAddCircle, GrSubtractCircle } from "react-icons/gr";
 
 
 
-function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIEM, refetchHOANTAT }: any) {
+function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIEM, refetchHOANTAT, refetchChoKham, setshowWarning, setShowSuccess, setThongBao }: any) {
     const { data: benhData, loading: benhLoading, error: benhError } = useGetAllBenhQuery();
     const { data: thuocData, loading: thuocLoading, error: thuocError } = useGetAllThuocQuery();
     const [selectedBenh, setSelectedBenh] = useState([]);
@@ -24,6 +24,9 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
 
     const { isEditing, setIsEditing }: any = useContext(EditContext);
     const [editKham, setEditKham] = useState(false);
+    /* const [showWarning, setshowWarning] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [thongbao, setThongBao] = useState('') */
 
     useEffect(() => {
         setEditKham(isEditing);
@@ -115,9 +118,9 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
         console.log('data số lượng', soluong);
         console.log('bệnh nhân id:', benhnhanId);
         console.log('bhyt: ', bhyt ? true : false);
-        console.log('ngày tạo: ', dayjs().format('YYYY/MM/DD'));
+        console.log('ngày tạo: ', dayjs().format('YYYY-MM-DD'));
         const dayjsNgayTaiKham = dayjs(ngaytaikham);
-        console.log('ngày tái khám:', dayjsNgayTaiKham.format('YYYY/MM/DD'));
+        console.log('ngày tái khám:', dayjsNgayTaiKham.format('YYYY-MM-DD'));
 
         try {
             if (benhnhanId && bacsiId) {
@@ -132,7 +135,7 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                                 "soluongs": soluong,
                                 "bhyt": bhyt ? true : false,
                                 "ngaytaikham": dayjsNgayTaiKham,
-                                "ngaytao": dayjs().format('YYYY/MM/DD')
+                                "ngaytao": dayjs().format('YYYY-MM-DD')
                             }
                         }
                     }),
@@ -149,7 +152,7 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                             "input": {
                                 "benhnhan": benhnhanId,
                                 "bhyt": bhyt ? true : false,
-                                "ngaytao": dayjs().format('YYYY/MM/DD')
+                                "ngaytao": dayjs().format('YYYY-MM-DD')
                             }
                         }
                     })
@@ -159,7 +162,7 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                                 "input": {
                                     "benhnhan": benhnhanId,
                                     "bhyt": bhyt ? true : false,
-                                    "ngaytao": dayjs().format('YYYY/MM/DD'),
+                                    "ngaytao": dayjs().format('YYYY-MM-DD'),
                                     "id": response?.data?.createHoadon?._id,
                                     "thuocs": thongtinthuoc,
                                     "vattuyte": selectedItems
@@ -168,22 +171,33 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                         })
                     }
                     else {
+                        setThongBao('không tìm thấy id để update')
+                        setshowWarning(true);
                         console.log('không tìm thấy id để update')
                     }
                 } catch (error) {
                     console.log(error)
+                    console.log('lỗi không')
                 }
+                console.log('Đã tạo toa thuốc thành công cho bệnh nhân ')
+                setThongBao('Đã tạo toa thuốc thành công cho bệnh nhân ');
+                setShowSuccess(true);
                 refetchDAXETNGHIEM();
                 refetchHOANTAT();
+                refetchChoKham();
                 setEditKham(true);
             }
             else {
+                setThongBao('Không thể tạo toa thuốc')
+                setshowWarning(true);
                 console.log('Không thể tạo toa thuốc')
             }
             handleRowSelect();
             setNgayTaiKham(dayjs())
         } catch (error) {
-            console.log('lỗi thêm toa thuốc: ', error)
+            console.log('lỗi thêm toa thuốc')
+            setThongBao('lỗi thêm toa thuốc: ' + error)
+            setshowWarning(true);
         }
     }
 

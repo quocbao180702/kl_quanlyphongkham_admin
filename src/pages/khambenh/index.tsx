@@ -11,6 +11,7 @@ import dayjs from 'dayjs'
 import moment from "moment";
 import { useSubscription } from "@apollo/client";
 import { newPhieuXacNhanSubscription } from "../../../codegen/graphql-definition/subcriptions";
+import { Alert } from "@mui/material";
 
 export const EditContext = createContext({});
 
@@ -29,11 +30,12 @@ function KhamBenh() {
 
     const [isEditing, setIsEditing] = useState(true);
     const [modalShow, setModalShow] = useState(false);
+    const [showWarning, setshowWarning] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [thongbao, setThongBao] = useState('')
 
 
     const { data: newPhieuXacNhan, error: newPhieuXacNhanError } = useSubscription(newPhieuXacNhanSubscription);
-
-
 
     const { loading: loadingChoKham, error: errorChoKham, data: dataChoKham, refetch: refetchChoKham } = useGetAllNgayVaPhongQuery({
         variables: {
@@ -41,7 +43,7 @@ function KhamBenh() {
             phongIds: dataAgrsChoKham?.phongIds,
             trangthai: "CHOKHAM"
         },
-        skip: !dataAgrsChoKham || !dataAgrsChoKham.phongIds
+        skip: !dataAgrsChoKham || dataAgrsChoKham.phongIds === ""
     });
 
     useEffect(() => {
@@ -54,7 +56,7 @@ function KhamBenh() {
             phongIds: dataAgrsChoKham?.phongIds,
             trangthai: "CHOXETNGHIEM"
         },
-        skip: !dataAgrsChoKham || !dataAgrsChoKham.phongIds
+        skip: !dataAgrsChoKham || dataAgrsChoKham.phongIds === ""
     });
 
     const { loading: loadingDAXETNGHIEM, error: errorDAXETNGHIEM, data: dataDAXETNGHIEM, refetch: refetchDAXETNGHIEM } = useGetAllPhieuXacNhanDaXetNghiemQuery({
@@ -62,7 +64,7 @@ function KhamBenh() {
             ngaykham: dataAgrsChoKham?.ngaykham,
             phongIds: dataAgrsChoKham?.phongIds
         },
-        skip: !dataAgrsChoKham || !dataAgrsChoKham.phongIds
+        skip: !dataAgrsChoKham || dataAgrsChoKham.phongIds === ""
     })
 
     const { loading: loadingHOANTAT, error: errorHOANTAT, data: dataHOANTAT, refetch: refetchHOANTAT } = useGetAllNgayVaPhongQuery({
@@ -71,7 +73,7 @@ function KhamBenh() {
             phongIds: dataAgrsChoKham?.phongIds,
             trangthai: "HOANTAT"
         },
-        skip: !dataAgrsChoKham || !dataAgrsChoKham.phongIds
+        skip: !dataAgrsChoKham || dataAgrsChoKham.phongIds === ""
     });
 
     const handleEditToggle = () => {
@@ -160,6 +162,25 @@ function KhamBenh() {
 
     return (<>
         <EditContext.Provider value={editContextValue}>
+            {showWarning && (
+                <>
+                    <div style={{ position: 'fixed', zIndex: 2 }}>
+                        <Alert severity="warning" onClose={() => { setshowWarning(false); setThongBao(''); }}>
+                            {thongbao}
+                        </Alert>
+                    </div>
+                </>
+            )}
+
+            {showSuccess && (
+                <>
+                    <div style={{ position: 'fixed', zIndex: 2 }}>
+                        <Alert severity="success" onClose={() => { setShowSuccess(false); setThongBao(''); }}>
+                            {thongbao}
+                        </Alert>
+                    </div>
+                </>
+            )}
             <div className="fluit-container">
                 <div className="row">
                     <Col xs={12} md={3}>
@@ -187,10 +208,10 @@ function KhamBenh() {
                             <div className="d-flex justify-content-around align-items-center">
                                 <Button className="mr-1" onClick={handleEditToggle}>Khám</Button>
                                 <Button className="mr-1" onClick={handleToaThuoc}>Tạo Toa Thuốc</Button>
-                                <Button className="mr-1">Xuất Toa Thuốc</Button>
+                                {/* <Button className="mr-1">Xuất Toa Thuốc</Button> */}
                                 <Button className="mr-1" onClick={handleHoanTatKham}>Hoàn Tất Khám</Button>
                                 <Button className="mr-1" onClick={handleYeuCauXetNghiem}>Yêu Cầu Xét Nghiệm</Button>
-                                <Button className="mr-1">Hủy Khám</Button>
+                                {/* <Button className="mr-1">Hủy Khám</Button> */}
                             </div>
                         </div>
                         {/* <div className="container mt-5">
@@ -297,6 +318,10 @@ function KhamBenh() {
                                 idPhieuXacNhan={idPhieuXacNhan}
                                 refetchDAXETNGHIEM={refetchDAXETNGHIEM}
                                 refetchHOANTAT={refetchHOANTAT}
+                                refetchChoKham={refetchChoKham}
+                                setshowWarning={setshowWarning}
+                                setShowSuccess={setShowSuccess}
+                                setThongBao={setThongBao}
                             />
                         </div>
                     </div>

@@ -201,7 +201,7 @@ mutation UpdateHoaDon($input: UpdateHoadonInput!){
 }
 `
 
-const updatreTrangThaiHoaDon = gql`
+const updateTrangThaiHoaDon = gql`
 mutation UpdateTrangThaiHoaDon($id: String!){
   updateTrangThaiHoaDon(id:$id){
     _id
@@ -211,8 +211,8 @@ mutation UpdateTrangThaiHoaDon($id: String!){
 `
 
 const updateTrangThaiCanLamSang = gql`
-mutation UpdateTrangThaiCanLamSang($id: String!){
-  updateTrangThaiCanLamSang(id: $id){
+mutation UpdateTrangThaiCanLamSang($id: String!, $trangthai: String!){
+  updateTrangThaiCanLamSang(id: $id, trangthai: $trangthai){
     _id
     trangthai
   }
