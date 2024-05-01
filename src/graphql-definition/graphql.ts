@@ -26,6 +26,7 @@ export type BacSi = {
   diachi: Scalars['String']['output'];
   gioitinh: Scalars['Boolean']['output'];
   hoten: Scalars['String']['output'];
+  lichkham: Lichkham;
   ngayBD: Scalars['DateTime']['output'];
   ngaysinh: Scalars['DateTime']['output'];
   phongs: Array<Phong>;
@@ -118,6 +119,11 @@ export type CreateHoadonchidinhcanlamsangInput = {
 
 export type CreateKetquacanlamsangInput = {
   loaicanlamsang: Scalars['String']['input'];
+};
+
+export type CreateLichkhamInput = {
+  ngaykham: Array<PhienkhamInput>;
+  ngaynghi: Array<Scalars['DateTime']['input']>;
 };
 
 export type CreatePhieuXacNhanInput = {
@@ -250,6 +256,13 @@ export type KetQuaCanLamSang = {
   thietbi?: Maybe<Scalars['String']['output']>;
 };
 
+export type Lichkham = {
+  __typename?: 'Lichkham';
+  _id: Scalars['ID']['output'];
+  ngaykham: Array<Phienkham>;
+  ngaynghi: Array<Scalars['DateTime']['output']>;
+};
+
 export type LinkImage = {
   __typename?: 'LinkImage';
   fileName: Scalars['String']['output'];
@@ -314,6 +327,7 @@ export type Mutation = {
   createHoadon: Hoadon;
   createHoadonchidinhcanlamsang: Hoadonchidinhcanlamsang;
   createKetquacanlamsang: KetQuaCanLamSang;
+  createLichKham: Lichkham;
   createLoaicanlamsang: LoaiCanLamSang;
   createNhanVien: NhanVien;
   createPhieuXacNhan: PhieuXacNhan;
@@ -333,6 +347,7 @@ export type Mutation = {
   deleteDatLich: Scalars['Boolean']['output'];
   deleteDichvu: Dichvu;
   deleteHoadon: Scalars['Boolean']['output'];
+  deleteLichKham: Scalars['Boolean']['output'];
   deleteLoaicanlamsang: Scalars['Boolean']['output'];
   deleteNhanVien: Scalars['Boolean']['output'];
   deletePhieuXacNhan: Scalars['Boolean']['output'];
@@ -358,6 +373,7 @@ export type Mutation = {
   updateHoadon: Hoadon;
   updateKetquacanlamsang: KetQuaCanLamSang;
   updateKichHoat: Scalars['Boolean']['output'];
+  updateLichKham: Lichkham;
   updateLoaicanlamsang: LoaiCanLamSang;
   updateNhanVien: NhanVien;
   updatePhieuXacNhan: PhieuXacNhan;
@@ -382,6 +398,7 @@ export type Mutation = {
 
 
 export type MutationCreateBacSiArgs = {
+  createLichkham: CreateLichkhamInput;
   newBacSiInput: NewBacSiInput;
 };
 
@@ -428,6 +445,11 @@ export type MutationCreateHoadonchidinhcanlamsangArgs = {
 
 export type MutationCreateKetquacanlamsangArgs = {
   createKetquacanlamsangInput: CreateKetquacanlamsangInput;
+};
+
+
+export type MutationCreateLichKhamArgs = {
+  createLichKham: CreateLichkhamInput;
 };
 
 
@@ -523,6 +545,11 @@ export type MutationDeleteDichvuArgs = {
 
 
 export type MutationDeleteHoadonArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteLichKhamArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -639,6 +666,11 @@ export type MutationUpdateKetquacanlamsangArgs = {
 
 export type MutationUpdateKichHoatArgs = {
   _id: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateLichKhamArgs = {
+  updateLichkham: UpdateLichkhamInput;
 };
 
 
@@ -857,6 +889,32 @@ export type NhanVien = {
 
 export type OnlyUser = BacSi | BenhNhan | NhanVien | Users;
 
+export type PhienInput = {
+  batdau: Scalars['String']['input'];
+  ketthuc: Scalars['String']['input'];
+  soluongToiDa: Scalars['Float']['input'];
+  trangthai: Scalars['Boolean']['input'];
+};
+
+export type Phienkham = {
+  __typename?: 'Phienkham';
+  ngaytrongtuan: Scalars['String']['output'];
+  phiens: Array<Phiens>;
+};
+
+export type PhienkhamInput = {
+  ngaytrongtuan: Scalars['String']['input'];
+  phiens: Array<PhienInput>;
+};
+
+export type Phiens = {
+  __typename?: 'Phiens';
+  batdau: Scalars['String']['output'];
+  ketthuc: Scalars['String']['output'];
+  soluongToiDa: Scalars['Float']['output'];
+  trangthai: Scalars['Boolean']['output'];
+};
+
 export type PhieuXacNhan = {
   __typename?: 'PhieuXacNhan';
   _id: Scalars['ID']['output'];
@@ -914,6 +972,7 @@ export type Query = {
   getAllHoaDonPhieuCanLamSang: Array<Hoadonchidinhcanlamsang>;
   getAllHoadon: Array<Hoadon>;
   getAllHoadonByBenhNhan: Array<Hoadon>;
+  getAllLich: Array<Lichkham>;
   getAllLoaiCLS: Array<LoaiCanLamSang>;
   getAllNhanVien: Array<NhanVien>;
   getAllPhieuCLS: Array<Phieuchidinhcanlamsang>;
@@ -1282,6 +1341,12 @@ export type UpdateKetquacanlamsangInput = {
   thietbi: Scalars['String']['input'];
 };
 
+export type UpdateLichkhamInput = {
+  id: Scalars['String']['input'];
+  ngaykham?: InputMaybe<Array<PhienkhamInput>>;
+  ngaynghi?: InputMaybe<Array<Scalars['DateTime']['input']>>;
+};
+
 export type UpdateLoaicanlamsangInput = {
   gia?: InputMaybe<Scalars['Float']['input']>;
   id: Scalars['String']['input'];
@@ -1489,7 +1554,8 @@ export type UpdateKetquacanlamsangMutationVariables = Exact<{
 export type UpdateKetquacanlamsangMutation = { __typename?: 'Mutation', updateKetquacanlamsang: { __typename?: 'KetQuaCanLamSang', _id: string, ketluan?: string | null, thietbi?: string | null } };
 
 export type CreateBacSiMutationVariables = Exact<{
-  input: NewBacSiInput;
+  newBacSiInput: NewBacSiInput;
+  createLichkham: CreateLichkhamInput;
 }>;
 
 
@@ -1704,7 +1770,7 @@ export type GetAllBacSiQueryVariables = Exact<{
 }>;
 
 
-export type GetAllBacSiQuery = { __typename?: 'Query', CountBacSi: number, getAllBacSi: Array<{ __typename?: 'BacSi', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, ngayBD: any, user: { __typename?: 'Users', _id: string, username: string, email: string }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, chuyenkhoa: { __typename?: 'ChuyenKhoa', _id: string, tenkhoa: string } }> };
+export type GetAllBacSiQuery = { __typename?: 'Query', CountBacSi: number, getAllBacSi: Array<{ __typename?: 'BacSi', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, ngayBD: any, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, chuyenkhoa: { __typename?: 'ChuyenKhoa', _id: string, tenkhoa: string } }> };
 
 export type CountBacSiQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2282,8 +2348,8 @@ export type UpdateKetquacanlamsangMutationHookResult = ReturnType<typeof useUpda
 export type UpdateKetquacanlamsangMutationResult = Apollo.MutationResult<UpdateKetquacanlamsangMutation>;
 export type UpdateKetquacanlamsangMutationOptions = Apollo.BaseMutationOptions<UpdateKetquacanlamsangMutation, UpdateKetquacanlamsangMutationVariables>;
 export const CreateBacSiDocument = gql`
-    mutation CreateBacSi($input: NewBacSiInput!) {
-  createBacSi(newBacSiInput: $input) {
+    mutation CreateBacSi($newBacSiInput: NewBacSiInput!, $createLichkham: CreateLichkhamInput!) {
+  createBacSi(newBacSiInput: $newBacSiInput, createLichkham: $createLichkham) {
     _id
   }
 }
@@ -2303,7 +2369,8 @@ export type CreateBacSiMutationFn = Apollo.MutationFunction<CreateBacSiMutation,
  * @example
  * const [createBacSiMutation, { data, loading, error }] = useCreateBacSiMutation({
  *   variables: {
- *      input: // value for 'input'
+ *      newBacSiInput: // value for 'newBacSiInput'
+ *      createLichkham: // value for 'createLichkham'
  *   },
  * });
  */
@@ -3380,11 +3447,6 @@ export const GetAllBacSiDocument = gql`
     sodienthoai
     cccd
     ngayBD
-    user {
-      _id
-      username
-      email
-    }
     phongs {
       _id
       tenphong

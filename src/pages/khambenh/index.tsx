@@ -1,4 +1,4 @@
-import { Button, Col, Row, Tab, Tabs } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import ChoKham from "./tab-chokham";
 import XetNghiem from "./xetnghiem";
 import KhamBenhForm from "./form-khambenh";
@@ -12,10 +12,12 @@ import moment from "moment";
 import { useSubscription } from "@apollo/client";
 import { newPhieuXacNhanSubscription } from "../../../codegen/graphql-definition/subcriptions";
 import { Alert } from "@mui/material";
+import { Tabs } from "antd";
 
 export const EditContext = createContext({});
 
 function KhamBenh() {
+    const { TabPane } = Tabs;
 
     const { profile } = useContext(AuthContext)
     const [dataSelected, setDataSelected] = useState<BenhNhan | undefined>(undefined);
@@ -184,23 +186,22 @@ function KhamBenh() {
             <div className="fluit-container">
                 <div className="row">
                     <Col xs={12} md={3}>
-                        <Tabs defaultActiveKey="profile" id="fill-tab-example">
-                            <Tab eventKey="choxetnghiem" title=" Chờ Xét Nghiệm ">
-                                <ChoKham data={dataCHOXETNGHIEM} loading={loadingCHOXETNGHIEM} error={errorCHOXETNGHIEM} selected={rowBenhNhanSelected} />
-                            </Tab>
-                            <Tab eventKey="daxetnghiem" title=" Đã Xét Nghiệm ">
-                                <ChoKham data={dataDAXETNGHIEM} loading={loadingDAXETNGHIEM} error={errorDAXETNGHIEM} selected={rowBenhNhanSelected} />
-                            </Tab>
-                            <Tab eventKey="chokham" title=" Chờ Khám ">
+                        <Tabs defaultActiveKey="1">
+                            <TabPane tab="Chờ Khám" key="1">
                                 <ChoKham data={dataChoKham} loading={loadingChoKham} error={errorChoKham} selected={rowBenhNhanSelected} />
-                            </Tab>
-                            <Tab eventKey="taikham" title=" Tái Khám ">
+                            </TabPane>
+                            <TabPane tab="Chờ Xét Nghiệm" key="2">
+                                <ChoKham data={dataCHOXETNGHIEM} loading={loadingCHOXETNGHIEM} error={errorCHOXETNGHIEM} selected={rowBenhNhanSelected} />
+                            </TabPane>
+                            <TabPane tab="Đã Xét Nghiệm" key="3">
+                                <ChoKham data={dataDAXETNGHIEM} loading={loadingDAXETNGHIEM} error={errorDAXETNGHIEM} selected={rowBenhNhanSelected} />
+                            </TabPane>
+                            <TabPane tab="Hoàn Tất" key="4">
                                 <ChoKham data={dataHOANTAT} loading={loadingHOANTAT} error={errorHOANTAT} selected={rowBenhNhanSelected} />
-                            </Tab>
-                            <Tab eventKey="hoantat" title=" Hoàn Tất ">
+                            </TabPane>
+                            <TabPane tab="Tái Khám" key="5">
                                 <ChoKham data={dataHOANTAT} loading={loadingHOANTAT} error={errorHOANTAT} selected={rowBenhNhanSelected} />
-                            </Tab>
-
+                            </TabPane>
                         </Tabs>
                     </Col>
                     <div className="col-6">

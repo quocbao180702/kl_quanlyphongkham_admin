@@ -77,6 +77,9 @@ function Header() {
                             <Link className={`nav-link text-uppercase ${profile?.role === UserRole.Admin ? 'nav-link__admin' : ''}`} to="/benhnhan"><MdOutlinePeopleAlt size={19} /> Bệnh Nhân</Link>
                         </li>
                         <li className="nav-item">
+                            <Link className={`nav-link text-uppercase ${profile?.role === UserRole.Admin ? 'nav-link__admin' : ''}`} to="/datlichvip"><GiMedicines /> Đặt Lịch Vip </Link>
+                        </li>
+                        <li className="nav-item">
                             <Link className={`nav-link text-uppercase ${profile?.role === UserRole.Admin ? 'nav-link__admin' : ''}`} to="/thuoc"><GiMedicines /> Thuốc</Link>
                         </li>
                         {

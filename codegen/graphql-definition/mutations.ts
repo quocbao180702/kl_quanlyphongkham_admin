@@ -126,8 +126,8 @@ mutation UpdateKetquacanlamsang($input: UpdateKetquacanlamsangInput!){
 }`
 
 const createBacSi = gql`
-mutation CreateBacSi($input: NewBacSiInput!) {
-  createBacSi(newBacSiInput: $input) {
+mutation CreateBacSi($newBacSiInput: NewBacSiInput!,$createLichkham: CreateLichkhamInput!){
+  createBacSi(newBacSiInput: $newBacSiInput, createLichkham: $createLichkham){
     _id
   }
 }

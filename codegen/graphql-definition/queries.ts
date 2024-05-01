@@ -120,11 +120,6 @@ query GetAllBacSi($input: FetchPagination!){
         sodienthoai
         cccd
         ngayBD
-    		user{
-          _id
-          username
-          email
-        }
     		phongs{
           _id
           tenphong
