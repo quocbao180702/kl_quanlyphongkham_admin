@@ -15,11 +15,11 @@ function ChoKham({ data, loading, error, selected }: any) {
     if (error) return <div>Error...{error.message}</div>;
 
     return (
-        <>
-            <Table responsive >
+        <div className=''>
+            <Table responsive hover >
                 <thead>
                     <tr>
-                        <th>STT</th>
+                        <th>Phiên khám</th>
                         <th>Họ tên</th>
                         <th>Ngày sinh</th>
                         <th>Giới tính</th>
@@ -30,12 +30,12 @@ function ChoKham({ data, loading, error, selected }: any) {
                 <tbody>
                     {data?.getAllByNgayVaPhong && data.getAllByNgayVaPhong.length > 0 && data.getAllByNgayVaPhong.map((kb: any) => (
                         <tr className='rowSelected' key={kb._id} onClick={() => handleRowSelect(kb?.benhnhan, kb?._id, undefined)}>
-                            <td>{kb?.sothutu}</td>
+                            <td>{kb?.phien?.batdau} - {kb?.phien?.ketthuc}</td>
                             <td>{kb?.benhnhan?.hoten}</td>
                             <td>{moment(kb?.benhnhan?.ngaysinh).format('YYYY/MM/DD')}</td>
                             <td>{kb?.benhnhan?.gioitinh ? 'Nam' : 'Nữ'}</td>
                             <td>{kb?.benhnhan?.bhyt ? "Yes" : 'No'}</td>
-                            <td>{kb?.benhnhan?.user?.phoneNumber}</td>
+                            <td>{kb?.benhnhan?.sodienthoai}</td>
                         </tr>
                     ))}
                     {data?.getAllPhieuXacNhanDaXetNgiem && data.getAllPhieuXacNhanDaXetNgiem.length > 0 && data.getAllPhieuXacNhanDaXetNgiem.map((kb: any) => (
@@ -45,13 +45,13 @@ function ChoKham({ data, loading, error, selected }: any) {
                             <td>{moment(kb?.benhnhan?.ngaysinh).format('YYYY/MM/DD')}</td>
                             <td>{kb?.benhnhan?.gioitinh ? 'Nam' : 'Nữ'}</td>
                             <td>{kb?.benhnhan?.bhyt ? "Yes" : 'No'}</td>
-                            <td>{kb?.benhnhan?.user?.phoneNumber}</td>
+                            <td>{kb?.benhnhan?.sodienthoai}</td>
                         </tr>
                     ))}
                 </tbody>
 
             </Table>
-        </>
+        </div>
     );
 }
 

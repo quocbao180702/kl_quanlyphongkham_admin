@@ -279,6 +279,11 @@ query GetAllNgayVaPhong($ngaykham: String!, $phongIds: String!, $trangthai: Stri
     sothutu
     ngaytao
     ngaykham
+    phien{
+      batdau
+      ketthuc
+      trangthai
+    }
   }
 }
 `
@@ -450,6 +455,11 @@ query GetAllPhieuXacNhanDaXetNghiem($ngaykham: String!, $phongIds: String!){
     sothutu
     ngaytao
     ngaykham
+    phien{
+      batdau
+      ketthuc
+      trangthai
+    }
     phieuchidinhcanlamsang{
       _id
       bacsi{
@@ -620,5 +630,78 @@ query GetTongTienbyMonthCLS($year: Float!){
   getTongTienbyMonthCLS(year: $year){
     month
     tongtien
+  }
+}`
+
+const getAllDatlichBacSi = gql`
+query GetAllDatlichBacSi{
+  getAllDatlichBacSi{
+    _id
+    bacsi{
+      hoten
+      chuyenkhoa{
+        tenkhoa
+      }
+      phongs{
+        tenphong
+      }
+    }
+    benhnhan{
+      hoten
+      ngaysinh
+      gioitinh
+      sodienthoai
+      diachi
+      cccd
+    }
+    motabenh
+    phien{
+      batdau
+      ketthuc
+      soluongToiDa
+      trangthai
+    }
+    ngaydat
+    ngaykham
+    email
+    trangthai
+  }
+}`
+
+const getAllDatLichBacSiByTrangThai = gql`
+query GetAllDatLichBacSiByTrangThai($trangthai: String!){
+  getAllDatLichBacSiByTrangThai(trangthai: $trangthai){
+    _id
+    bacsi{
+      _id
+      hoten
+      chuyenkhoa{
+        tenkhoa
+      }
+      phongs{
+        _id
+        tenphong
+      }
+    }
+    benhnhan{
+      _id
+      hoten
+      sodienthoai
+      ngaysinh
+      gioitinh
+      diachi
+      cccd
+    }
+    motabenh
+    phien{
+      batdau
+      ketthuc
+      soluongToiDa
+      trangthai
+    }
+    ngaydat
+    ngaykham
+    email
+    trangthai
   }
 }`

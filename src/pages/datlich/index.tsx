@@ -211,7 +211,13 @@ function DatLich() {
                             phongs: selectedValues,
                             ngaykham: dayjs(ngaykham).format('YYYY-MM-DD'),
                             ngaytao: dayjs().format('YYYY-MM-DD'),
-                            email: selected?.email || ''
+                            email: selected?.email || '',
+                            "phien": {
+                                "batdau": "22:00",
+                                "ketthuc": "23:00",
+                                "soluongToiDa": 5,
+                                "trangthai": true
+                            }
                         }
                     }
                 }),
@@ -244,7 +250,13 @@ function DatLich() {
                             "phongs": selectedValues,
                             "ngaykham": ngaykham,
                             "ngaytao": dayjs().format('YYYY-MM-DD'),
-                            "email": email || ''
+                            "email": email || '',
+                            "phien": {
+                                "batdau": "22:00",
+                                "ketthuc": "23:00",
+                                "soluongToiDa": 5,
+                                "trangthai": true
+                            }
                         }
                     }
                 })

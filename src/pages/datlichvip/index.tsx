@@ -1,111 +1,117 @@
-/* import { Calendar, momentLocalizer } from 'react-big-calendar' */
-import moment from 'moment';
 
-import "react-big-calendar/lib/css/react-big-calendar.css"
+
 import { Col, Form, Row, Table } from 'react-bootstrap';
+import { Table as TableAntd } from 'antd';
 import { Button, Menu, Tabs } from 'antd';
 import { Calendar } from 'antd';
-import { useState } from 'react';
-/* 
-const localizer = momentLocalizer(moment) */
+import { useEffect, useState } from 'react';
+import { FcCalendar } from 'react-icons/fc';
+import { BsFillCalendar2HeartFill } from "react-icons/bs";
+import moment from "moment";
+import dayjs, {Dayjs} from 'dayjs'
 
-const myEventsList = [
-    {
-        id: 1,
-        title: 'Meeting',
-        start: new Date(2024, 3, 25, 10, 0),
-        end: new Date(2024, 3, 25, 12, 0),
-    },
-    {
-        id: 2,
-        title: 'Lunch',
-        start: new Date(2024, 3, 26, 12, 0),
-        end: new Date(2024, 3, 26, 13, 0),
-    },
-    {
-        id: 3,
-        title: 'Bệnh Nhân Hà Anh Tuấn',
-        start: new Date(2024, 3, 26, 12, 0),
-        end: new Date(2024, 3, 26, 13, 0)
-    }
-];
+import "./style.css";
+import { useCreatePhieuXacNhanMutation, useGetAllDatLichBacSiByTrangThaiQuery, useGetAllDatlichBacSiQuery, useUpdateTrangThaiDatLichBacSiMutation } from "../../graphql-definition/graphql";
+import Pagination from '../../components/pagination';
+import ListBacSi from './listBacSi';
+import { from } from '@apollo/client';
 
-const onChange = (key: string) => {
-    console.log(key);
-};
+
 
 
 function DatLichVip() {
 
-
-    const items = [
-        {
-            key: '1',
-            label: 'Option 1',
-        },
-        {
-            key: '2',
-            label: 'Option 2',
-        },
-        {
-            key: '3',
-            label: 'Option 3',
-        },
-        {
-            key: 'sub1',
-            label: 'Navigation One',
-            children: [
-                {
-                    key: '5',
-                    label: 'Option 5',
-                },
-                {
-                    key: '6',
-                    label: 'Option 6',
-                },
-                {
-                    key: '7',
-                    label: 'Option 7',
-                },
-                {
-                    key: '8',
-                    label: 'Option 8',
-                },
-            ],
-        },
-        {
-            key: 'sub2',
-            label: 'Navigation Two',
-            children: [
-                {
-                    key: '9',
-                    label: 'Option 9',
-                },
-                {
-                    key: '10',
-                    label: 'Option 10',
-                },
-                {
-                    key: 'sub3',
-                    label: 'Submenu',
-                    children: [
-                        {
-                            key: '11',
-                            label: 'Option 11',
-                        },
-                        {
-                            key: '12',
-                            label: 'Option 12',
-                        },
-                    ],
-                },
-            ],
-        },
-    ];
     const { TabPane } = Tabs
 
+    const [dataSelected, SetDataSelected] = useState({});
     const [selectedMenuItem, setSelectedMenuItem] = useState('1');
     const [collapsed, setCollapsed] = useState(false);
+    const [take, setTake] = useState(10);
+    const [skip, setSkip] = useState(0);
+    const [page, setPage] = useState(1);
+    const handleChangPage = (skip: number, page: number) => {
+        setSkip(skip);
+        setPage(page)
+    }
+
+
+    /* const { data: dataDatLich, loading: loadingDatLich, error: errorDatlich } = useGetAllDatlichBacSiQuery(); */
+
+    const { data: dataDatLichBacSi, loading: loadingDatLichBacSi, error: errorDatLichBacSi, refetch: refetchDatLichBacSi } = useGetAllDatLichBacSiByTrangThaiQuery({
+        variables: {
+            trangthai: "DANGXET"
+        }
+    })
+
+    const { data: dataXacNhanBacSi, loading: loadingXacNhanBacSi, error: errorXacNhanBacSi, refetch: refetcXacNhanBacSi } = useGetAllDatLichBacSiByTrangThaiQuery({
+        variables: {
+            trangthai: "XACNHAN"
+        }
+    })
+
+    const { data: dataHuyBacSi, loading: loadingHuyBacSi, error: errorHuyBacSi, refetch: refetcHuyBacSi } = useGetAllDatLichBacSiByTrangThaiQuery({
+        variables: {
+            trangthai: "HUY"
+        }
+    })
+
+    const [updateTrangThaiDatLichBacSi] = useUpdateTrangThaiDatLichBacSiMutation();
+    const [createPhieuXacNhan] = useCreatePhieuXacNhanMutation();
+
+
+    const handleXacNhan = async (datlich: any) => {
+        try {
+            if (datlich?._id) {
+                await Promise.all([
+                    createPhieuXacNhan({
+                        variables: {
+                            input: {
+                                benhnhan: datlich?.benhnhan?._id,
+                                phongs: datlich?.bacsi?.phongs[0]?._id,
+                                ngaykham: dayjs(datlich?.ngaykham).format('YYYY-MM-DD'),
+                                ngaytao: dayjs().format('YYYY-MM-DD'),
+                                email: datlich?.email || '',
+                                "phien": {
+                                    "batdau": datlich?.phien?.batdau,
+                                    "ketthuc": datlich?.phien?.ketthuc,
+                                    "soluongToiDa": datlich?.phien?.soluongToiDa,
+                                    "trangthai": datlich?.phien?.trangthai
+                                }
+                            }
+                        }
+                    }),
+                    updateTrangThaiDatLichBacSi({
+                        variables: {
+                            id: datlich?._id,
+                            trangthai: "XACNHAN"
+                        }
+                    })
+                ])
+                refetchDatLichBacSi()
+                refetcXacNhanBacSi()
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleHuy = async (id: string) => {
+        try {
+            if (id) {
+                const result = await updateTrangThaiDatLichBacSi({
+                    variables: {
+                        id: id,
+                        trangthai: "HUY"
+                    }
+                })
+                refetchDatLichBacSi()
+                refetcHuyBacSi()
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const toggleCollapsed = () => {
         setCollapsed(!collapsed);
     };
@@ -114,158 +120,200 @@ function DatLichVip() {
         setSelectedMenuItem(event.key);
     };
 
-    const renderContent = () => {
-        switch (selectedMenuItem) {
-            case '1':
-                return <div>Nội dung cho Option 1</div>;
-            case '2':
-                return <div>Nội dung cho Option 2</div>;
-            case '3':
-                return <div>Nội dung cho Option 3</div>;
-            default:
-                return null;
-        }
-    };
+    const handleSeclect = (datlich: any) => {
+        console.log('đặt lịch là: ', datlich)
+        SetDataSelected(datlich);
+    }
+
+    useEffect(() => {
+        console.log('data có đặt lịch thay đổi là: ', dataSelected)
+    }, [dataSelected])
+
 
     return (
         <>
-            {/*  <div style={{ width: 256 }}>
-                <Menu
-                    defaultSelectedKeys={['1']}
-                    defaultOpenKeys={['sub1']}
-                    mode="inline"
-                    theme="light"
-                    inlineCollapsed={collapsed}
-                    onClick={handleMenuClick}
-                    selectedKeys={[selectedMenuItem]}
-                >
-                    <Menu.Item key={"1"}>
-                        Option 1
-                    </Menu.Item>
-                    <Menu.Item key={"2"}>
-                        Option 2
-                    </Menu.Item>
-                    <Menu.Item key={"3"}>
-                        Option 3
-                    </Menu.Item>
-                    <Button
-                        type="primary"
-                        onClick={toggleCollapsed}
-                        style={{ marginBottom: 16 }}
-                    >
-                        {collapsed ? 'Mở' : 'Tắt'}
-                    </Button>
-                </Menu>
-            </div> */}
-            {/* <div style={{ display: 'flex' }}>
-                <div style={{ width: 256 }}>
-                    <Menu
-                        defaultSelectedKeys={['1']}
-                        defaultOpenKeys={['sub1']}
-                        mode="inline"
-                        theme="light"
-                        inlineCollapsed={collapsed}
-                        onClick={handleMenuClick}
-                        selectedKeys={[selectedMenuItem]}
-                    >
-                        <Menu.Item key={"1"}>
-                            Option 1
-                        </Menu.Item>
-                        <Menu.Item key={"2"}>
-                            Option 2
-                        </Menu.Item>
-                        <Menu.Item key={"3"}>
-                            Option 3
-                        </Menu.Item>
-                        <Button
-                            type="primary"
-                            onClick={toggleCollapsed}
-                            style={{ marginBottom: 16 }}
-                        >
-                            {collapsed ? 'Mở' : 'Tắt'}
-                        </Button>
-                    </Menu>
-                </div>
-                <div style={{ flex: 1 }}>
-                    {renderContent()}
-                </div>
-            </div> */}
             <div style={{ display: 'flex' }}>
-                <div style={{ width: collapsed ? 80 : 256, transition: 'width 0.3s' }}>
+                <div style={{ flex: 1, transition: 'width 0.3s' }}>
                     <Menu
-                        defaultSelectedKeys={['1']}
-                        defaultOpenKeys={['sub1']}
+                        selectedKeys={[selectedMenuItem]}
                         mode="inline"
                         theme="light"
                         inlineCollapsed={collapsed}
                         onClick={handleMenuClick}
-                        selectedKeys={[selectedMenuItem]}
                     >
-                        <Menu.Item key={"1"}>
-                            Option 1
+                        <Menu.Item key="1">
+                            <BsFillCalendar2HeartFill /> Lịch Đặt Hẹn
                         </Menu.Item>
-                        <Menu.Item key={"2"}>
-                            Option 2
-                        </Menu.Item>
-                        <Menu.Item key={"3"}>
-                            Option 3
+                        <Menu.Item key="2">
+                            <FcCalendar /> Lịch Làm Việc Bác Sĩ
                         </Menu.Item>
                         <Button
                             type="primary"
                             onClick={toggleCollapsed}
-                            style={{ marginBottom: 16 }}
                         >
                             {collapsed ? 'Mở' : 'Thu nhỏ'}
                         </Button>
                     </Menu>
                 </div>
-                <div style={{ flex: 1 }}>
-                    {/* Nội dung */}
-                    {/* Nội dung tùy thuộc vào mục được chọn */}
+                <div style={{ flex: 11 }}>
                     {selectedMenuItem === '1' && <div>
-                        <Row>
-                            <Col lg={3}>
-                                <Tabs defaultActiveKey="1">
-                                    <TabPane tab="Tab 1" key="1">
-                                        Content of Tab Pane 1
-                                    </TabPane>
-                                    <TabPane tab="Tab 2" key="2">
-                                        <Form>
+                        <div className='d-flex justify-content-center align-items-center'>
+                            <h4 className='text-center'>Thông Tin</h4>
+                        </div>
+                        <Row className='justify-content-center'>
+                            <Col lg={6}>
+                                <Form>
+                                    <Row>
+                                        <Col lg={6}>
                                             <Form.Group>
                                                 <Form.Label>Họ Tên</Form.Label>
                                                 <Form.Control></Form.Control>
                                             </Form.Group>
+                                        </Col>
+                                        <Col lg={6}>
                                             <Form.Group>
-                                                <Form.Label>Ngày Sinh</Form.Label>
+                                                <Form.Label>Địa Chỉ</Form.Label>
                                                 <Form.Control></Form.Control>
                                             </Form.Group>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col lg={3}>
                                             <Form.Group>
                                                 <Form.Label>Giới Tính</Form.Label>
                                                 <Form.Control></Form.Control>
                                             </Form.Group>
+                                        </Col>
+                                        <Col lg={5}>
                                             <Form.Group>
                                                 <Form.Label>Số Điện Thoại</Form.Label>
                                                 <Form.Control></Form.Control>
                                             </Form.Group>
+                                        </Col>
+                                        <Col lg={4}>
                                             <Form.Group>
-                                                <Form.Label>Phòng</Form.Label>
+                                                <Form.Label>Ngày Sinh</Form.Label>
                                                 <Form.Control></Form.Control>
                                             </Form.Group>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col lg={6}>
                                             <Form.Group>
                                                 <Form.Label>Bác Sĩ</Form.Label>
                                                 <Form.Control></Form.Control>
                                             </Form.Group>
+                                        </Col>
+                                        <Col lg={3}>
+                                            <Form.Group>
+                                                <Form.Label>Phòng</Form.Label>
+                                                <Form.Control></Form.Control>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col lg={3}>
+                                            <Form.Group>
+                                                <Form.Label>Chuyên Khoa</Form.Label>
+                                                <Form.Control></Form.Control>
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col>
                                             <Form.Group>
                                                 <Form.Label>Ngày Khám</Form.Label>
                                                 <Form.Control></Form.Control>
                                             </Form.Group>
+                                        </Col>
+                                        <Col>
                                             <Form.Group>
                                                 <Form.Label>Phiên</Form.Label>
                                                 <Form.Control></Form.Control>
                                             </Form.Group>
-                                        </Form>
-                                    </TabPane>
-                                    <TabPane tab="Tab 3" key="3">
+                                        </Col>
+                                    </Row>
+                                </Form>
+                            </Col>
+                        </Row>
+                        <div>
+                            <Tabs defaultActiveKey="1">
+                                <TabPane tab="Bệnh Nhân Mới" key="1">
+                                    <div className=' border position-relative w-100' style={{ height: 300 }}>
+                                        <Table responsive bordered hover>
+                                            <thead>
+                                                <tr>
+                                                    <th style={{ width: "1%" }}>STT</th>
+                                                    <th>Họ Và Tên</th>
+                                                    <th>Số Điện Thoại</th>
+                                                    <th>Bác Sĩ</th>
+                                                    <th>Chuyên Khoa</th>
+                                                    <th>Ngày Khám</th>
+                                                    <th>Phiên Khám</th>
+                                                    <th className='text-center' colSpan={2}>Hành Động</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {dataDatLichBacSi?.getAllDatLichBacSiByTrangThai?.map((datlich: any, index: number) => {
+                                                    return (
+                                                        <tr key={datlich?._id} onClick={() => handleSeclect(datlich)}>
+                                                            <td>{index + 1}</td>
+                                                            <td>{datlich?.benhnhan?.hoten}</td>
+                                                            <td>{datlich?.benhnhan?.sodienthoai}</td>
+                                                            <td>{datlich?.bacsi?.hoten}</td>
+                                                            <td>{datlich?.bacsi?.chuyenkhoa?.tenkhoa}</td>
+                                                            <td>{moment(datlich?.ngaykham).format('DD-MM-YYYY')}</td>
+                                                            <td>{datlich?.phien?.batdau} - {datlich?.phien?.ketthuc}</td>
+                                                            <td className='d-flex justify-content-around align-items-center'>
+                                                                <Button>Xem</Button>
+                                                                <Button onClick={() => handleXacNhan(datlich)}>Xác Nhận</Button>
+                                                                <Button onClick={() => handleHuy(datlich?._id)}>Hủy</Button>
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })}
+                                            </tbody>
+                                        </Table>
+                                    </div>
+                                    <div className='d-flex justify-content-end'>
+                                        <Pagination count={3} take={take} skip={handleChangPage} page={page} />
+                                    </div>
+                                </TabPane>
+                                <TabPane tab="Đã Xác Nhận" key="2">
+                                    <div className='position-relative w-100' style={{ height: 300 }}>
+                                        <Table responsive bordered hover>
+                                            <thead className='sticky-top top-0'>
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>Họ Và Tên</th>
+                                                    <th>Số Điện Thoại</th>
+                                                    <th>Bác Sĩ</th>
+                                                    <th>Chuyên Khoa</th>
+                                                    <th>Ngày Khám</th>
+                                                    <th>Phiên Khám</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {dataXacNhanBacSi?.getAllDatLichBacSiByTrangThai?.map((datlich: any, index: number) => {
+                                                    return (
+                                                        <tr key={datlich?._id} onClick={() => handleSeclect(datlich)}>
+                                                            <td>{index + 1}</td>
+                                                            <td>{datlich?.benhnhan?.hoten}</td>
+                                                            <td>{datlich?.benhnhan?.sodienthoai}</td>
+                                                            <td>{datlich?.bacsi?.hoten}</td>
+                                                            <td>{datlich?.bacsi?.chuyenkhoa?.tenkhoa}</td>
+                                                            <td>{moment(datlich?.ngaykham).format('DD-MM-YYYY')}</td>
+                                                            <td>{datlich?.phien?.batdau} - {datlich?.phien?.ketthuc}</td>
+                                                        </tr>
+                                                    )
+                                                })}
+                                            </tbody>
+                                        </Table>
+                                    </div>
+                                    <div className='d-flex justify-content-end'>
+                                        <Pagination count={3} take={take} skip={handleChangPage} page={page} />
+                                    </div>
+                                </TabPane>
+                                <TabPane tab="Đã Hủy" key="3">
+                                    <div className='position-relative w-100' style={{ height: 300 }}>
                                         <Table responsive bordered>
                                             <thead>
                                                 <tr>
@@ -279,96 +327,31 @@ function DatLichVip() {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>Phạm Dương Hoàn Tuần</td>
-                                                    <td>0123456789</td>
-                                                    <td>Nguyễn Văn Hoàng</td>
-                                                    <td>Khoa Tim Mạch</td>
-                                                    <td>30-04-2024</td>
-                                                    <td>8:00 - 9:00</td>
-                                                </tr>
+                                                {dataHuyBacSi?.getAllDatLichBacSiByTrangThai?.map((datlich: any, index: number) => {
+                                                    return (
+                                                        <tr key={datlich?._id} onClick={() => handleSeclect(datlich)}>
+                                                            <td>{index + 1}</td>
+                                                            <td>{datlich?.benhnhan?.hoten}</td>
+                                                            <td>{datlich?.benhnhan?.sodienthoai}</td>
+                                                            <td>{datlich?.bacsi?.hoten}</td>
+                                                            <td>{datlich?.bacsi?.chuyenkhoa?.tenkhoa}</td>
+                                                            <td>{moment(datlich?.ngaykham).format('DD-MM-YYYY')}</td>
+                                                            <td>{datlich?.phien?.batdau} - {datlich?.phien?.ketthuc}</td>
+                                                        </tr>
+                                                    )
+                                                })}
                                             </tbody>
                                         </Table>
-                                    </TabPane>
-                                </Tabs>
-                            </Col>
-                            <Col lg={6}>
-                                <h4 className='text-center'>Thông Tin</h4>
-                                <Form>
-                                    <Form.Group>
-                                        <Form.Label>Họ Tên</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>Ngày Sinh</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>Giới Tính</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>Số Điện Thoại</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>Phòng</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>Bác Sĩ</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>Ngày Khám</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>Phiên</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                </Form>
-                            </Col>
-                            <Col lg={3}>
-                                <Calendar style={{ width: "100%", height: 400 }} />
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col lg={3}>
-
-                            </Col>
-                            <Col lg={6}>
-                                <Table>
-                                    <thead>
-                                        <tr>
-                                            <th>STT</th>
-                                            <th>Họ Và Tên</th>
-                                            <th>Số Điện Thoại</th>
-                                            <th>Bác Sĩ</th>
-                                            <th>Chuyên Khoa</th>
-                                            <th>Ngày Khám</th>
-                                            <th>Phiên Khám</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Phạm Dương Hoàn Tuần</td>
-                                            <td>0123456789</td>
-                                            <td>Nguyễn Văn Hoàng</td>
-                                            <td>Khoa Tim Mạch</td>
-                                            <td>30-04-2024</td>
-                                            <td>8:00 - 9:00</td>
-                                        </tr>
-                                    </tbody>
-                                </Table>
-                            </Col>
-                            <Col lg={3}>
-                            </Col>
-                        </Row>
+                                    </div>
+                                    <div className='d-flex justify-content-end'>
+                                        <Pagination count={3} take={take} skip={handleChangPage} page={page} />
+                                    </div>
+                                </TabPane>
+                            </Tabs>
+                        </div>
                     </div>}
-                    {selectedMenuItem === '2' && <div>Nội dung cho Option 2</div>}
+                    {selectedMenuItem === '2' && <ListBacSi />}
+
                     {selectedMenuItem === '3' && <div>Nội dung cho Option 3</div>}
                 </div>
             </div>

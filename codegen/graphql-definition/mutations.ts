@@ -316,3 +316,10 @@ mutation UpdateTinhTrangHoaDonCLS($id: String!){
     _id
   }
 }`
+
+const updateTrangThaiDatLichBacSi = gql`
+mutation UpdateTrangThaiDatLichBacSi($id:String!, $trangthai:String!){
+  updateTrangThaiDatLichBacSi(id: $id, trangthai: $trangthai){
+    _id
+  }
+}`
