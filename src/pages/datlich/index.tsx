@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { newDatLichSubscription } from "../../../codegen/graphql-definition/subcriptions";
 import { TrangThaiDatKham, TrangThaiKham, useCreatePhieuXacNhanMutation, useDeleteDatlichMutation, useGetAllBenhNhanNoPaginationQuery, useGetAllDatLichbyTrangThaiQuery, useGetAllPhongQuery, useUpdateTrangThaiDatLichMutation } from "../../graphql-definition/graphql";
 import { MdDelete } from "react-icons/md";
-import { Alert, Checkbox, FormControlLabel } from "@mui/material";
+import { Alert, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import DatePickerValue from "../../components/DatePicker";
 import dayjs, { Dayjs } from 'dayjs';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -73,6 +73,7 @@ function DatLich() {
     const [email, setEmail] = useState('')
     const [dataBenhNhan, setDataBenhNhan] = useState<any[]>([]);
     const [searchText, setSearchText] = useState("");
+    const [phien, SetPhien] = useState("");
 
 
     const handleDateChange = (date: any) => {
@@ -213,8 +214,8 @@ function DatLich() {
                             ngaytao: dayjs().format('YYYY-MM-DD'),
                             email: selected?.email || '',
                             "phien": {
-                                "batdau": "22:00",
-                                "ketthuc": "23:00",
+                                "batdau": phien.split("-")[0] || "22:00",
+                                "ketthuc": phien.split("-")[1] || "23:00",
                                 "soluongToiDa": 5,
                                 "trangthai": true
                             }
@@ -237,7 +238,14 @@ function DatLich() {
         }
     }
 
+    const handleChangePhien = (event: SelectChangeEvent) => {
+        SetPhien(event.target.value as string);
+    };
 
+    useEffect(() => {
+        console.log('Bắt Đầu: ', phien.split("-")[0]);
+        console.log('Kết Thúc: ', phien.split("-")[1]);
+    }, [phien])
 
     const handleTaoXacNhan = async () => {
         try {
@@ -252,8 +260,8 @@ function DatLich() {
                             "ngaytao": dayjs().format('YYYY-MM-DD'),
                             "email": email || '',
                             "phien": {
-                                "batdau": "22:00",
-                                "ketthuc": "23:00",
+                                "batdau": phien.split("-")[0] || "22:00",
+                                "ketthuc": phien.split("-")[1] || "23:00",
                                 "soluongToiDa": 5,
                                 "trangthai": true
                             }
@@ -371,17 +379,33 @@ function DatLich() {
                                         <Form.Group className="mb-3" controlId="formUserDescription">
                                             <Form.Label>Mô Tả Bệnh</Form.Label>
                                             <Form.Control
-                                                as="textarea" rows={8}
+                                                as="textarea" rows={7}
                                                 placeholder={mota || "Mô tả ..."}
                                                 value={mota}
                                                 readOnly
                                             />
                                         </Form.Group>
 
-                                        {/* <Form.Group controlId="formNgaysinh" className="mt-2">
-                                            <DatePickerValue label={'Ngày Sinh'} value={ngaysinh} onChange={handleDateChange} />
-                                        </Form.Group> */}
-                                        <div className="w-100 d-flex justify-content-center">
+
+                                        <div className="w-100 d-flex justify-content-around">
+                                            <FormControl sx={{minWidth: "25%"}} className="mt-3">
+                                                <InputLabel id="demo-simple-select-helper-label">Phiên</InputLabel>
+                                                <Select
+                                                    labelId="demo-simple-select-helper-label"
+                                                    id="demo-simple-select-helper"
+                                                    value={phien}
+                                                    label="Phiên"
+                                                    onChange={handleChangePhien}
+                                                >
+                                                    <MenuItem value={"7:00-8:00"}>7:00-8:00</MenuItem>
+                                                    <MenuItem value={"8:00-9:00"}>8:00-9:00</MenuItem>
+                                                    <MenuItem value={"9:00-10:00"}>9:00-10:00</MenuItem>
+                                                    <MenuItem value={"10:00-11:00"}>10:00-11:00</MenuItem>
+                                                    <MenuItem value={"13:00-14:00"}>13:00-14:00</MenuItem>
+                                                    <MenuItem value={"15:00-16:00"}>15:00-16:00</MenuItem>
+                                                    <MenuItem value={"16:00-17:00"}>16:00-17:00</MenuItem>
+                                                </Select>
+                                            </FormControl>
                                             <Form.Group controlId="formNgaykham" className="mt-2">
                                                 <DatePickerValue label={'Ngày Khám'} value={ngaykham} onChange={handleDateNgayKhamChange} />
                                             </Form.Group>

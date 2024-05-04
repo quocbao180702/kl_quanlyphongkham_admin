@@ -16,14 +16,47 @@ import Pagination from '../../components/pagination';
 import ListBacSi from './listBacSi';
 import { from } from '@apollo/client';
 
-
+interface DatLichBacSi{
+    _id: string;
+    bacsi: {
+      _id: string;
+      hoten: string;
+      chuyenkhoa: {
+        tenkhoa: string;
+      };
+      phongs: {
+        _id: string;
+        tenphong: string;
+      };
+    };
+    benhnhan: {
+      _id: string;
+      hoten: string;
+      sodienthoai: string;
+      ngaysinh: string;
+      gioitinh: string;
+      diachi: string;
+      cccd: string;
+    };
+    motabenh: string
+    phien: {
+      batdau: string;
+      ketthuc: string;
+      soluongToiDa: number;
+      trangthai: boolean;
+    }
+    ngaydat: Date;
+    ngaykham: Date;
+    email: string;
+    trangthai: boolean;
+}
 
 
 function DatLichVip() {
 
     const { TabPane } = Tabs
 
-    const [dataSelected, SetDataSelected] = useState({});
+    const [dataSelected, SetDataSelected] = useState<DatLichBacSi>();
     const [selectedMenuItem, setSelectedMenuItem] = useState('1');
     const [collapsed, setCollapsed] = useState(false);
     const [take, setTake] = useState(10);
@@ -167,13 +200,13 @@ function DatLichVip() {
                                         <Col lg={6}>
                                             <Form.Group>
                                                 <Form.Label>Họ Tên</Form.Label>
-                                                <Form.Control></Form.Control>
+                                                <Form.Control value={dataSelected?.benhnhan?.hoten}></Form.Control>
                                             </Form.Group>
                                         </Col>
                                         <Col lg={6}>
                                             <Form.Group>
                                                 <Form.Label>Địa Chỉ</Form.Label>
-                                                <Form.Control></Form.Control>
+                                                <Form.Control value={dataSelected?.benhnhan?.diachi}></Form.Control>
                                             </Form.Group>
                                         </Col>
                                     </Row>
@@ -181,19 +214,19 @@ function DatLichVip() {
                                         <Col lg={3}>
                                             <Form.Group>
                                                 <Form.Label>Giới Tính</Form.Label>
-                                                <Form.Control></Form.Control>
+                                                <Form.Control value={dataSelected?.benhnhan?.gioitinh ? 'NAM': 'NỮ'}></Form.Control>
                                             </Form.Group>
                                         </Col>
                                         <Col lg={5}>
                                             <Form.Group>
                                                 <Form.Label>Số Điện Thoại</Form.Label>
-                                                <Form.Control></Form.Control>
+                                                <Form.Control value={dataSelected?.benhnhan?.sodienthoai}></Form.Control>
                                             </Form.Group>
                                         </Col>
                                         <Col lg={4}>
                                             <Form.Group>
                                                 <Form.Label>Ngày Sinh</Form.Label>
-                                                <Form.Control></Form.Control>
+                                                <Form.Control value={dayjs(dataSelected?.benhnhan?.ngaysinh).format('DD-MM-YYYY')}></Form.Control>
                                             </Form.Group>
                                         </Col>
                                     </Row>
@@ -201,19 +234,19 @@ function DatLichVip() {
                                         <Col lg={6}>
                                             <Form.Group>
                                                 <Form.Label>Bác Sĩ</Form.Label>
-                                                <Form.Control></Form.Control>
+                                                <Form.Control value={dataSelected?.bacsi?.hoten}></Form.Control>
                                             </Form.Group>
                                         </Col>
                                         <Col lg={3}>
                                             <Form.Group>
                                                 <Form.Label>Phòng</Form.Label>
-                                                <Form.Control></Form.Control>
+                                                <Form.Control value={(Array.isArray(dataSelected?.bacsi?.phongs) && dataSelected?.bacsi?.phongs.length > 0) ? dataSelected.bacsi.phongs[0].tenphong : ''}></Form.Control>
                                             </Form.Group>
                                         </Col>
                                         <Col lg={3}>
                                             <Form.Group>
                                                 <Form.Label>Chuyên Khoa</Form.Label>
-                                                <Form.Control></Form.Control>
+                                                <Form.Control value={dataSelected?.bacsi?.chuyenkhoa?.tenkhoa}></Form.Control>
                                             </Form.Group>
                                         </Col>
                                     </Row>
@@ -221,13 +254,13 @@ function DatLichVip() {
                                         <Col>
                                             <Form.Group>
                                                 <Form.Label>Ngày Khám</Form.Label>
-                                                <Form.Control></Form.Control>
+                                                <Form.Control value={dayjs(dataSelected?.ngaykham).format('YYYY-MM-DD')}></Form.Control>
                                             </Form.Group>
                                         </Col>
                                         <Col>
                                             <Form.Group>
                                                 <Form.Label>Phiên</Form.Label>
-                                                <Form.Control></Form.Control>
+                                                <Form.Control value={`${dataSelected?.phien?.batdau} - ${dataSelected?.phien?.ketthuc}`}></Form.Control>
                                             </Form.Group>
                                         </Col>
                                     </Row>

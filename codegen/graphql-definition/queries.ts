@@ -119,6 +119,7 @@ query GetAllBacSi($input: FetchPagination!){
         diachi
         sodienthoai
         cccd
+        lichkham
         ngayBD
     		phongs{
           _id
@@ -671,6 +672,62 @@ query GetAllDatlichBacSi{
 const getAllDatLichBacSiByTrangThai = gql`
 query GetAllDatLichBacSiByTrangThai($trangthai: String!){
   getAllDatLichBacSiByTrangThai(trangthai: $trangthai){
+    _id
+    bacsi{
+      _id
+      hoten
+      chuyenkhoa{
+        tenkhoa
+      }
+      phongs{
+        _id
+        tenphong
+      }
+    }
+    benhnhan{
+      _id
+      hoten
+      sodienthoai
+      ngaysinh
+      gioitinh
+      diachi
+      cccd
+    }
+    motabenh
+    phien{
+      batdau
+      ketthuc
+      soluongToiDa
+      trangthai
+    }
+    ngaydat
+    ngaykham
+    email
+    trangthai
+  }
+}`
+
+const getLichKham = gql`
+query GetLichKham($id: String!){
+  getLichKham(id: $id){
+    _id
+    ngaykham{
+      ngaytrongtuan
+      phiens{
+        batdau
+        ketthuc
+        trangthai
+        soluongToiDa
+      }
+    }
+    ngaynghi
+  }
+}`
+
+
+const getAllDatLichBacSiByBacSi = gql`
+query GetAllDatLichBacSiByBacSi($bacsi: String!){
+  getAllDatLichBacSiByBacSi(bacsi: $bacsi){
     _id
     bacsi{
       _id
