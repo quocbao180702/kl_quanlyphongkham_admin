@@ -6,6 +6,8 @@ import ThemNhanVien from "./f_themNhanVien";
 import { MdDelete } from "react-icons/md";
 import { FaMarker } from "react-icons/fa";
 import SuaNhanVien from "./f_suaNhanVien";
+import Item from "antd/es/list/Item";
+import { CSVLink } from "react-csv";
 
 function NhanVienPage() {
 
@@ -39,6 +41,12 @@ function NhanVienPage() {
         }
     }
 
+    const dataCSV = data?.getAllNhanVien.map(item => {
+        return [item?.hoten, item?.gioitinh ? "Nam" : "Nữ", item?.cccd, item?.chucvu, item?.diachi, item?.sodienthoai,
+        moment(item?.ngaysinh).format('DD-MM-YYYY'), moment(item?.ngayBD).format('DD-MM-YYYY'), item?.phongs[0].tenphong
+        ]
+    })
+
     const handleEdit = (nhanvien: any) => {
         console.log('nhân viên', nhanvien);
         setSelectedNhanVien(nhanvien);
@@ -54,8 +62,7 @@ function NhanVienPage() {
                 <div className="d-flex justify-content-center">
                     <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Thêm Nhân Viên</Button>
                     <Button className="mr-3 btn-outline-primary">Nhập Exel</Button>
-                    <Button className="mr-3 btn-outline-success">Xuất Exel</Button>
-                    <Button className="mr-3 btn-outline-danger">Xuất PDF</Button>
+                    <CSVLink className="mr-3 btn btn-outline-success" filename={"nhanvien.csv"} data={dataCSV || []} target="_blank"> Xuất CSV</CSVLink>
                 </div>
             </Row>
 

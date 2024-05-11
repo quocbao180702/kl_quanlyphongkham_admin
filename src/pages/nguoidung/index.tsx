@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import MyVerticallyCenteredModal from './form_updateUser'; import ThemNguoiDung from './f_themUser';
 import { deleteImage, getUrlImage } from '../../utils/uploadFile';
 import Pagination from '../../components/pagination';
+import { CSVLink } from 'react-csv';
 ;
 
 function NguoiDung() {
@@ -45,6 +46,12 @@ function NguoiDung() {
         }
     };
 
+    const dataCSV = data?.getAllUsers.map(item => {
+        return[
+            item?.username, item?.email, item?.role
+        ]
+    })
+
     const handleEdit = (user: Users) => {
         setSelectedUser(user);
         setModalShow(true);
@@ -74,8 +81,7 @@ function NguoiDung() {
                 <div className="d-flex justify-content-center">
                     <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Thêm Người Dùng</Button>
                     <Button className="mr-3 btn-outline-primary">Nhập Exel</Button>
-                    <Button className="mr-3 btn-outline-success">Xuất Exel</Button>
-                    <Button className="mr-3 btn-outline-danger">Xuất PDF</Button>
+                    <CSVLink className="mr-3 btn btn-outline-success" filename={"nguoidung.csv"} data={dataCSV || []} target="_blank"> Xuất CSV Page {page}</CSVLink>
                 </div>
             </Row>
             <Row className="mt-3">

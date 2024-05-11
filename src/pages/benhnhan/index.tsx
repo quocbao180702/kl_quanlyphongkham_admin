@@ -9,6 +9,7 @@ import ThemBenhNhan from "./f_themBenhNhan";
 import { useState } from "react";
 import SuaBenhNhan from "./f_suaBenhNhan";
 import Pagination from "../../components/pagination";
+import { CSVLink } from "react-csv";
 
 
 export default function BenhNhanPage() {
@@ -57,6 +58,13 @@ export default function BenhNhanPage() {
         }
     }
 
+
+    const dataCSV = data?.getAllBenhNhan.map(item => {
+        return [item?.hoten, moment(item?.ngaysinh).format('DD-MM-YYYY'), item?.gioitinh ? "Nam" : "Nữ",
+        item?.diachi, item?.bhyt ? 'Có' : 'Không', item?.cccd, item?.sodienthoai
+        ]
+    })
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error...</div>;
 
@@ -70,8 +78,7 @@ export default function BenhNhanPage() {
                     <div className="d-flex justify-content-center">
                         <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Thêm Bệnh Nhân</Button>
                         <Button className="mr-3 btn-outline-primary">Nhập Exel</Button>
-                        <Button className="mr-3 btn-outline-success">Xuất Exel</Button>
-                        <Button className="mr-3 btn-outline-danger">Xuất PDF</Button>
+                        <CSVLink className="mr-3 btn btn-outline-success" filename={"benhnhan.csv"} data={dataCSV || []} target="_blank"> Xuất CSV Page {page}</CSVLink>
                     </div>
                 </Row>
                 <div className="mt-3">

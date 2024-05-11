@@ -1,0 +1,18 @@
+.ant-image{
+    width: 100%;
+}
+
+
+.xetnghiem-img-empty{
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    border: 2px solid #d5d6d7aa;
+
+}
+
+.xetnghiem-img-empty:hover{
+    box-shadow: 2px 2px #61dafbaa;
+    border: 2px solid #61dafbaa;
+}

@@ -9,7 +9,6 @@ import Thuoc from "../pages/thuoc"
 import NguoiDung from "../pages/nguoidung"
 import KhamBenh from "../pages/khambenh"
 import BacSiPage from "../pages/bacsi"
-import CanLamSan from "../pages/canlamsang"
 import CanLamSang from "../pages/canlamsang"
 import NhanSu from "../pages/nhansu"
 import NhanVienPage from "../pages/nhanvien"
@@ -18,9 +17,9 @@ import HoaDonPage from "../pages/hoadon"
 import ProtectedRoutes from "./protectedRoute"
 import Blogs from "../pages/blogs/danhsachBlog"
 import ThemBlog from "../pages/blogs/f_themblog"
-import SuaBlog from "../pages/blogs/f_suablog"
 import BaoCao from "../pages/baocao/page"
 import DatLichVip from "../pages/datlichvip"
+import Test from "../pages/test/test"
 
 export const AppRouter = () => {
 
@@ -34,6 +33,7 @@ export const AppRouter = () => {
                             <Route path="datlich" element={<DatLich />} />
                             <Route path="nguoidung" element={<NguoiDung />} />
                             <Route path="benhnhan" element={<BenhNhan />} />
+                            <Route path="test" element={<Test />} />
                             <Route path="bacsi" element={<NhanSu />}>
                                 <Route /* path="bacsi" */ index element={<BacSiPage />} />
                                 <Route path="nhanvien" element={<NhanVienPage />} />

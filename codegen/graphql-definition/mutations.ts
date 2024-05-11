@@ -323,3 +323,15 @@ mutation UpdateTrangThaiDatLichBacSi($id:String!, $trangthai:String!){
     _id
   }
 }`
+
+const createTest = gql`
+mutation CreateTest($input: CreateTestInput!){
+  createTest(createTestInput: $input){
+    _id
+    listImages{
+      fileName
+      url
+      type
+    }
+  }
+}`

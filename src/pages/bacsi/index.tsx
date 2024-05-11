@@ -8,6 +8,7 @@ import ThemBacSi from "./f_themBacSi";
 import SuaBacSi from "./f_suaBacSi";
 import dayjs, { Dayjs } from 'dayjs';
 import Pagination from "../../components/pagination";
+import { CSVLink } from "react-csv";
 
 
 
@@ -15,7 +16,7 @@ function BacSiPage() { // Rename the function here
 
 
     const [take, setTake] = useState(2);
-    const [skip, setSkip] =  useState(0);
+    const [skip, setSkip] = useState(0);
     const { data, loading, error, refetch } = useGetAllBacSiQuery({
         variables: {
             "input": {
@@ -30,7 +31,7 @@ function BacSiPage() { // Rename the function here
     const [modalSua, setModalSua] = useState(false);
     const [page, setPage] = useState(1);
 
-    const handleChangPage = (skip: number, page: number) =>{
+    const handleChangPage = (skip: number, page: number) => {
         setSkip(skip);
         setPage(page)
     }
@@ -41,20 +42,26 @@ function BacSiPage() { // Rename the function here
         setModalSua(true);
     };
 
-    const handleAdd = () =>{
+    const handleAdd = () => {
         setModalAdd(true)
     }
 
     const [deleteBacSi] = useDeleteBacSiMutation()
 
-    const handleDelete = async (id: string) =>{
-        try{
-            await deleteBacSi({variables: {id}});
+    const handleDelete = async (id: string) => {
+        try {
+            await deleteBacSi({ variables: { id } });
             refetch();
-        }catch(error){
+        } catch (error) {
             console.log('Error deleting user: ', error)
         }
     }
+
+    const dataCSV = data?.getAllBacSi.map(item => {
+        return [item?.hoten, dayjs(item?.ngaysinh).format('DD-MM-YYYY'), item?.gioitinh ? 'Nam' : 'Nữ', item?.cccd,
+        item?.sodienthoai, dayjs(item?.ngayBD).format('DD-MM-YYYY'), item?.diachi, item?.chuyenkhoa?.tenkhoa, item?.phongs[0]?.tenphong
+        ]
+    })
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error...</div>;
@@ -65,10 +72,9 @@ function BacSiPage() { // Rename the function here
 
                 <Row className="mt-3">
                     <div className="d-flex justify-content-center">
-                    <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Thêm Bác Sĩ</Button>
+                        <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Thêm Bác Sĩ</Button>
                         <Button className="mr-3 btn-outline-primary">Nhập Exel</Button>
-                        <Button className="mr-3 btn-outline-success">Xuất Exel</Button>
-                        <Button className="mr-3 btn-outline-danger">Xuất PDF</Button>
+                        <CSVLink className="mr-3 btn btn-outline-success" filename={"bacsi.csv"} data={dataCSV || []} target="_blank"> Xuất CSV Page {page}</CSVLink>
                     </div>
                 </Row>
                 <Row className="mt-3">
@@ -114,7 +120,7 @@ function BacSiPage() { // Rename the function here
                             })}
                         </tbody>
                     </Table>
-                    <Pagination count={data?.CountBacSi as number} take={take} skip={handleChangPage} page={page}/>
+                    <Pagination count={data?.CountBacSi as number} take={take} skip={handleChangPage} page={page} />
                 </Row>
                 <ThemBacSi
                     show={modalAdd}
@@ -123,7 +129,7 @@ function BacSiPage() { // Rename the function here
                 />
                 <SuaBacSi
                     show={modalSua}
-                    onHide = {() => setModalSua(false)}
+                    onHide={() => setModalSua(false)}
                     bacsi={selectedBacSi}
                     refetch={refetch}
                 />

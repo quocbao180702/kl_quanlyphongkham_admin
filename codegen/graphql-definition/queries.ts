@@ -376,8 +376,9 @@ query FindAllRelatedKetQuaCanLamSang($input: [String!]!){
 
 
 const getAllHoadon = gql`
-query GetAllHoaDon{
-  getAllHoadon{
+query GetAllHoaDon($input: FetchPagination!){
+  CountHoadon
+  getAllHoadon(fetchPagination: $input){
     _id
     benhnhan{
       hoten
@@ -509,8 +510,9 @@ query GetAllNhanVien{
 }`
 
 const getAllHoaDonPhieuCanLamSang = gql`
-query GetAllHoaDonPhieuCanLamSang{
-  getAllHoaDonPhieuCanLamSang{
+query GetAllHoaDonPhieuCanLamSang($input: FetchPagination!){
+  CountHoadonchidinhcanlamsang
+  getAllHoaDonPhieuCanLamSang(fetchPagination: $input){
     _id
     bhyt
     benhnhan{
@@ -760,5 +762,17 @@ query GetAllDatLichBacSiByBacSi($bacsi: String!){
     ngaykham
     email
     trangthai
+  }
+}`
+
+const get = gql`
+query GetAllHinhAnh($id: String!){
+  get(id: $id){
+    _id
+    listImages{
+      url
+      type
+      fileName
+    }
   }
 }`

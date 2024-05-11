@@ -7,11 +7,12 @@ import { useState } from "react";
 import ThemThuoc from "./f_themThuoc";
 import SuaThuoc from "./f_suaThuoc";
 import Pagination from "../../components/pagination";
+import { CSVLink } from "react-csv";
 
 function ThuocPage() {
 
-    const [take, setTake] = useState(10);
-    const [skip, setSkip] =  useState(0);
+    const [take, setTake] = useState(5);
+    const [skip, setSkip] = useState(0);
     const { data, loading, error, refetch } = useGetThuocPaginationQuery({
         variables: {
             "input": {
@@ -27,11 +28,11 @@ function ThuocPage() {
     const [selectedThuoc, setSelectedThuoc] = useState({});
     const [page, setPage] = useState(1);
 
-    const handleChangPage = (skip: number, page: number) =>{
+    const handleChangPage = (skip: number, page: number) => {
         setSkip(skip);
         setPage(page)
     }
-    
+
     const handleAdd = () => {
         setModalAdd(true)
     }
@@ -43,31 +44,35 @@ function ThuocPage() {
 
     const [deleteThuoc] = useDeleteThuocMutation();
 
-    const handleDelete = async (id: string) =>{
-        try{
-            await deleteThuoc({variables: {id}});
+    const handleDelete = async (id: string) => {
+        try {
+            await deleteThuoc({ variables: { id } });
             refetch();
-        }catch(error){
+        } catch (error) {
             console.log('Error deleting user: ', error)
         }
     }
-    
+
+    const dataCSV = data?.getThuocPagination.map(item => [item?.tenthuoc, item?.tenPhoBien, item?.soluong, item?.nhasanxuat,
+    item?.hansudung, item?.hamluong, item?.giaKhongBHYT, item?.giaBHYT, item?.donvi, item?.dangthuoc, item?.bhyt]);
+
+
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error...</div>;
-    
-    
+
+
     return (<>
         <div className="fluit-container">
             <Row className="mt-3">
                 <div className="d-flex justify-content-center">
                     <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Thêm Thuốc</Button>
                     <Button className="mr-3 btn-outline-primary">Nhập Exel</Button>
-                    <Button className="mr-3 btn-outline-success">Xuất Exel</Button>
-                    <Button className="mr-3 btn-outline-danger">Xuất PDF</Button>
+                    <CSVLink className="mr-3 btn btn-outline-success" filename={"thuoc.csv"}  data={dataCSV || []} target="_blank"> Xuất CSV Page {page}</CSVLink>
                 </div>
             </Row>
             <div className="mt-3">
-                <Table responsive striped bordered hover>
+                <Table responsive striped bordered hover >
                     <thead>
                         <tr>
                             <th>#</th>
@@ -106,18 +111,18 @@ function ThuocPage() {
                         ))}
                     </tbody>
                 </Table>
-                <Pagination count={data?.CountThuoc as number} take={take} skip={handleChangPage} page={page}/>
+                <Pagination count={data?.CountThuoc as number} take={take} skip={handleChangPage} page={page} />
             </div>
-            <ThemThuoc 
+            <ThemThuoc
                 show={modalAdd}
                 onHide={() => setModalAdd(false)}
                 refetch={refetch}
             />
             <SuaThuoc
                 show={modalSua}
-                onHide = {() => setModalSua(false)}
+                onHide={() => setModalSua(false)}
                 refetch={refetch}
-                thuoc={selectedThuoc} 
+                thuoc={selectedThuoc}
             />
         </div>
     </>);

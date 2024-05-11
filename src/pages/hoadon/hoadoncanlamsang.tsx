@@ -5,16 +5,38 @@ import { MdDelete } from "react-icons/md";
 import moment from "moment";
 import { LiaEyeSolid } from "react-icons/lia";
 import { useGetAllHoaDonPhieuCanLamSangQuery, useUpdateTinhTrangHoaDonClsMutation, useUpdateTrangThaiCanLamSangMutation } from "../../graphql-definition/graphql";
+import Pagination from "../../components/pagination";
+import { Input } from "antd";
+import type { SearchProps } from 'antd/es/input/Search'
+import { CSVLink } from "react-csv";
 
 function HoaDonCanLamSang() {
+
+    const { Search } = Input;
 
     const [show, setModalShow] = useState(false)
     const [selectedHoadon, setSelectedHoadon] = useState({})
 
-    const { data, loading, error, refetch } = useGetAllHoaDonPhieuCanLamSangQuery()
+    const [take, setTake] = useState(2);
+    const [skip, setSkip] = useState(0);
+    const [page, setPage] = useState(1);
+
+    const { data, loading, error, refetch } = useGetAllHoaDonPhieuCanLamSangQuery({
+        variables: {
+            input: {
+                take: take,
+                skip: skip,
+            }
+        }
+    })
 
     const handleAdd = () => {
 
+    }
+
+    const handleChangPage = (skip: number, page: number) => {
+        setSkip(skip);
+        setPage(page)
     }
 
     const handleXem = (hoadon: any) => {
@@ -51,6 +73,20 @@ function HoaDonCanLamSang() {
 
     }
 
+    const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
+        refetch({
+            input: {
+                take: take,
+                skip: skip,
+                search: value
+            }
+        })
+    }
+
+    const dataCSV = data?.getAllHoaDonPhieuCanLamSang.map(item => {
+        return [item?.benhnhan?.hoten, moment(item?.benhnhan?.ngaysinh).format('DD-MM-YYYY'), item?.benhnhan?.gioitinh ? "Nam" : "Nữ", moment(item?.ngaytao).format("DD-MM-YYYY"), item?.bhyt ? "Có" : "Không", item?.thanhtien]
+    })
+
     if (loading) return <div> ... Loading ... </div>
 
     if (error) return <div> ... Error ... </div>
@@ -62,11 +98,13 @@ function HoaDonCanLamSang() {
                     <div className="d-flex justify-content-center">
                         <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Tạo Hóa Đơn Cân Lâm Sàng</Button>
                         <Button className="mr-3 btn-outline-primary">Nhập Exel</Button>
-                        <Button className="mr-3 btn-outline-success">Xuất Exel</Button>
-                        <Button className="mr-3 btn-outline-danger">Xuất PDF</Button>
+                        <CSVLink className="mr-3 btn btn-outline-success" filename={"hoadoncls.csv"} data={dataCSV || []} target="_blank"> Xuất CSV Page {page}</CSVLink>
                     </div>
                 </Row>
                 <Row className="mt-3">
+                    <div className="w-100 mb-2 d-flex justify-content-end align-items-center">
+                        <Search placeholder="Họ Tên" allowClear onSearch={onSearch} size={"large"} style={{ width: 300 }} />
+                    </div>
                     <Table striped bordered hover>
                         <thead>
                             <tr>
@@ -97,6 +135,7 @@ function HoaDonCanLamSang() {
                             ))}
                         </tbody>
                     </Table>
+                    <Pagination count={data?.CountHoadonchidinhcanlamsang as number} take={take} skip={handleChangPage} page={page} />
                 </Row>
                 <XemHoaDon
                     show={show}

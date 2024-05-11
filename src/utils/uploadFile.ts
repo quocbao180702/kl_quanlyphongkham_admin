@@ -54,8 +54,9 @@ export async function uploadMultiFile(
     files: any,
     callback?: any
 ) {
+    console.log('file: ', files)
     const newArr = files?.map((file: any) => (
-        file.file
+        file.originFileObj
     ))
     const newFile = new Promise((resolve, reject) => {
         const formData = new FormData()
@@ -67,7 +68,7 @@ export async function uploadMultiFile(
             .post(backendUpload[typeFile], formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
-                    /*  'access-token': localStorage.getItem('access-token') */
+                
                 }
             })
             .then((response) => {

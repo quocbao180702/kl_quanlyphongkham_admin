@@ -7,6 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SuaBlog from "./f_suablog";
 import Pagination from "../../components/pagination";
+import moment from "moment";
+import { CSVLink } from "react-csv";
+
+
 
 function Blogs() {
 
@@ -20,6 +24,10 @@ function Blogs() {
             }
         }
     });
+
+    const dataCSV = data?.getAllBlog.map(item => {
+        return [item?.tieude, item?.tomtat, item?.noidung, moment(item?.ngaytao).format("DD-MM-YYYY"), item?.user?.username]
+    })
 
     const [modalShow, setModalShow] = useState(false);
     const [selectedBlog, setSelectedBlog] = useState({});
@@ -89,8 +97,7 @@ function Blogs() {
                     <div className="d-flex justify-content-center">
                         <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Thêm Blog</Button>
                         <Button className="mr-3 btn-outline-primary">Nhập Exel</Button>
-                        <Button className="mr-3 btn-outline-success">Xuất Exel</Button>
-                        <Button className="mr-3 btn-outline-danger">Xuất PDF</Button>
+                        <CSVLink className="mr-3 btn btn-outline-success" filename={"blog.csv"} data={dataCSV || []} target="_blank"> Xuất CSV Page {page}</CSVLink>
                     </div>
                 </Row>
                 <Table striped bordered hover responsive>
