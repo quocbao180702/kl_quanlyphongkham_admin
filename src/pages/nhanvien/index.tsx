@@ -6,17 +6,28 @@ import ThemNhanVien from "./f_themNhanVien";
 import { MdDelete } from "react-icons/md";
 import { FaMarker } from "react-icons/fa";
 import SuaNhanVien from "./f_suaNhanVien";
-import Item from "antd/es/list/Item";
 import { CSVLink } from "react-csv";
+import Search, { SearchProps } from "antd/es/input/Search";
+import Pagination from "../../components/pagination";
 
 function NhanVienPage() {
 
+    const [take, setTake] = useState(2);
+    const [skip, setSkip] = useState(0);
+    const [page, setPage] = useState(1);
 
     const [showAdd, setModalAdd] = useState(false)
     const [showSua, setShowSua] = useState(false);
     const [selectedNhanVien, setSelectedNhanVien] = useState({});
 
-    const { data, loading, error, refetch } = useGetAllNhanVienQuery()
+    const { data, loading, error, refetch } = useGetAllNhanVienQuery({
+        variables: {
+            input: {
+                take: take,
+                skip: skip
+            }
+        }
+    })
 
 
     useEffect(() => {
@@ -25,6 +36,11 @@ function NhanVienPage() {
 
     const handleAdd = () => {
         setModalAdd(true)
+    }
+
+    const handleChangPage = (skip: number, page: number) => {
+        setSkip(skip);
+        setPage(page)
     }
 
     const [deleteNhanVien] = useDeleteNhanVienMutation()
@@ -53,6 +69,29 @@ function NhanVienPage() {
         setShowSua(true);
     }
 
+
+    /* const customRequest = async (options: any) => {
+        const result = await handleUpload("documentthuoc", options);
+
+        if (result === 0) {
+            message.success(`uploaded successfully`);
+        }
+        else {
+            message.success('upload failed');
+        }
+        refetch();
+    }; */
+
+    const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
+        refetch({
+            input: {
+                take: take,
+                skip: skip,
+                search: value
+            }
+        });
+    }
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error...</div>;
 
@@ -61,8 +100,15 @@ function NhanVienPage() {
             <Row className="mt-3">
                 <div className="d-flex justify-content-center">
                     <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Thêm Nhân Viên</Button>
-                    <Button className="mr-3 btn-outline-primary">Nhập Exel</Button>
+                    {/* <Upload
+                        customRequest={customRequest}
+                        maxCount={1}
+                        showUploadList={false}
+                    >
+                        <Button className="mr-3 btn-outline-primary">Upload File</Button>
+                    </Upload> */}
                     <CSVLink className="mr-3 btn btn-outline-success" filename={"nhanvien.csv"} data={dataCSV || []} target="_blank"> Xuất CSV</CSVLink>
+                    <Search placeholder="Họ Tên" allowClear onSearch={onSearch} size={"large"} style={{ width: 300 }} />
                 </div>
             </Row>
 
@@ -107,6 +153,7 @@ function NhanVienPage() {
                         })}
                     </tbody>
                 </Table>
+                <Pagination count={data?.CountNhanVien as number} take={take} skip={handleChangPage} page={page} />
             </Row>
             <ThemNhanVien
                 show={showAdd}

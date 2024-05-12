@@ -1,33 +1,34 @@
-import React, { useRef } from 'react';
-import Button from "react-bootstrap/Button";
-import ToaThuocPDF from "../pdf/taothuoc";
-import HoadonPDF from '../pdf/hoadon';
+import React from 'react';
+import { Upload, Button, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import axios from 'axios';
+import { handleUpload } from '../../utils/uploadFile';
 
-function Test() {
-  const data = {
-    hoten: "Đặng Quốc Bảo",
-    ngaysinh: "20-02-2002",
-    sodienthoai: "0123456789"
-  };
+const backendUploadUrl = 'http://localhost:3000/file-upload/PhongKhamDocumentBacSiUpload';;
 
-  const pdfComponentRef = useRef<{ downloadPdf: () => void } | null>(null);
+const Test = () => {
 
-  const handleDownloadPdf = () => {
-    if (pdfComponentRef.current) {
-      pdfComponentRef.current.downloadPdf();
+
+ /*  const customRequest = async (options: any) => {
+    const result = await handleUpload("documentbacsi", options);
+
+    if (result === 0) {
+      message.success(`uploaded successfully`);
     }
-  };
+    else {
+      message.success('upload failed');
+    }
+  }; */
 
   return (
-    <>
-      {/*  <ToaThuocPDF ref={pdfComponentRef} data={data} /> */}
-      <Button className="btn btn-outline-primary" onClick={handleDownloadPdf}>
-        Xuất PDF
-      </Button>
-      {/* <HoadonPDF /> */}
-      {/*  <HoaDonCLSPDF /> */}
-    </>
+    {/* <Upload
+      customRequest={customRequest}
+      maxCount={1}
+      showUploadList={false}
+    >
+      <Button icon={<UploadOutlined />}>Upload File</Button>
+    </Upload> */}
   );
-}
+};
 
 export default Test;

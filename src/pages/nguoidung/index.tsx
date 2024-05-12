@@ -12,7 +12,7 @@ import { CSVLink } from 'react-csv';
 
 function NguoiDung() {
 
-    const [take, setTake] = useState(2);
+    const [take, setTake] = useState(10);
     const [skip, setSkip] = useState(0);
     const { data, loading, error, refetch } = useGetAllUserQuery({
         variables: {
@@ -80,7 +80,7 @@ function NguoiDung() {
             <Row className="mt-3">
                 <div className="d-flex justify-content-center">
                     <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Thêm Người Dùng</Button>
-                    <Button className="mr-3 btn-outline-primary">Nhập Exel</Button>
+                    {/* <Button className="mr-3 btn-outline-primary">Nhập Exel</Button> */}
                     <CSVLink className="mr-3 btn btn-outline-success" filename={"nguoidung.csv"} data={dataCSV || []} target="_blank"> Xuất CSV Page {page}</CSVLink>
                 </div>
             </Row>

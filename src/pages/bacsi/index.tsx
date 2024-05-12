@@ -1,21 +1,21 @@
 import { Table, Row, Button } from "react-bootstrap";
 import { BacSi, useDeleteBacSiMutation, useGetAllBacSiQuery } from "../../graphql-definition/graphql"; // Rename BacSi import alias
 import { MdDelete } from "react-icons/md";
-import { IoAddCircleOutline } from "react-icons/io5";
 import { FaMarker } from "react-icons/fa";
 import { useState } from "react";
 import ThemBacSi from "./f_themBacSi";
 import SuaBacSi from "./f_suaBacSi";
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import Pagination from "../../components/pagination";
 import { CSVLink } from "react-csv";
+import Search, { SearchProps } from "antd/es/input/Search";
 
 
 
 function BacSiPage() { // Rename the function here
 
 
-    const [take, setTake] = useState(2);
+    const [take, setTake] = useState(4);
     const [skip, setSkip] = useState(0);
     const { data, loading, error, refetch } = useGetAllBacSiQuery({
         variables: {
@@ -63,6 +63,29 @@ function BacSiPage() { // Rename the function here
         ]
     })
 
+
+    /* const customRequest = async (options: any) => {
+        const result = await handleUpload("documentbacsi", options);
+
+        if (result === 0) {
+            message.success(`uploaded successfully`);
+        }
+        else {
+            message.success('upload failed');
+        }
+        refetch();
+    }; */
+
+    const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
+        refetch({
+            input: {
+                take: take,
+                skip: skip,
+                search: value
+            }
+        })
+    }
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error...</div>;
 
@@ -71,10 +94,18 @@ function BacSiPage() { // Rename the function here
             <div className="container-fluit">
 
                 <Row className="mt-3">
+
                     <div className="d-flex justify-content-center">
                         <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Thêm Bác Sĩ</Button>
-                        <Button className="mr-3 btn-outline-primary">Nhập Exel</Button>
+                        {/*  <Upload
+                            customRequest={customRequest}
+                            maxCount={1}
+                            showUploadList={false}
+                        >
+                            <Button className="mr-3 btn-outline-primary">Upload File</Button>
+                        </Upload> */}
                         <CSVLink className="mr-3 btn btn-outline-success" filename={"bacsi.csv"} data={dataCSV || []} target="_blank"> Xuất CSV Page {page}</CSVLink>
+                        <Search placeholder="Họ Tên" allowClear onSearch={onSearch} size={"large"} style={{ width: 300 }} />
                     </div>
                 </Row>
                 <Row className="mt-3">

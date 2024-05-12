@@ -1,19 +1,46 @@
 import axios from 'axios'
 
-type TypeFile = 'image' /* | 'video' | 'document' */
+type TypeFile = 'image'  | 'documentbenhnhan'  | 'documentthuoc'
 export const backendUrlFile = {
-    /* image: `${import.meta.env.BACKEND_URL || window.location.origin}${'/phongkham/images'}`, */
-    image: `http://localhost:3000/images`
-    /* video:'http://localhost:3000/file-upload/PhongKhamImageUpload',
-    document: 'http://localhost:3000/file-upload/PhongKhamImageUpload' */
+    image: `http://localhost:3000/images`,
+   /*  documentbacsi: 'http://localhost:3000/file-upload/PhongKhamDocumentBacSiUpload', */
+    documentbenhnhan: 'http://localhost:3000/file-upload/PhongKhamDocumentBenhNhanUpload',
+   /*  documentnhanvien: 'http://localhost:3000/file-upload/PhongKhamDocumentNhanVienUpload', */
+    documentthuoc: 'http://localhost:3000/file-upload/PhongKhamDocumentThuocUpload',
 }
 
 const backendUpload = {
-    /* image: `${import.meta.env.BACKEND_URL || window.location.origin}${'/file-upload/PhongKhamImageUpload'}`, */
-    image: `http://localhost:3000/file-upload/PhongKhamImageUpload`
-    /*  video: 'http://localhost:3000/file-upload/PhongKhamImageUpload',
-     document: 'http://localhost:3000/file-upload/PhongKhamImageUpload' */
+    image: `http://localhost:3000/file-upload/PhongKhamImageUpload`,
+   /*  documentbacsi: 'http://localhost:3000/file-upload/PhongKhamDocumentBacSiUpload', */
+    documentbenhnhan: 'http://localhost:3000/file-upload/PhongKhamDocumentBenhNhanUpload',
+  /*   documentnhanvien: 'http://localhost:3000/file-upload/PhongKhamDocumentNhanVienUpload', */
+    documentthuoc: 'http://localhost:3000/file-upload/PhongKhamDocumentThuocUpload',
 }
+
+
+
+export const handleUpload = async (typeFile: TypeFile, options: any) => {
+    const { file } = options;
+
+    if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await axios.post(backendUpload[typeFile], formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+            return 0;
+            console.log(response.data);
+        } catch (error) {
+            return error
+        }
+    }
+};
+
+
 
 export async function uploadFile(
     typeFile: TypeFile,
@@ -68,7 +95,7 @@ export async function uploadMultiFile(
             .post(backendUpload[typeFile], formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
-                
+
                 }
             })
             .then((response) => {

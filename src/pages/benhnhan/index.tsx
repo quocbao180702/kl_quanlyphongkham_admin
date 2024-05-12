@@ -10,6 +10,9 @@ import { useState } from "react";
 import SuaBenhNhan from "./f_suaBenhNhan";
 import Pagination from "../../components/pagination";
 import { CSVLink } from "react-csv";
+import { Upload, message } from "antd";
+import { handleUpload } from "../../utils/uploadFile";
+import Search, { SearchProps } from "antd/es/input/Search";
 
 
 export default function BenhNhanPage() {
@@ -65,6 +68,28 @@ export default function BenhNhanPage() {
         ]
     })
 
+    const customRequest = async (options: any) => {
+        const result = await handleUpload("documentbenhnhan", options);
+
+        if (result === 0) {
+            message.success(`uploaded successfully`);
+        }
+        else {
+            message.success('upload failed');
+        }
+        refetch();
+    };
+
+    const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
+        refetch({
+            input: {
+                take: take,
+                skip: skip,
+                search: value
+            }
+        })
+    }
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error...</div>;
 
@@ -77,8 +102,15 @@ export default function BenhNhanPage() {
                 <Row className="mt-3 ml-2">
                     <div className="d-flex justify-content-center">
                         <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Thêm Bệnh Nhân</Button>
-                        <Button className="mr-3 btn-outline-primary">Nhập Exel</Button>
+                        <Upload
+                            customRequest={customRequest}
+                            maxCount={1}
+                            showUploadList={false}
+                        >
+                            <Button className="mr-3 btn-outline-primary">Upload File</Button>
+                        </Upload>
                         <CSVLink className="mr-3 btn btn-outline-success" filename={"benhnhan.csv"} data={dataCSV || []} target="_blank"> Xuất CSV Page {page}</CSVLink>
+                        <Search placeholder="Họ Tên" allowClear onSearch={onSearch} size={"large"} style={{ width: 300 }} />
                     </div>
                 </Row>
                 <div className="mt-3">

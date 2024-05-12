@@ -9,6 +9,7 @@ import SuaBlog from "./f_suablog";
 import Pagination from "../../components/pagination";
 import moment from "moment";
 import { CSVLink } from "react-csv";
+import Search, { SearchProps } from "antd/es/input/Search";
 
 
 
@@ -89,6 +90,15 @@ function Blogs() {
             console.log(error)
         }
     }
+    const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
+        refetch({
+            input: {
+                take: take,
+                skip: skip,
+                search: value
+            }
+        })
+    }
 
     return (
         <>
@@ -96,8 +106,9 @@ function Blogs() {
                 <Row className="mt-3">
                     <div className="d-flex justify-content-center">
                         <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Thêm Blog</Button>
-                        <Button className="mr-3 btn-outline-primary">Nhập Exel</Button>
+                        {/* <Button className="mr-3 btn-outline-primary">Nhập Exel</Button> */}
                         <CSVLink className="mr-3 btn btn-outline-success" filename={"blog.csv"} data={dataCSV || []} target="_blank"> Xuất CSV Page {page}</CSVLink>
+                        <Search placeholder="Tiêu đề" allowClear onSearch={onSearch} size={"large"} style={{ width: 300 }} />
                     </div>
                 </Row>
                 <Table striped bordered hover responsive>

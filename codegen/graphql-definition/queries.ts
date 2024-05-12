@@ -491,8 +491,9 @@ query GetAllPhieuXacNhanDaXetNghiem($ngaykham: String!, $phongIds: String!){
 
 
 const getAllNhanVien = gql`
-query GetAllNhanVien{
-  getAllNhanVien{
+query GetAllNhanVien($input: FetchPagination!){
+  CountNhanVien
+  getAllNhanVien(fetchPagination: $input){
     _id
     hoten
     ngaysinh
@@ -769,10 +770,5 @@ const get = gql`
 query GetAllHinhAnh($id: String!){
   get(id: $id){
     _id
-    listImages{
-      url
-      type
-      fileName
-    }
   }
 }`

@@ -160,7 +160,9 @@ export type CreateSobenhInput = {
 };
 
 export type CreateTestInput = {
-  listImages: Array<LinkImageInput>;
+  adress: Scalars['String']['input'];
+  age: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 };
 
 export type CreateToathuocInput = {
@@ -1149,6 +1151,11 @@ export type QueryGetAllHoadonByBenhNhanArgs = {
 };
 
 
+export type QueryGetAllNhanVienArgs = {
+  fetchPagination: FetchPagination;
+};
+
+
 export type QueryGetAllPhieuClSbyNgayArgs = {
   ngaytao: Scalars['DateTime']['input'];
   trangthai: Scalars['String']['input'];
@@ -1318,7 +1325,9 @@ export type Subscription = {
 export type Test = {
   __typename?: 'Test';
   _id: Scalars['ID']['output'];
-  listImages: Array<LinkImage>;
+  adress: Scalars['String']['output'];
+  age: Scalars['String']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type Thuoc = {
@@ -1897,7 +1906,7 @@ export type CreateTestMutationVariables = Exact<{
 }>;
 
 
-export type CreateTestMutation = { __typename?: 'Mutation', createTest: { __typename?: 'Test', _id: string, listImages: Array<{ __typename?: 'LinkImage', fileName: string, url: string, type: TypeImage }> } };
+export type CreateTestMutation = { __typename?: 'Mutation', createTest: { __typename?: 'Test', _id: string } };
 
 export type OnlyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2035,10 +2044,12 @@ export type GetAllPhieuXacNhanDaXetNghiemQueryVariables = Exact<{
 
 export type GetAllPhieuXacNhanDaXetNghiemQuery = { __typename?: 'Query', getAllPhieuXacNhanDaXetNgiem?: Array<{ __typename?: 'PhieuXacNhan', _id: string, trangthai: TrangThaiKham, sothutu: number, ngaytao: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, bhyt: string, sinhhieu?: { __typename?: 'Sinhhieu', _id: string, mach: number, nhietdo: number, ha: string, chieucao: number, cannang: number, bmi: number, benhmangtinh: boolean } | null }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, phien: { __typename?: 'Phiens', batdau: string, ketthuc: string, trangthai: boolean }, phieuchidinhcanlamsang?: { __typename?: 'Phieuchidinhcanlamsang', _id: string, bhyt: boolean, ngaytao: any, trangthai: TrangThaiCls, bacsi: { __typename?: 'BacSi', _id: string, hoten: string }, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', ketluan?: string | null, thietbi?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', _id: string, tenxetnghiem: string, loaicanlamsang: string }, hinhanh?: Array<{ __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage }> | null }> } | null }> | null };
 
-export type GetAllNhanVienQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAllNhanVienQueryVariables = Exact<{
+  input: FetchPagination;
+}>;
 
 
-export type GetAllNhanVienQuery = { __typename?: 'Query', getAllNhanVien: Array<{ __typename?: 'NhanVien', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, ngayBD: any, chucvu: string, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }> }> };
+export type GetAllNhanVienQuery = { __typename?: 'Query', CountNhanVien: number, getAllNhanVien: Array<{ __typename?: 'NhanVien', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, ngayBD: any, chucvu: string, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }> }> };
 
 export type GetAllHoaDonPhieuCanLamSangQueryVariables = Exact<{
   input: FetchPagination;
@@ -2142,7 +2153,7 @@ export type GetAllHinhAnhQueryVariables = Exact<{
 }>;
 
 
-export type GetAllHinhAnhQuery = { __typename?: 'Query', get: { __typename?: 'Test', _id: string, listImages: Array<{ __typename?: 'LinkImage', url: string, type: TypeImage, fileName: string }> } };
+export type GetAllHinhAnhQuery = { __typename?: 'Query', get: { __typename?: 'Test', _id: string } };
 
 export type NewDatLichSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -3485,11 +3496,6 @@ export const CreateTestDocument = gql`
     mutation CreateTest($input: CreateTestInput!) {
   createTest(createTestInput: $input) {
     _id
-    listImages {
-      fileName
-      url
-      type
-    }
   }
 }
     `;
@@ -4722,8 +4728,9 @@ export type GetAllPhieuXacNhanDaXetNghiemLazyQueryHookResult = ReturnType<typeof
 export type GetAllPhieuXacNhanDaXetNghiemSuspenseQueryHookResult = ReturnType<typeof useGetAllPhieuXacNhanDaXetNghiemSuspenseQuery>;
 export type GetAllPhieuXacNhanDaXetNghiemQueryResult = Apollo.QueryResult<GetAllPhieuXacNhanDaXetNghiemQuery, GetAllPhieuXacNhanDaXetNghiemQueryVariables>;
 export const GetAllNhanVienDocument = gql`
-    query GetAllNhanVien {
-  getAllNhanVien {
+    query GetAllNhanVien($input: FetchPagination!) {
+  CountNhanVien
+  getAllNhanVien(fetchPagination: $input) {
     _id
     hoten
     ngaysinh
@@ -4753,10 +4760,11 @@ export const GetAllNhanVienDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllNhanVienQuery({
  *   variables: {
+ *      input: // value for 'input'
  *   },
  * });
  */
-export function useGetAllNhanVienQuery(baseOptions?: Apollo.QueryHookOptions<GetAllNhanVienQuery, GetAllNhanVienQueryVariables>) {
+export function useGetAllNhanVienQuery(baseOptions: Apollo.QueryHookOptions<GetAllNhanVienQuery, GetAllNhanVienQueryVariables> & ({ variables: GetAllNhanVienQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetAllNhanVienQuery, GetAllNhanVienQueryVariables>(GetAllNhanVienDocument, options);
       }
@@ -5489,11 +5497,6 @@ export const GetAllHinhAnhDocument = gql`
     query GetAllHinhAnh($id: String!) {
   get(id: $id) {
     _id
-    listImages {
-      url
-      type
-      fileName
-    }
   }
 }
     `;
