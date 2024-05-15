@@ -29,7 +29,7 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
 
     const HandleUpdate = async () => {
         try {
-            if (bacsi?._id && benhnhanId && bhyt && idPhieuXacNhan) {
+            if (bacsi?._id && benhnhanId && idPhieuXacNhan) {
                 const ketqua = selectedValues.map(value => ({ loaicanlamsang: value }));
 
                 const [response, update] = await Promise.all([
@@ -39,7 +39,7 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
                                 "benhnhan": benhnhanId,
                                 "bacsi": bacsi?._id,
                                 "phieuxacnhan": idPhieuXacNhan,
-                                "bhyt": bhyt,
+                                "bhyt": bhyt || false,
                                 "ngaytao": dayjs().format('YYYY-MM-DD')
                             },
                             "ketqua": ketqua
@@ -69,7 +69,7 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
                                 "input": {
                                     "benhnhan": benhnhanId,
                                     "idPhieuCLS": response?.data?.createPhieuchidinhcanlamsang?._id,
-                                    "bhyt": bhyt,
+                                    "bhyt": bhyt || false,
                                     "chitietcanlamsang": selectedDichVu
                                 }
                             }
@@ -82,7 +82,7 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
                 refetchChoKham();
             }
             else {
-                console.log('trường dữ liệu có thể bị thiếu:  ', bacsi?._id, benhnhanId, bhyt)
+                console.log('trường dữ liệu có thể bị thiếu:  ', bacsi?._id, benhnhanId, bhyt, idPhieuXacNhan)
             }
         }
         catch (error) {

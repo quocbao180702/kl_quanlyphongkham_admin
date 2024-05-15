@@ -7,11 +7,12 @@ import DatePickerValue from "../../components/DatePicker";
 import dayjs, { Dayjs } from 'dayjs';
 import { EditContext } from ".";
 import { GrAddCircle, GrSubtractCircle } from "react-icons/gr";
+import ThemBenh from "./f_thembenh";
 
 
 
 function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIEM, refetchHOANTAT, refetchChoKham, setshowWarning, setShowSuccess, setThongBao }: any) {
-    const { data: benhData, loading: benhLoading, error: benhError } = useGetAllBenhQuery();
+    const { data: benhData, loading: benhLoading, error: benhError, refetch: refetchBenh } = useGetAllBenhQuery();
     const { data: thuocData, loading: thuocLoading, error: thuocError } = useGetAllThuocQuery();
     const [selectedBenh, setSelectedBenh] = useState([]);
     const [benhnhanId, setBenhNhanId] = useState('');
@@ -24,9 +25,12 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
 
     const { isEditing, setIsEditing }: any = useContext(EditContext);
     const [editKham, setEditKham] = useState(false);
-    /* const [showWarning, setshowWarning] = useState(false);
-    const [showSuccess, setShowSuccess] = useState(false);
-    const [thongbao, setThongBao] = useState('') */
+    const [showBenh, SetShowBenh] = useState(false);
+
+
+    const handleAddBenh = () => {
+        SetShowBenh(true);
+    }
 
     useEffect(() => {
         setEditKham(isEditing);
@@ -272,6 +276,11 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                             sx={{ width: '75%' }}
                         />
                     </div>
+                    <div>
+                        <Button onClick={handleAddBenh} variant="contained" color="primary">
+                            <GrAddCircle color="red"/>
+                        </Button>
+                    </div>
                     {/* <Row> */}
                     {/* </Row> */}
                     <hr />
@@ -359,6 +368,11 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                     </Button>
                 </fieldset>
             </Form>
+            <ThemBenh
+                show={showBenh}
+                onHide={() => SetShowBenh(false)}
+                refetch={refetchBenh} 
+            />
         </>
     );
 }

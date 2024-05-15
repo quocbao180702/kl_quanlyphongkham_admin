@@ -868,21 +868,27 @@ export type NewChuyenKhoaInput = {
 
 export type NewDatLichBacSiInput = {
   bacsi: Scalars['String']['input'];
+  cccd: Scalars['String']['input'];
   email: Scalars['String']['input'];
+  gioitinh: Scalars['Boolean']['input'];
   hoten: Scalars['String']['input'];
   motabenh: Scalars['String']['input'];
   ngaydat: Scalars['DateTime']['input'];
   ngaykham: Scalars['DateTime']['input'];
+  ngaysinh: Scalars['DateTime']['input'];
   phien: PhienInput;
   sodienthoai: Scalars['String']['input'];
 };
 
 export type NewDatLichInput = {
+  cccd: Scalars['String']['input'];
   email: Scalars['String']['input'];
+  gioitinh: Scalars['Boolean']['input'];
   hoten: Scalars['String']['input'];
   motabenh: Scalars['String']['input'];
   ngaydat: Scalars['DateTime']['input'];
   ngaykham: Scalars['DateTime']['input'];
+  ngaysinh: Scalars['DateTime']['input'];
   sodienthoai: Scalars['String']['input'];
 };
 
@@ -1434,23 +1440,29 @@ export type UpdateChuyenKhoaInput = {
 
 export type UpdateDatLichBacSiInput = {
   bacsi?: InputMaybe<Scalars['String']['input']>;
+  cccd?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
+  gioitinh?: InputMaybe<Scalars['Boolean']['input']>;
   hoten?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
   motabenh?: InputMaybe<Scalars['String']['input']>;
   ngaydat?: InputMaybe<Scalars['DateTime']['input']>;
   ngaykham?: InputMaybe<Scalars['DateTime']['input']>;
+  ngaysinh?: InputMaybe<Scalars['DateTime']['input']>;
   phien?: InputMaybe<PhienInput>;
   sodienthoai?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateDatLichInput = {
+  cccd?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
+  gioitinh?: InputMaybe<Scalars['Boolean']['input']>;
   hoten?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['String']['input'];
   motabenh?: InputMaybe<Scalars['String']['input']>;
   ngaydat?: InputMaybe<Scalars['DateTime']['input']>;
   ngaykham?: InputMaybe<Scalars['DateTime']['input']>;
+  ngaysinh?: InputMaybe<Scalars['DateTime']['input']>;
   sodienthoai?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1907,6 +1919,13 @@ export type CreateTestMutationVariables = Exact<{
 
 
 export type CreateTestMutation = { __typename?: 'Mutation', createTest: { __typename?: 'Test', _id: string } };
+
+export type CreateBenhMutationVariables = Exact<{
+  input: NewBenhInput;
+}>;
+
+
+export type CreateBenhMutation = { __typename?: 'Mutation', createBenh: { __typename?: 'Benh', _id: string } };
 
 export type OnlyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3525,6 +3544,39 @@ export function useCreateTestMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateTestMutationHookResult = ReturnType<typeof useCreateTestMutation>;
 export type CreateTestMutationResult = Apollo.MutationResult<CreateTestMutation>;
 export type CreateTestMutationOptions = Apollo.BaseMutationOptions<CreateTestMutation, CreateTestMutationVariables>;
+export const CreateBenhDocument = gql`
+    mutation CreateBenh($input: NewBenhInput!) {
+  createBenh(newBenhInput: $input) {
+    _id
+  }
+}
+    `;
+export type CreateBenhMutationFn = Apollo.MutationFunction<CreateBenhMutation, CreateBenhMutationVariables>;
+
+/**
+ * __useCreateBenhMutation__
+ *
+ * To run a mutation, you first call `useCreateBenhMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBenhMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBenhMutation, { data, loading, error }] = useCreateBenhMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateBenhMutation(baseOptions?: Apollo.MutationHookOptions<CreateBenhMutation, CreateBenhMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBenhMutation, CreateBenhMutationVariables>(CreateBenhDocument, options);
+      }
+export type CreateBenhMutationHookResult = ReturnType<typeof useCreateBenhMutation>;
+export type CreateBenhMutationResult = Apollo.MutationResult<CreateBenhMutation>;
+export type CreateBenhMutationOptions = Apollo.BaseMutationOptions<CreateBenhMutation, CreateBenhMutationVariables>;
 export const OnlyUserDocument = gql`
     query OnlyUser {
   onlyUser {

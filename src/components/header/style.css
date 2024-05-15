@@ -2,19 +2,11 @@
     background-color: #32C0F9;
 }
 
-.nav-item {
-    margin: 0 10px;
-    transition: all 0.3s ease;
-}
 
-.nav-item:hover {
-    transform: translateY(-2px);
-}
-
-.nav-link {
+.nav-link-custom {
     padding: 10px 15px;
     border-radius: 5px;
-    color: #fff;
+    color: #fff !important; 
     font-weight: bold;
     transition: color 0.3s ease;
 }
@@ -23,12 +15,27 @@
     padding: 10px 15px !important;
 }
 
-.nav-link:hover {
-    background-color: #fff;
-    color: #32C0F9;
+.dropdown-custom{
+    background-color: #32C0F9;
+    border: none;
 }
 
-.nav-link:active {
+.dropdown-custom:hover{
     background-color: #fff;
-    /* color: #32C0F9; */
+    color: #32C0F9 !important;
+}
+
+.dropdown-custom:active{
+    background-color: #fff !important;
+    color: #32C0F9 !important;
+}
+
+.nav-link-custom:hover {
+    background-color: #fff;
+    color: #32C0F9 !important;
+}
+
+.nav-link-custom.active {
+    background-color: #fff;
+    color: #32C0F9 !important;
 }

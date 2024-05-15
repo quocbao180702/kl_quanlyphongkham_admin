@@ -1,0 +1,11 @@
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ebf2fa;
+}
+
+.form-custom {
+    border-radius: 20px;
+}

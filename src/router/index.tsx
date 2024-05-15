@@ -19,7 +19,8 @@ import Blogs from "../pages/blogs/danhsachBlog"
 import ThemBlog from "../pages/blogs/f_themblog"
 import BaoCao from "../pages/baocao/page"
 import DatLichVip from "../pages/datlichvip"
-import Test from "../pages/test/test"
+import Profile from "../pages/profile"
+/* import Test from "../pages/test/test" */
 
 export const AppRouter = () => {
 
@@ -33,7 +34,7 @@ export const AppRouter = () => {
                             <Route path="datlich" element={<DatLich />} />
                             <Route path="nguoidung" element={<NguoiDung />} />
                             <Route path="benhnhan" element={<BenhNhan />} />
-                            <Route path="test" element={<Test />} />
+                            {/* <Route path="test" element={<Test />} /> */}
                             <Route path="bacsi" element={<NhanSu />}>
                                 <Route /* path="bacsi" */ index element={<BacSiPage />} />
                                 <Route path="nhanvien" element={<NhanVienPage />} />
@@ -46,6 +47,7 @@ export const AppRouter = () => {
                             <Route path="hoadon" element={<HoaDonPage />} />
                             <Route path="blogs" element={<Blogs />} />
                             <Route path="blogs/them" element={<ThemBlog />} />
+                            <Route path="profile" element={<Profile />} />
                         </Route>
                     </Route>
 

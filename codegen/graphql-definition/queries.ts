@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 const onlyUser = gql`
 query OnlyUser{
   onlyUser{
-  	... on Users{
+    ... on Users{
       _id
       username
       email
@@ -88,6 +88,23 @@ query OnlyUser{
   }
 }`
 
+
+/* const onlyUser = gql`
+query OnlyUser{
+  onlyUser{
+    _id
+    username
+    email
+    role
+    avatar{
+      url
+      fileName
+      type
+    }
+    isLocked
+  }
+}
+` */
 const getAllUsers = gql`
 query GetAllUser($input: FetchUsersArgs!){
   countUser

@@ -7,6 +7,8 @@ import { ApolloError } from "@apollo/client";
 import { Alert } from "@mui/material";
 import { AuthContext } from "../../provider/AuthContextProvider";
 
+import "./style.css";
+
 
 export function Login() {
     const { setIsAuthenticated } = useContext(AuthContext);
@@ -14,7 +16,7 @@ export function Login() {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const [showError, setError] = useState(false);
-    const [thongbao, setThongBao] = useState('')
+    const [thongbao, setThongBao] = useState('');
 
     useEffect(() => {
         if (showError) {
@@ -62,37 +64,35 @@ export function Login() {
                     </div>
                 </>
             )}
-            <Container>
-                <Row>
-                    <Col md={6} className="offset-md-3">
-                        <h2 className="text-center text-dark mt-5">Đăng Nhập</h2>
-                        <div className="text-center mb-5 text-dark">Phòng Khám Đa Khoa</div>
-                        <div className="card my-5">
+            <div className="login-page">
+                <Container>
+                    <Row>
+                        <Col md={6} className="offset-md-3">
+                            <h2 className="text-center text-dark mt-5">Đăng Nhập</h2>
+                            <div className="text-center mb-5 text-dark">Phòng Khám Đa Khoa</div>
+                            <div className="card my-5 form-custom">
+                                <Form onSubmit={onSubmit} className="card-body cardbody-color p-lg-5 ">
+                                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                                        <Form.Label>Tên Người Dùng</Form.Label>
+                                        <Form.Control className="p-3 mb-2 bg-light text-dark" type="text" placeholder="Tên Người Dùng" value={username} onChange={event => setUsername(event.target.value)} />
+                                    </Form.Group>
 
-                            <Form onSubmit={onSubmit} className="card-body cardbody-color p-lg-5" style={{ backgroundColor: "#ebf2fa" }}>
-                                <Form.Group className="mb-3" controlId="formBasicEmail">
-                                    <Form.Label>Tên Người Dùng</Form.Label>
-                                    <Form.Control className="p-3 mb-2 bg-light text-dark" type="text" placeholder="Tên Người Dùng" value={username} onChange={event => setUsername(event.target.value)} />
-                                </Form.Group>
+                                    <Form.Group className="mb-3" controlId="formBasicPassword">
+                                        <Form.Label>Mật Khẩu</Form.Label>
+                                        <Form.Control className="p-3 mb-2 bg-light text-dark" type="password" placeholder="Mật Khẩu" value={password} onChange={event => setPassword(event.target.value)} />
+                                    </Form.Group>
+                                    <Button variant="primary" type="submit" className="btn-color px-5 mb-5 w-100 mt-3">
+                                        Đăng Nhập
+                                    </Button>
+                                    <div id="emailHelp" className="form-text text-center mb-5 text-dark">Chưa Tạo? <a href="#" className="text-dark fw-bold"> Liên Hệ Người Lý Để Hỗ Trợ</a>
+                                    </div>
+                                </Form>
+                            </div>
 
-                                <Form.Group className="mb-3" controlId="formBasicPassword">
-                                    <Form.Label>Mật Khẩu</Form.Label>
-                                    <Form.Control className="p-3 mb-2 bg-light text-dark" type="password" placeholder="Mật Khẩu" value={password} onChange={event => setPassword(event.target.value)} />
-                                </Form.Group>
-                                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                    <Form.Check type="checkbox" label="Check me out" />
-                                </Form.Group>
-                                <Button variant="primary" type="submit" className="btn-color px-5 mb-5 w-100">
-                                    Submit
-                                </Button>
-                                <div id="emailHelp" className="form-text text-center mb-5 text-dark">Chưa Tạo? <a href="#" className="text-dark fw-bold"> Liên Hệ Người Lý Để Hỗ Trợ</a>
-                                </div>
-                            </Form>
-                        </div>
-
-                    </Col>
-                </Row>
-            </Container>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
         </>
     )
 }

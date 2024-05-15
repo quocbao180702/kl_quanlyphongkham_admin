@@ -330,3 +330,11 @@ mutation CreateTest($input: CreateTestInput!){
     _id
   }
 }`
+
+
+const createBenh = gql`
+mutation CreateBenh($input: NewBenhInput!) {
+  createBenh(newBenhInput: $input){
+    _id
+  }
+}`
