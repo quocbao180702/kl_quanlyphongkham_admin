@@ -783,6 +783,37 @@ query GetAllDatLichBacSiByBacSi($bacsi: String!){
   }
 }`
 
+
+const getAllToaThuocbyBacSi = gql`
+query GetAllToaThuocbyBacSi($input: String!){
+  getAllToaThuocbyBacSi(bacsiId: $input){
+    _id
+    benhnhan{
+      hoten
+      ngaysinh
+      gioitinh
+      diachi
+      sinhhieu{
+        cannang
+      }
+    }
+    bacsi{
+      hoten
+    }
+    thuocs{
+      tenthuoc
+    }
+    soluongs
+    benhs{
+      tenbenh
+    }
+    bhyt
+    ngaytaikham
+    ngaytao
+  }
+}`
+
+
 const get = gql`
 query GetAllHinhAnh($id: String!){
   get(id: $id){

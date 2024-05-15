@@ -1061,6 +1061,7 @@ export type Query = {
   getAllSoBenh: Array<Sobenh>;
   getAllThuoc: Array<Thuoc>;
   getAllToaThuoc: Array<Toathuoc>;
+  getAllToaThuocbyBacSi: Array<Toathuoc>;
   getAllToaThuocbyBenhNhan: Array<Toathuoc>;
   getAllUsers: Array<Users>;
   getAllVatTuYTe: Array<Vattuyte>;
@@ -1176,6 +1177,11 @@ export type QueryGetAllPhieuXacNhanDaXetNgiemArgs = {
 
 export type QueryGetAllSinhHieuByBenhNhanArgs = {
   benhnhanId: Scalars['String']['input'];
+};
+
+
+export type QueryGetAllToaThuocbyBacSiArgs = {
+  bacsiId: Scalars['String']['input'];
 };
 
 
@@ -1325,7 +1331,11 @@ export type Sobenh = {
 export type Subscription = {
   __typename?: 'Subscription';
   newDatLich: DatLich;
+  newHoaDon: Hoadon;
+  newHoaDonCLS: Hoadonchidinhcanlamsang;
   newPhieuXacNhan: PhieuXacNhan;
+  updateCLSDaXetNghiem: Phieuchidinhcanlamsang;
+  updateCLSThanhToan: Phieuchidinhcanlamsang;
 };
 
 export type Test = {
@@ -2167,6 +2177,13 @@ export type GetAllDatLichBacSiByBacSiQueryVariables = Exact<{
 
 export type GetAllDatLichBacSiByBacSiQuery = { __typename?: 'Query', getAllDatLichBacSiByBacSi?: Array<{ __typename?: 'DatLichBacSi', _id: string, motabenh: string, ngaydat: any, ngaykham: any, email: string, trangthai: TrangThaiDatKham, bacsi: { __typename?: 'BacSi', _id: string, hoten: string, chuyenkhoa: { __typename?: 'ChuyenKhoa', tenkhoa: string }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }> }, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, sodienthoai: string, ngaysinh: any, gioitinh: boolean, diachi: string, cccd: string }, phien: { __typename?: 'Phiens', batdau: string, ketthuc: string, soluongToiDa: number, trangthai: boolean } }> | null };
 
+export type GetAllToaThuocbyBacSiQueryVariables = Exact<{
+  input: Scalars['String']['input'];
+}>;
+
+
+export type GetAllToaThuocbyBacSiQuery = { __typename?: 'Query', getAllToaThuocbyBacSi: Array<{ __typename?: 'Toathuoc', _id: string, soluongs: Array<number>, bhyt: boolean, ngaytaikham: any, ngaytao: any, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sinhhieu?: { __typename?: 'Sinhhieu', cannang: number } | null }, bacsi: { __typename?: 'BacSi', hoten: string }, thuocs: Array<{ __typename?: 'Thuoc', tenthuoc: string }>, benhs: Array<{ __typename?: 'Benh', tenbenh: string }> }> };
+
 export type GetAllHinhAnhQueryVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
@@ -2183,6 +2200,26 @@ export type NewPhieuXacNhanSubscriptionVariables = Exact<{ [key: string]: never;
 
 
 export type NewPhieuXacNhanSubscription = { __typename?: 'Subscription', newPhieuXacNhan: { __typename?: 'PhieuXacNhan', _id: string, trangthai: TrangThaiKham, sothutu: number, ngaytao: any, ngaykham: any, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, bhyt: string, sinhhieu?: { __typename?: 'Sinhhieu', _id: string, mach: number, nhietdo: number, ha: string, chieucao: number, cannang: number, bmi: number, benhmangtinh: boolean } | null }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }> } };
+
+export type UpdateClsThanhToanSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UpdateClsThanhToanSubscription = { __typename?: 'Subscription', updateCLSThanhToan: { __typename?: 'Phieuchidinhcanlamsang', _id: string } };
+
+export type UpdateClsDaXetNghiemSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UpdateClsDaXetNghiemSubscription = { __typename?: 'Subscription', updateCLSDaXetNghiem: { __typename?: 'Phieuchidinhcanlamsang', _id: string } };
+
+export type NewHoaDonClsSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NewHoaDonClsSubscription = { __typename?: 'Subscription', newHoaDonCLS: { __typename?: 'Hoadonchidinhcanlamsang', _id: string, bhyt: boolean, thanhtien: number, tinhtrang: boolean, ngaytao: any, idPhieuCLS?: string | null, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string }, chitietcanlamsang: Array<{ __typename?: 'DichVu', ten: string, gia: number, soluong: number, thanhtien: number }> } };
+
+export type NewHoaDonSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NewHoaDonSubscription = { __typename?: 'Subscription', newHoaDon: { __typename?: 'Hoadon', _id: string } };
 
 
 export const LoginDocument = gql`
@@ -5545,6 +5582,68 @@ export type GetAllDatLichBacSiByBacSiQueryHookResult = ReturnType<typeof useGetA
 export type GetAllDatLichBacSiByBacSiLazyQueryHookResult = ReturnType<typeof useGetAllDatLichBacSiByBacSiLazyQuery>;
 export type GetAllDatLichBacSiByBacSiSuspenseQueryHookResult = ReturnType<typeof useGetAllDatLichBacSiByBacSiSuspenseQuery>;
 export type GetAllDatLichBacSiByBacSiQueryResult = Apollo.QueryResult<GetAllDatLichBacSiByBacSiQuery, GetAllDatLichBacSiByBacSiQueryVariables>;
+export const GetAllToaThuocbyBacSiDocument = gql`
+    query GetAllToaThuocbyBacSi($input: String!) {
+  getAllToaThuocbyBacSi(bacsiId: $input) {
+    _id
+    benhnhan {
+      hoten
+      ngaysinh
+      gioitinh
+      diachi
+      sinhhieu {
+        cannang
+      }
+    }
+    bacsi {
+      hoten
+    }
+    thuocs {
+      tenthuoc
+    }
+    soluongs
+    benhs {
+      tenbenh
+    }
+    bhyt
+    ngaytaikham
+    ngaytao
+  }
+}
+    `;
+
+/**
+ * __useGetAllToaThuocbyBacSiQuery__
+ *
+ * To run a query within a React component, call `useGetAllToaThuocbyBacSiQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllToaThuocbyBacSiQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllToaThuocbyBacSiQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetAllToaThuocbyBacSiQuery(baseOptions: Apollo.QueryHookOptions<GetAllToaThuocbyBacSiQuery, GetAllToaThuocbyBacSiQueryVariables> & ({ variables: GetAllToaThuocbyBacSiQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllToaThuocbyBacSiQuery, GetAllToaThuocbyBacSiQueryVariables>(GetAllToaThuocbyBacSiDocument, options);
+      }
+export function useGetAllToaThuocbyBacSiLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllToaThuocbyBacSiQuery, GetAllToaThuocbyBacSiQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllToaThuocbyBacSiQuery, GetAllToaThuocbyBacSiQueryVariables>(GetAllToaThuocbyBacSiDocument, options);
+        }
+export function useGetAllToaThuocbyBacSiSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllToaThuocbyBacSiQuery, GetAllToaThuocbyBacSiQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllToaThuocbyBacSiQuery, GetAllToaThuocbyBacSiQueryVariables>(GetAllToaThuocbyBacSiDocument, options);
+        }
+export type GetAllToaThuocbyBacSiQueryHookResult = ReturnType<typeof useGetAllToaThuocbyBacSiQuery>;
+export type GetAllToaThuocbyBacSiLazyQueryHookResult = ReturnType<typeof useGetAllToaThuocbyBacSiLazyQuery>;
+export type GetAllToaThuocbyBacSiSuspenseQueryHookResult = ReturnType<typeof useGetAllToaThuocbyBacSiSuspenseQuery>;
+export type GetAllToaThuocbyBacSiQueryResult = Apollo.QueryResult<GetAllToaThuocbyBacSiQuery, GetAllToaThuocbyBacSiQueryVariables>;
 export const GetAllHinhAnhDocument = gql`
     query GetAllHinhAnh($id: String!) {
   get(id: $id) {
@@ -5682,3 +5781,136 @@ export function useNewPhieuXacNhanSubscription(baseOptions?: Apollo.Subscription
       }
 export type NewPhieuXacNhanSubscriptionHookResult = ReturnType<typeof useNewPhieuXacNhanSubscription>;
 export type NewPhieuXacNhanSubscriptionResult = Apollo.SubscriptionResult<NewPhieuXacNhanSubscription>;
+export const UpdateClsThanhToanDocument = gql`
+    subscription UpdateCLSThanhToan {
+  updateCLSThanhToan {
+    _id
+  }
+}
+    `;
+
+/**
+ * __useUpdateClsThanhToanSubscription__
+ *
+ * To run a query within a React component, call `useUpdateClsThanhToanSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClsThanhToanSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUpdateClsThanhToanSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUpdateClsThanhToanSubscription(baseOptions?: Apollo.SubscriptionHookOptions<UpdateClsThanhToanSubscription, UpdateClsThanhToanSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<UpdateClsThanhToanSubscription, UpdateClsThanhToanSubscriptionVariables>(UpdateClsThanhToanDocument, options);
+      }
+export type UpdateClsThanhToanSubscriptionHookResult = ReturnType<typeof useUpdateClsThanhToanSubscription>;
+export type UpdateClsThanhToanSubscriptionResult = Apollo.SubscriptionResult<UpdateClsThanhToanSubscription>;
+export const UpdateClsDaXetNghiemDocument = gql`
+    subscription UpdateCLSDaXetNghiem {
+  updateCLSDaXetNghiem {
+    _id
+  }
+}
+    `;
+
+/**
+ * __useUpdateClsDaXetNghiemSubscription__
+ *
+ * To run a query within a React component, call `useUpdateClsDaXetNghiemSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useUpdateClsDaXetNghiemSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUpdateClsDaXetNghiemSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUpdateClsDaXetNghiemSubscription(baseOptions?: Apollo.SubscriptionHookOptions<UpdateClsDaXetNghiemSubscription, UpdateClsDaXetNghiemSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<UpdateClsDaXetNghiemSubscription, UpdateClsDaXetNghiemSubscriptionVariables>(UpdateClsDaXetNghiemDocument, options);
+      }
+export type UpdateClsDaXetNghiemSubscriptionHookResult = ReturnType<typeof useUpdateClsDaXetNghiemSubscription>;
+export type UpdateClsDaXetNghiemSubscriptionResult = Apollo.SubscriptionResult<UpdateClsDaXetNghiemSubscription>;
+export const NewHoaDonClsDocument = gql`
+    subscription NewHoaDonCLS {
+  newHoaDonCLS {
+    _id
+    bhyt
+    benhnhan {
+      hoten
+      ngaysinh
+      gioitinh
+      sodienthoai
+    }
+    chitietcanlamsang {
+      ten
+      gia
+      soluong
+      thanhtien
+    }
+    thanhtien
+    tinhtrang
+    ngaytao
+    idPhieuCLS
+  }
+}
+    `;
+
+/**
+ * __useNewHoaDonClsSubscription__
+ *
+ * To run a query within a React component, call `useNewHoaDonClsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useNewHoaDonClsSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewHoaDonClsSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNewHoaDonClsSubscription(baseOptions?: Apollo.SubscriptionHookOptions<NewHoaDonClsSubscription, NewHoaDonClsSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<NewHoaDonClsSubscription, NewHoaDonClsSubscriptionVariables>(NewHoaDonClsDocument, options);
+      }
+export type NewHoaDonClsSubscriptionHookResult = ReturnType<typeof useNewHoaDonClsSubscription>;
+export type NewHoaDonClsSubscriptionResult = Apollo.SubscriptionResult<NewHoaDonClsSubscription>;
+export const NewHoaDonDocument = gql`
+    subscription NewHoaDon {
+  newHoaDon {
+    _id
+  }
+}
+    `;
+
+/**
+ * __useNewHoaDonSubscription__
+ *
+ * To run a query within a React component, call `useNewHoaDonSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useNewHoaDonSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNewHoaDonSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNewHoaDonSubscription(baseOptions?: Apollo.SubscriptionHookOptions<NewHoaDonSubscription, NewHoaDonSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<NewHoaDonSubscription, NewHoaDonSubscriptionVariables>(NewHoaDonDocument, options);
+      }
+export type NewHoaDonSubscriptionHookResult = ReturnType<typeof useNewHoaDonSubscription>;
+export type NewHoaDonSubscriptionResult = Apollo.SubscriptionResult<NewHoaDonSubscription>;

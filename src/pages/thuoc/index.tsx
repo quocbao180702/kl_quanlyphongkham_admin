@@ -15,7 +15,7 @@ import Search, { SearchProps } from "antd/es/input/Search";
 
 function ThuocPage() {
 
-    const [take, setTake] = useState(5);
+    const [take, setTake] = useState(10);
     const [skip, setSkip] = useState(0);
     const { data, loading, error, refetch } = useGetThuocPaginationQuery({
         variables: {

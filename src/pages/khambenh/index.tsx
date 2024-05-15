@@ -13,6 +13,7 @@ import { useSubscription } from "@apollo/client";
 import { UpdateCLSDaXetNghiemSubcription, newPhieuXacNhanSubscription } from "../../../codegen/graphql-definition/subcriptions";
 import { Alert } from "@mui/material";
 import { Tabs } from "antd";
+import { useNavigate, useNavigation } from "react-router-dom";
 
 export const EditContext = createContext({});
 
@@ -35,6 +36,7 @@ function KhamBenh() {
     const [showWarning, setshowWarning] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [thongbao, setThongBao] = useState('')
+    const navigate = useNavigate();
 
 
     const { data: newPhieuXacNhan, error: newPhieuXacNhanError } = useSubscription(newPhieuXacNhanSubscription);
@@ -149,7 +151,8 @@ function KhamBenh() {
                  }
              });
          } */
-        return true
+         navigate('/toathuoc');
+       
     }
 
     const [updateTrangThaiKham] = useUpdateTrangThaiKhamMutation()
@@ -215,7 +218,7 @@ function KhamBenh() {
                         <div className="row">
                             <div className="d-flex justify-content-around align-items-center">
                                 <Button className="mr-1" onClick={handleEditToggle}>Khám</Button>
-                                <Button className="mr-1" onClick={handleToaThuoc}>Tạo Toa Thuốc</Button>
+                                <Button className="mr-1" onClick={handleToaThuoc}>Xem Toa Thuốc</Button>
                                 {/* <Button className="mr-1">Xuất Toa Thuốc</Button> */}
                                 <Button className="mr-1" onClick={handleHoanTatKham}>Hoàn Tất Khám</Button>
                                 <Button className="mr-1" onClick={handleYeuCauXetNghiem}>Yêu Cầu Xét Nghiệm</Button>
