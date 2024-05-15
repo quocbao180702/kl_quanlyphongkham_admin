@@ -2,19 +2,21 @@ import moment from "moment";
 import { Badge, Button, Row, Table } from "react-bootstrap";
 import { MdDelete } from "react-icons/md";
 import { useDeleteHoaDonMutation, useGetAllHoaDonQuery, useUpdateTrangThaiHoaDonMutation } from "../../graphql-definition/graphql";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import XemHoaDon from "./xemHoaDon";
 import { LiaEyeSolid } from "react-icons/lia";
 import Pagination from "../../components/pagination";
 import { Input } from "antd";
 import type { SearchProps } from 'antd/es/input/Search'
 import { CSVLink } from "react-csv";
+import { useSubscription } from "@apollo/client";
+import { NewHoaDonSubcription } from "../../../codegen/graphql-definition/subcriptions";
 
 function Hoadon() {
 
     const { Search } = Input;
 
-    const [take, setTake] = useState(2);
+    const [take, setTake] = useState(5);
     const [skip, setSkip] = useState(0);
     const [page, setPage] = useState(1);
 
@@ -26,6 +28,12 @@ function Hoadon() {
             }
         }
     });
+
+    const {data: dataHoaDon, loading: loadingHoaDon, error: errorHoaDon} = useSubscription(NewHoaDonSubcription);
+
+    useEffect(() => {
+        refetch();
+    }, [dataHoaDon])
 
     const [show, setModalShow] = useState(false)
     const [selectedHoadon, setSelectedHoadon] = useState({})

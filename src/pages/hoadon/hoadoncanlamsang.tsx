@@ -1,6 +1,6 @@
 import { Badge, Button, Row, Table } from "react-bootstrap";
 import XemHoaDon from "./xemHoaDon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import moment from "moment";
 import { LiaEyeSolid } from "react-icons/lia";
@@ -9,6 +9,8 @@ import Pagination from "../../components/pagination";
 import { Input } from "antd";
 import type { SearchProps } from 'antd/es/input/Search'
 import { CSVLink } from "react-csv";
+import { useSubscription } from "@apollo/client";
+import { NewHoaDonCLSSubcription } from "../../../codegen/graphql-definition/subcriptions";
 
 function HoaDonCanLamSang() {
 
@@ -17,7 +19,7 @@ function HoaDonCanLamSang() {
     const [show, setModalShow] = useState(false)
     const [selectedHoadon, setSelectedHoadon] = useState({})
 
-    const [take, setTake] = useState(2);
+    const [take, setTake] = useState(5);
     const [skip, setSkip] = useState(0);
     const [page, setPage] = useState(1);
 
@@ -29,6 +31,9 @@ function HoaDonCanLamSang() {
             }
         }
     })
+
+    const {data: dataHoaDonCLS, error: errorHoaDonCLS} = useSubscription(NewHoaDonCLSSubcription);
+
 
     const handleAdd = () => {
 
@@ -83,6 +88,12 @@ function HoaDonCanLamSang() {
         })
     }
 
+    useEffect(() => {
+        if(dataHoaDonCLS){
+            console.log('data new hoa don cls', dataHoaDonCLS);
+        }
+    }, [dataHoaDonCLS])
+
     const dataCSV = data?.getAllHoaDonPhieuCanLamSang.map(item => {
         return [item?.benhnhan?.hoten, moment(item?.benhnhan?.ngaysinh).format('DD-MM-YYYY'), item?.benhnhan?.gioitinh ? "Nam" : "Nữ", moment(item?.ngaytao).format("DD-MM-YYYY"), item?.bhyt ? "Có" : "Không", item?.thanhtien]
     })
@@ -118,11 +129,26 @@ function HoaDonCanLamSang() {
                             </tr>
                         </thead>
                         <tbody>
+                            {dataHoaDonCLS && (
+                                <tr key={dataHoaDonCLS?._id}>
+                                    <td>{dataHoaDonCLS?.newHoaDonCLS?.benhnhan?.hoten}</td>
+                                    <td>{moment(dataHoaDonCLS?.newHoaDonCLS?.benhnhan?.ngaysinh).format('YYYY-MM-DD')}</td>
+                                    <td>{dataHoaDonCLS?.newHoaDonCLS?.benhnhan?.gioitinh ? 'Nam' : 'Nữ'}</td>
+                                    <td>{moment(dataHoaDonCLS?.newHoaDonCLS?.ngaytao).format('YYYY-MM-DD')}</td>
+                                    <td>{dataHoaDonCLS?.newHoaDonCLS?.bhyt ? 'Có' : 'Không'}</td>
+                                    <td>{dataHoaDonCLS?.newHoaDonCLS?.thanhtien}</td>
+                                    <td width={50} className="text-center" onClick={() => handleXem(dataHoaDonCLS?.newHoaDonCLS)}><LiaEyeSolid /></td>
+                                    <td width={150} className="text-center" onClick={() => handleTrangThai(dataHoaDonCLS?.newHoaDonCLS?._id, dataHoaDonCLS?.newHoaDonCLS?.idPhieuCLS)}>{dataHoaDonCLS?.newHoaDonCLS?.tinhtrang ? <Badge bg="success">Đã Thanh Toán</Badge> : <Badge bg="warning">Chưa Thanh Toán</Badge>}</td>
+                                    <td width={50} className="text-center" onClick={() => handleDelete(dataHoaDonCLS?.newHoaDonCLS?._id)}>
+                                        <MdDelete />
+                                    </td>
+                                </tr>
+                            )}
                             {data?.getAllHoaDonPhieuCanLamSang.map((hoadon: any) => (
                                 <tr key={hoadon?._id}>
                                     <td>{hoadon?.benhnhan?.hoten}</td>
                                     <td>{moment(hoadon?.benhnhan?.ngaysinh).format('YYYY-MM-DD')}</td>
-                                    <td>{hoadon?.benhnhan?.hoten ? 'Nam' : 'Nữ'}</td>
+                                    <td>{hoadon?.benhnhan?.gioitinh ? 'Nam' : 'Nữ'}</td>
                                     <td>{moment(hoadon?.ngaytao).format('YYYY-MM-DD')}</td>
                                     <td>{hoadon?.bhyt ? 'Có' : 'Không'}</td>
                                     <td>{hoadon?.thanhtien}</td>

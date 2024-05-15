@@ -10,7 +10,7 @@ import { AuthContext } from "../../provider/AuthContextProvider";
 import dayjs from 'dayjs'
 import moment from "moment";
 import { useSubscription } from "@apollo/client";
-import { newPhieuXacNhanSubscription } from "../../../codegen/graphql-definition/subcriptions";
+import { UpdateCLSDaXetNghiemSubcription, newPhieuXacNhanSubscription } from "../../../codegen/graphql-definition/subcriptions";
 import { Alert } from "@mui/material";
 import { Tabs } from "antd";
 
@@ -38,6 +38,8 @@ function KhamBenh() {
 
 
     const { data: newPhieuXacNhan, error: newPhieuXacNhanError } = useSubscription(newPhieuXacNhanSubscription);
+    const { data: dataUpdateCLSDaXetNghiem, error: errorUpdateCLSDaXetNghiem } = useSubscription(UpdateCLSDaXetNghiemSubcription)
+
 
     const { loading: loadingChoKham, error: errorChoKham, data: dataChoKham, refetch: refetchChoKham } = useGetAllNgayVaPhongQuery({
         variables: {
@@ -68,6 +70,11 @@ function KhamBenh() {
         },
         skip: !dataAgrsChoKham || dataAgrsChoKham.phongIds === ""
     })
+
+    useEffect(() => {
+        refetchCHOXETNGHIEM();
+        refetchDAXETNGHIEM();
+    }, [dataUpdateCLSDaXetNghiem])
 
     const { loading: loadingHOANTAT, error: errorHOANTAT, data: dataHOANTAT, refetch: refetchHOANTAT } = useGetAllNgayVaPhongQuery({
         variables: {

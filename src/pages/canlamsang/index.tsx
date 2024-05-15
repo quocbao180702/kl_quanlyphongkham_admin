@@ -6,6 +6,8 @@ import dayjs, { Dayjs } from 'dayjs';
 import UploadImage from "../../components/UploadImage";
 import { backendUrlFile, getUrlImage, uploadMultiFile } from "../../utils/uploadFile";
 import TestUpload from "../test/uploadTest";
+import { useSubscription } from "@apollo/client";
+import { UpdateCLSThanhToanSubcription } from "../../../codegen/graphql-definition/subcriptions";
 
 
 function CanLamSang() {
@@ -28,12 +30,19 @@ function CanLamSang() {
         setDataSelected(select);
     }
 
+    const {data: dataUpdateCLSThanhToan, error: errorUpdateCLSThanhToanm, loading: loadingUpdateCLSThanhToan } = useSubscription(UpdateCLSThanhToanSubcription);
+
+
     const { loading, error, data, refetch } = useGetAllPhieuClSbyNgayQuery({
         variables: {
             ngaytao: dayjs().format('YYYY-MM-DD'),
             trangthai: "CHOKHAM"
         }
     })
+
+    useEffect(() => {
+        refetch()
+    }, [dataUpdateCLSThanhToan])
 
     const { loading: loadingDaXetNghiem, error: errorDaXetNghiem, data: dataDaXetNghiem, refetch: refetchDatXetNghiem } = useGetAllPhieuClSbyNgayQuery({
         variables: {

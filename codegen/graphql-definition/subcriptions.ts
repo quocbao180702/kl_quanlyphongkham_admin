@@ -53,3 +53,52 @@ subscription NewPhieuXacNhan{
     ngaykham
     }
 }`
+
+
+export const UpdateCLSThanhToanSubcription = gql`
+subscription UpdateCLSThanhToan{
+  updateCLSThanhToan{
+    _id
+  }
+}` 
+
+
+export const UpdateCLSDaXetNghiemSubcription = gql`
+subscription UpdateCLSDaXetNghiem{
+  updateCLSDaXetNghiem{
+    _id
+  }
+}`
+
+
+export const NewHoaDonCLSSubcription = gql`
+subscription NewHoaDonCLS{
+  newHoaDonCLS{
+   _id
+    bhyt
+    benhnhan{
+      hoten
+      ngaysinh
+      gioitinh
+      sodienthoai
+    }
+    chitietcanlamsang{
+      ten
+      gia
+      soluong
+      thanhtien
+    }
+    thanhtien
+    tinhtrang
+    ngaytao
+    idPhieuCLS
+  }
+}`
+
+
+export const NewHoaDonSubcription = gql`
+subscription NewHoaDon{
+  newHoaDon{
+     _id
+  }
+}`
