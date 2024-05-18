@@ -2,7 +2,7 @@ import { Button, Form, Modal, Row, Table } from "react-bootstrap";
 import { DichVuInput, LinkImage, LoaiCanLamSang, useCreateHoadonchidinhcanlamsangMutation, useCreatePhieuchidinhcanlamsangMutation, useGetAllLoaiClsQuery, useUpdateTrangThaiKhamMutation } from "../../graphql-definition/graphql";
 import { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
-import { Checkbox, FormControlLabel } from "@mui/material";
+import { Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import dayjs, { Dayjs } from 'dayjs';
 
 function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refetchChoKham, refetchCHOXETNGHIEM }: any) {
@@ -12,6 +12,7 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
     const [selectedDichVu, setSelectedDichVu] = useState<DichVuInput[]>([]);
     const [benhnhanId, setBenhNhanId] = useState();
     const [bhyt, setBHYT] = useState(Boolean);
+    const [truoc, setTruoc] = useState(false);
 
     const [createphieuchidinhCLS] = useCreatePhieuchidinhcanlamsangMutation();
     const [updateTrangThaiKham] = useUpdateTrangThaiKhamMutation();
@@ -24,7 +25,11 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
         benhnhan?.bhyt ? setBHYT(true) : setBHYT(false)
         console.log('bệnh nhân là yêu cầu là', benhnhan)
         console.log('bác sĩ là: ', bacsi)
-    }, [benhnhan])
+    }, [benhnhan]);
+
+    const handleChangeTruoc = (event: SelectChangeEvent) => {
+        setTruoc(event.target.value === '0' ? true : false);
+    }
 
 
     const HandleUpdate = async () => {
@@ -40,7 +45,8 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
                                 "bacsi": bacsi?._id,
                                 "phieuxacnhan": idPhieuXacNhan,
                                 "bhyt": bhyt || false,
-                                "ngaytao": dayjs().format('YYYY-MM-DD')
+                                "ngaytao": dayjs().format('YYYY-MM-DD'),
+                                "truoc": truoc
                             },
                             "ketqua": ketqua
                         }
@@ -138,7 +144,22 @@ function YeuCauCanLamSang({ show, onHide, benhnhan, bacsi, idPhieuXacNhan, refet
                     <div style={{ border: "1px solid black" }}></div>
                 </Row>
                 <Row>
-                    <h6>Loại Xét Nghiệm</h6>
+                    <div className="w-100 d-flex justify-content-between align-items-center">
+                        <h6>Loại Xét Nghiệm</h6>
+                        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                            <InputLabel id="demo-select-small-label">Ưu Tiên</InputLabel>
+                            <Select
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                value={truoc ? '0' : '1'}
+                                label="Age"
+                                onChange={handleChangeTruoc}
+                            >
+                                <MenuItem value={'0'}>Có</MenuItem>
+                                <MenuItem value={'1'}>Không</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
                     <Table responsive>
                         <thead>
                             <tr className="text-center">

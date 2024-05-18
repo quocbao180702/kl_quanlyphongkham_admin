@@ -338,3 +338,11 @@ mutation CreateBenh($input: NewBenhInput!) {
     _id
   }
 }`
+
+const updateUuTien = gql`
+mutation UpdateUutien($id: String!){
+  updateUuTien(id: $id){
+  	_id
+    truoc
+  }
+}`

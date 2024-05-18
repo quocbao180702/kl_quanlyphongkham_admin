@@ -141,6 +141,7 @@ export type CreatePhieuchidinhcanlamsangInput = {
   bhyt: Scalars['Boolean']['input'];
   ngaytao: Scalars['DateTime']['input'];
   phieuxacnhan: Scalars['String']['input'];
+  truoc: Scalars['Boolean']['input'];
 };
 
 export type CreateSinhhieuInput = {
@@ -418,6 +419,7 @@ export type Mutation = {
   updateTrangThaiThongTinUser: Users;
   updateUser: Users;
   updateUserbySoDienThoai?: Maybe<BenhNhan>;
+  updateUuTien: Phieuchidinhcanlamsang;
   updateVatTuYTe: Vattuyte;
   xulyKhoa: Users;
 };
@@ -821,6 +823,11 @@ export type MutationUpdateUserbySoDienThoaiArgs = {
 };
 
 
+export type MutationUpdateUuTienArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type MutationUpdateVatTuYTeArgs = {
   updateDichvuInput: UpdateVattuyteInput;
 };
@@ -1007,6 +1014,7 @@ export type Phieuchidinhcanlamsang = {
   ngaytao: Scalars['DateTime']['output'];
   phieuxacnhan: PhieuXacNhan;
   trangthai: TrangThaiCls;
+  truoc: Scalars['Boolean']['output'];
 };
 
 export type Phong = {
@@ -1547,6 +1555,7 @@ export type UpdatePhieuchidinhcanlamsangInput = {
   id: Scalars['String']['input'];
   ngaytao?: InputMaybe<Scalars['DateTime']['input']>;
   phieuxacnhan?: InputMaybe<Scalars['String']['input']>;
+  truoc?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type UpdatePhongInput = {
@@ -1937,6 +1946,13 @@ export type CreateBenhMutationVariables = Exact<{
 
 export type CreateBenhMutation = { __typename?: 'Mutation', createBenh: { __typename?: 'Benh', _id: string } };
 
+export type UpdateUutienMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type UpdateUutienMutation = { __typename?: 'Mutation', updateUuTien: { __typename?: 'Phieuchidinhcanlamsang', _id: string, truoc: boolean } };
+
 export type OnlyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2032,7 +2048,7 @@ export type GetAllPhieuClSbyNgayQueryVariables = Exact<{
 }>;
 
 
-export type GetAllPhieuClSbyNgayQuery = { __typename?: 'Query', getAllPhieuCLSbyNgay: Array<{ __typename?: 'Phieuchidinhcanlamsang', _id: string, bhyt: boolean, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string }, bacsi: { __typename?: 'BacSi', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string }, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', _id: string, ketluan?: string | null, thietbi?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', tenxetnghiem: string, gia: number, loaicanlamsang: string }, hinhanh?: Array<{ __typename?: 'LinkImage', fileName: string, url: string, type: TypeImage }> | null }> }> };
+export type GetAllPhieuClSbyNgayQuery = { __typename?: 'Query', getAllPhieuCLSbyNgay: Array<{ __typename?: 'Phieuchidinhcanlamsang', _id: string, bhyt: boolean, truoc: boolean, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string }, bacsi: { __typename?: 'BacSi', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string }, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', _id: string, ketluan?: string | null, thietbi?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', tenxetnghiem: string, gia: number, loaicanlamsang: string }, hinhanh?: Array<{ __typename?: 'LinkImage', fileName: string, url: string, type: TypeImage }> | null }> }> };
 
 export type GetAllPhongQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3614,6 +3630,40 @@ export function useCreateBenhMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateBenhMutationHookResult = ReturnType<typeof useCreateBenhMutation>;
 export type CreateBenhMutationResult = Apollo.MutationResult<CreateBenhMutation>;
 export type CreateBenhMutationOptions = Apollo.BaseMutationOptions<CreateBenhMutation, CreateBenhMutationVariables>;
+export const UpdateUutienDocument = gql`
+    mutation UpdateUutien($id: String!) {
+  updateUuTien(id: $id) {
+    _id
+    truoc
+  }
+}
+    `;
+export type UpdateUutienMutationFn = Apollo.MutationFunction<UpdateUutienMutation, UpdateUutienMutationVariables>;
+
+/**
+ * __useUpdateUutienMutation__
+ *
+ * To run a mutation, you first call `useUpdateUutienMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUutienMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUutienMutation, { data, loading, error }] = useUpdateUutienMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdateUutienMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUutienMutation, UpdateUutienMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUutienMutation, UpdateUutienMutationVariables>(UpdateUutienDocument, options);
+      }
+export type UpdateUutienMutationHookResult = ReturnType<typeof useUpdateUutienMutation>;
+export type UpdateUutienMutationResult = Apollo.MutationResult<UpdateUutienMutation>;
+export type UpdateUutienMutationOptions = Apollo.BaseMutationOptions<UpdateUutienMutation, UpdateUutienMutationVariables>;
 export const OnlyUserDocument = gql`
     query OnlyUser {
   onlyUser {
@@ -4415,6 +4465,7 @@ export const GetAllPhieuClSbyNgayDocument = gql`
       sodienthoai
     }
     bhyt
+    truoc
     ketquacanlamsangs {
       _id
       loaicanlamsang {

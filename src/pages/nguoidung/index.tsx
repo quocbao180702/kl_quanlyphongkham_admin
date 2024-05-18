@@ -99,7 +99,7 @@ function NguoiDung() {
                     <tbody>
                         {data?.getAllUsers.map((user: any) => (
                             <tr key={user._id}>
-                                <td>
+                                <td className='align-middle text-center'>
                                     <Image
                                         src={getUrlImage(user.avatar)}
                                         style={{
@@ -110,14 +110,14 @@ function NguoiDung() {
                                         rounded
                                     />
                                 </td>
-                                <td>{user.username}</td>
-                                <td>{user.email}</td>
-                                <td>{user.role}</td>
-                                <td onClick={() => handleKhoa(user._id)}>{user.isLocked ? <CiLock /> : <CiUnlock />}</td>
-                                <td onClick={() => handleDelete(user._id, user?.avatar)}>
-                                    <MdDelete />
+                                <td className='align-middle text-center'>{user.username}</td>
+                                <td className='align-middle text-center'>{user.email}</td>
+                                <td className='align-middle text-center'>{user.role}</td>
+                                <td className='align-middle text-center' onClick={() => handleKhoa(user._id)}>{user.isLocked ? <CiLock size={20}/> : <CiUnlock size={20}/>}</td>
+                                <td className='align-middle text-center' onClick={() => handleDelete(user._id, user?.avatar)}>
+                                    <MdDelete size={20}/>
                                 </td>
-                                <td onClick={() => handleEdit(user)}><FaMarker /></td>
+                                <td className='align-middle text-center' onClick={() => handleEdit(user)}><FaMarker size={20}/></td>
                             </tr>
                         ))}
                     </tbody>

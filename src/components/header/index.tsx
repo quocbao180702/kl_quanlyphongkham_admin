@@ -14,6 +14,7 @@ import { Container, Dropdown, Nav, Navbar } from "react-bootstrap";
 
 
 import "./style.css"
+import { FaSignOutAlt } from "react-icons/fa";
 
 
 
@@ -36,53 +37,53 @@ function Header() {
             <Navbar className="navbar-custom justify-content-between" data-bs-theme="light">
                 <Navbar.Brand href="/" className="text-uppercase text-light fw-bold">CLINIC</Navbar.Brand>
                 <Nav className="me-auto">
-                    <Nav.Link as={Link} to={"/"} className={`nav-link-custom text-uppercase ${profile?.role === UserRole.Admin ? 'nav-link__admin' : ''}`}><IoHomeOutline size={14} />Home</Nav.Link>
+                    <Nav.Link as={Link} to={"/"} className={`nav-link-custom text-uppercase ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`}><IoHomeOutline size={14} /> Home</Nav.Link>
 
                     {(profile?.user?.role === UserRole.Doctor || profile?.role === UserRole.Admin) && (
                         <>
 
-                            <Nav.Link as={Link} to={"/khambenh"} className="nav-link-custom text-uppercase"><PiStethoscopeLight size={14} /> Khám Bệnh</Nav.Link>
-                            <Nav.Link as={Link} to={"/canlamsang"} className="nav-link-custom text-uppercase"><ImLab size={14} />Cận Lâm Sàng</Nav.Link>
+                            <Nav.Link as={Link} to={"/khambenh"} className={`nav-link-custom text-uppercase border-left ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`}><PiStethoscopeLight size={14} /> Khám Bệnh</Nav.Link>
+                            <Nav.Link as={Link} to={"/canlamsang"} className={`nav-link-custom text-uppercase border-left ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`}><ImLab size={14} /> Cận Lâm Sàng</Nav.Link>
                         </>
                     )}
-                    <Nav.Link as={Link} to={"/benhnhan"} className=" nav-link-custom text-uppercase"><MdOutlinePeopleAlt size={14} />Bệnh Nhân</Nav.Link>
-                    <Nav.Link as={Link} to={"/thuoc"} className="nav-link-custom  text-uppercase"><GiMedicines />Thuốc</Nav.Link>
+                    <Nav.Link as={Link} to={"/benhnhan"} className={` nav-link-custom text-uppercase border-left ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`}><MdOutlinePeopleAlt size={14} /> Bệnh Nhân</Nav.Link>
+                    <Nav.Link as={Link} to={"/thuoc"} className={`nav-link-custom  text-uppercase border-left ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}` }><GiMedicines /> Thuốc</Nav.Link>
 
 
                     {
                         (profile?.user?.role === UserRole.Staff || profile?.role === UserRole.Admin) && (
                             <>
-                                <Nav.Link as={Link} to={"/hoadon"} className="nav-link-custom text-uppercase"><LiaFileInvoiceDollarSolid size={14} />Hóa Đơn</Nav.Link>
+                                <Nav.Link as={Link} to={"/hoadon"} className={`nav-link-custom text-uppercase border-left ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`}><LiaFileInvoiceDollarSolid size={14} /> Hóa Đơn</Nav.Link>
                                 <Dropdown>
-                                    <Dropdown.Toggle className="nav-link-custom dropdown-custom text-uppercase">
+                                    <Dropdown.Toggle variant="" className={`nav-link-custom dropdown-custom no-focus-outline text-uppercase border-left ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`}>
                                         <PiCalendarCheckThin /> Đặt Lịch
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
-                                        <Dropdown.Item as={Link} to={"/datlich"}>Đặt Lịch Thường</Dropdown.Item>
-                                        <Dropdown.Item as={Link} to={"/datlichvip"}>Đặt Lịch Theo Bác Sĩ</Dropdown.Item>
+                                        <Dropdown.Item as={Link} to={"/datlich"}> Đặt Lịch Thường</Dropdown.Item>
+                                        <Dropdown.Item as={Link} to={"/datlichvip"}> Đặt Lịch Theo Bác Sĩ</Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
                             </>
                         )
                     }
-                    <Nav.Link as={Link} to={"/baocao"} className=" nav-link-custom text-upercase text-uppercase"><TfiWrite size={14} />Báo Cáo</Nav.Link>
-                    <Nav.Link as={Link} to={"/blogs"} className=" nav-link-custom text-uppercase"><TfiWrite size={14} />Blogs</Nav.Link>
+                    <Nav.Link as={Link} to={"/baocao"} className={` nav-link-custom text-upercase text-uppercase border-left ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`}><TfiWrite size={14} /> Báo Cáo</Nav.Link>
+                    <Nav.Link as={Link} to={"/blogs"} className={` nav-link-custom text-uppercase border-left ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`}><TfiWrite size={14} /> Blogs</Nav.Link>
 
 
                     {
                         (profile?.role === UserRole.Admin) && (
                             <>
-                                <Nav.Link as={Link} to={"/bacsi"} className="nav-link-custom text-uppercase"><FaPeopleGroup size={14} />Nhân Sự</Nav.Link>
-                                <Nav.Link as={Link} to={"/nguoidung"} className=" nav-link-custom  text-uppercase"><FaRegUser size={14} />Người Dùng</Nav.Link>
+                                <Nav.Link as={Link} to={"/bacsi"} className={`nav-link-custom text-uppercase border-left ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`}><FaPeopleGroup size={14} /> Nhân Sự</Nav.Link>
+                                <Nav.Link as={Link} to={"/nguoidung"} className={` nav-link-custom  text-uppercase border-left ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`}><FaRegUser size={14} /> Người Dùng</Nav.Link>
                             </>
                         )
                     }
                 </Nav>
                 {isAuthenticated && (
                     <Nav>
-                        <Nav.Link as={Link} to={"/profile"} className="nav-link-custom text-uppercase">Thông Tin</Nav.Link>
-                        <Nav.Link href="/login" className="nav-link-custom text-uppercase" onClick={logout}>
-                            Đăng Xuất
+                        <Nav.Link as={Link} to={"/profile"} className={`nav-link-custom text-uppercase border-right ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`}> Thông Tin</Nav.Link>
+                        <Nav.Link href="/login" className={`nav-link-custom text-uppercase ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`} onClick={logout}>
+                            <FaSignOutAlt size={20}/>
                         </Nav.Link>
                     </Nav>
                 )}

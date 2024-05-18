@@ -334,6 +334,7 @@ query GetAllPhieuCLSbyNgay($ngaytao: DateTime!,$trangthai: String!){
       sodienthoai
     }
     bhyt
+    truoc
     ketquacanlamsangs{
       _id
       loaicanlamsang{
