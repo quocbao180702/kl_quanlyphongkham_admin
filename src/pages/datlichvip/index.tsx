@@ -296,7 +296,7 @@ function DatLichVip() {
                                                             <td>{moment(datlich?.ngaykham).format('DD-MM-YYYY')}</td>
                                                             <td>{datlich?.phien?.batdau} - {datlich?.phien?.ketthuc}</td>
                                                             <td className='d-flex justify-content-around align-items-center'>
-                                                                <Button>Xem</Button>
+                                                                {/* <Button>Xem</Button> */}
                                                                 <Button onClick={() => handleXacNhan(datlich)}>Xác Nhận</Button>
                                                                 <Button onClick={() => handleHuy(datlich?._id)}>Hủy</Button>
                                                             </td>

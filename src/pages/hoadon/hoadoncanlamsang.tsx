@@ -108,7 +108,7 @@ function HoaDonCanLamSang() {
                 <Row className="mt-3">
                     <div className="d-flex justify-content-center">
                         <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Tạo Hóa Đơn Cân Lâm Sàng</Button>
-                        <Button className="mr-3 btn-outline-primary">Nhập Exel</Button>
+                        {/* <Button className="mr-3 btn-outline-primary">Nhập Exel</Button> */}
                         <CSVLink className="mr-3 btn btn-outline-success" filename={"hoadoncls.csv"} data={dataCSV || []} target="_blank"> Xuất CSV Page {page}</CSVLink>
                     </div>
                 </Row>

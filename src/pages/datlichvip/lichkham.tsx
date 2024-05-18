@@ -125,7 +125,7 @@ function LichKham({ show, onHide, idLich, idBacSi }: any) {
             centered
         >
             <Modal.Header>
-                <Modal.Header>
+                <Modal.Header className="w-100">
                     <Modal.Title id="contained-modal-title-vcenter">
                         Lịch Khám Của Bác Sĩ
                     </Modal.Title>

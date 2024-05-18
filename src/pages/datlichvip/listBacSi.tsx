@@ -48,8 +48,8 @@ function ListBacSi() {
                                     <p><strong>Lịch: </strong>{bacsi?.lichkham ? <Badge bg="success">Đã Có Lịch</Badge> : <Badge bg="warning">Chưa Có Lịch</Badge>}</p>
                                 </Card.Text>
                                 <div className="w-100 d-flex justify-content-around">
-                                    <Button onClick={() => handleChooseBacSi(bacsi?.lichkham, bacsi?._id)} className="btn-outline-primary"> Đặt </Button>
-                                    <Button onClick={() => handleChooseBacSi(bacsi?.lichkham, bacsi?._id)} className="btn-outline-success"> Xem </Button>
+                                    {/* <Button onClick={() => handleChooseBacSi(bacsi?.lichkham, bacsi?._id)} className="btn-outline-primary"> Đặt </Button> */}
+                                    <Button onClick={() => handleChooseBacSi(bacsi?.lichkham, bacsi?._id)} className="btn-outline-success"> Xem Lịch </Button>
                                 </div>
                             </Card.Body>
                         </Card>
