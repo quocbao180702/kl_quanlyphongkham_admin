@@ -1,6 +1,6 @@
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
 import { DichVuInput, Thuoc, Vattuyte, useCreateHoaDonMutation, useCreateToaThuocMutation, useGetAllBenhQuery, useGetAllThuocQuery, useGetAllVattuyteQuery, useUpdateHoaDonMutation, useUpdateTrangThaiKhamMutation } from "../../graphql-definition/graphql";
-import { ChangeEvent, FormEvent, useContext, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Alert, Autocomplete, Checkbox, FormControlLabel, Grid, TextField } from "@mui/material";
 import { IoAddOutline } from "react-icons/io5";
 import DatePickerValue from "../../components/DatePicker";
@@ -8,10 +8,11 @@ import dayjs, { Dayjs } from 'dayjs';
 import { EditContext } from ".";
 import { GrAddCircle, GrSubtractCircle } from "react-icons/gr";
 import ThemBenh from "./f_thembenh";
+import { message } from "antd";
 
 
 
-function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIEM, refetchHOANTAT, refetchChoKham, setshowWarning, setShowSuccess, setThongBao }: any) {
+function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIEM, refetchHOANTAT, refetchChoKham, setshowWarning, setShowSuccess, setThongBao,  resetDataSelected }: any) {
     const { data: benhData, loading: benhLoading, error: benhError, refetch: refetchBenh } = useGetAllBenhQuery();
     const { data: thuocData, loading: thuocLoading, error: thuocError } = useGetAllThuocQuery();
     const [selectedBenh, setSelectedBenh] = useState([]);
@@ -23,9 +24,18 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
     const [hangs, setHangs] = useState([{ id: 0, idThuoc: '', tenthuoc: '', giaBHYT: '', giaKhongBHYT: '', soLuong: '' }]);
     const [selectedItems, setSelectedItems] = useState<DichVuInput[]>([]);
 
+
+
     const { isEditing, setIsEditing }: any = useContext(EditContext);
     const [editKham, setEditKham] = useState(false);
     const [showBenh, SetShowBenh] = useState(false);
+
+
+
+    const [resetBenh, SetResetBenh] = useState('keyBenh1');
+    const [resetBenhPhu, SetResetBenhPhu] = useState('keyBenhPhu1');
+    const [resetThuoc, SetResetThuoc] = useState('keyThuoc')
+
 
 
     const handleAddBenh = () => {
@@ -175,33 +185,36 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                         })
                     }
                     else {
-                        setThongBao('không tìm thấy id để update')
-                        setshowWarning(true);
+                        message.warning('Không tìm thấy id của update')
                         console.log('không tìm thấy id để update')
                     }
                 } catch (error) {
                     console.log(error)
                     console.log('lỗi không')
                 }
-                console.log('Đã tạo toa thuốc thành công cho bệnh nhân ')
-                setThongBao('Đã tạo toa thuốc thành công cho bệnh nhân ');
-                setShowSuccess(true);
+                SetResetBenh(resetBenh === "keyBenh1" ? "keyBenh2" : "keyBenh1")
+                setSelectedBenh([]);
+                SetResetBenhPhu(resetBenhPhu === "keyBenhPhu1" ? "keyBenhPhu2" : "keyBenhPhu1")
+                setSelectedBenhPhu([]);
+                setSelectedItems([]);
+                setHangs([{ id: 0, idThuoc: '', tenthuoc: '', giaBHYT: '', giaKhongBHYT: '', soLuong: '' }])
+                resetDataSelected();
+                console.log('Đã tạo toa thuốc thành công cho bệnh nhân ');
+                message.success('Đã tạo toa thuốc thành công cho bệnh nhân');
                 refetchDAXETNGHIEM();
                 refetchHOANTAT();
                 refetchChoKham();
                 setEditKham(true);
             }
             else {
-                setThongBao('Không thể tạo toa thuốc')
-                setshowWarning(true);
+                message.warning('Không thể tạo toa thuốc')
                 console.log('Không thể tạo toa thuốc')
             }
             handleRowSelect();
             setNgayTaiKham(dayjs())
         } catch (error) {
             console.log('lỗi thêm toa thuốc')
-            setThongBao('lỗi thêm toa thuốc: ' + error)
-            setshowWarning(true);
+            message.error('lỗi thêm toa thuốc')
         }
     }
 
@@ -215,7 +228,6 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                 thanhtien: item.chiphi[0]?.gia * item.soluong
             }]);
         } else {
-            // Nếu checkbox bị bỏ chọn, loại bỏ thông tin của hàng khỏi mảng selectedItems
             setSelectedItems(selectedItems.filter(selectedItem => selectedItem.ten !== item.tenvattu));
         }
     };
@@ -253,6 +265,7 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                     <hr />
                     <div className="d-flex justify-content-center">
                         <Autocomplete
+                            key={resetBenh}
                             multiple
                             id="multiple-limit-tags"
                             options={benhData?.getAllBenh || []}
@@ -265,6 +278,7 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                         />
 
                         <Autocomplete
+                            key={resetBenhPhu}
                             multiple
                             id="multiple-limit-tags"
                             options={benhData?.getAllBenh || []}
@@ -278,20 +292,18 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                     </div>
                     <div>
                         <Button onClick={handleAddBenh} variant="contained" color="primary">
-                            <GrAddCircle color="red"/>
+                            <GrAddCircle color="red" />
                         </Button>
                     </div>
-                    {/* <Row> */}
-                    {/* </Row> */}
                     <hr />
                     <h5>Thuốc</h5>
                     <hr />
-                    {/* <Row> */}
                     <div>
                         {hangs.map((hang, index) => (
                             <Grid container spacing={3} key={hang.id}>
                                 <Grid item md={7}>
                                     <Autocomplete
+                                        key={hang.id}
                                         id={`multiple-limit-tags-${hang.id}`}
                                         options={thuocData?.getAllThuoc || []}
                                         getOptionLabel={(option) => option?.tenthuoc}
@@ -304,6 +316,7 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                                 </Grid>
                                 <Grid item md={3}>
                                     <TextField
+                                        key={hang.id}
                                         id={`soLuong-${hang.id}`}
                                         label="Số lượng..."
                                         type="number"
@@ -323,7 +336,6 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                         </Button>
 
                     </div>
-                    {/* </Row> */}
 
 
                     <Row>
@@ -371,7 +383,7 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
             <ThemBenh
                 show={showBenh}
                 onHide={() => SetShowBenh(false)}
-                refetch={refetchBenh} 
+                refetch={refetchBenh}
             />
         </>
     );

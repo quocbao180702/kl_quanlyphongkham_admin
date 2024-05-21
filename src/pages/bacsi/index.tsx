@@ -1,5 +1,5 @@
 import { Table, Row, Button } from "react-bootstrap";
-import { BacSi, useDeleteBacSiMutation, useGetAllBacSiQuery } from "../../graphql-definition/graphql"; // Rename BacSi import alias
+import { BacSi, useDeleteBacSiMutation, useGetAllBacSiQuery } from "../../graphql-definition/graphql"; 
 import { MdDelete } from "react-icons/md";
 import { FaMarker } from "react-icons/fa";
 import { useState } from "react";
@@ -12,7 +12,7 @@ import Search, { SearchProps } from "antd/es/input/Search";
 
 
 
-function BacSiPage() { // Rename the function here
+function BacSiPage() { 
 
 
     const [take, setTake] = useState(4);
@@ -65,7 +65,7 @@ function BacSiPage() { // Rename the function here
 
 
     /* const customRequest = async (options: any) => {
-        const result = await handleUpload("documentbacsi", options);
+        const result = await handleUpload("", options);
 
         if (result === 0) {
             message.success(`uploaded successfully`);
@@ -97,7 +97,7 @@ function BacSiPage() { // Rename the function here
 
                     <div className="d-flex justify-content-center">
                         <Button className="mr-3 btn-outline-secondary" onClick={handleAdd}>Thêm Bác Sĩ</Button>
-                        {/*  <Upload
+                         {/* <Upload
                             customRequest={customRequest}
                             maxCount={1}
                             showUploadList={false}

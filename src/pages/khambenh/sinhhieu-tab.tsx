@@ -20,7 +20,6 @@ function SinhHieu({ dataSelected }: any) {
         SetEdingSinhHieu(isEditing)
     }, [isEditing])
 
-    // Sử dụng useMemo để so sánh giá trị mới của dataSelected với giá trị cũ
     const memoizedDataSelected = useMemo(() => dataSelected, [dataSelected]);
 
     useEffect(() => {
@@ -33,7 +32,7 @@ function SinhHieu({ dataSelected }: any) {
             setHa2(ha2Val || '');
             setChieucao(memoizedDataSelected?.sinhhieu?.chieucao || 0.0);
             setCannang(memoizedDataSelected?.sinhhieu?.cannang || 0.0);
-            setBmi(memoizedDataSelected?.sinhhieu?.bmi || 0.0);
+            setBmi(Number(tinhBMI(memoizedDataSelected?.sinhhieu?.chieucao, memoizedDataSelected?.sinhhieu?.cannang)) || 0.0);
             setIsChecked(!!memoizedDataSelected?.sinhhieu?.benhmangtinh);
         }
     }, [memoizedDataSelected]);
@@ -56,7 +55,6 @@ function SinhHieu({ dataSelected }: any) {
             ha,
             chieucao,
             cannang,
-            bmi,
             benhmangtinh: isChecked
         };
         console.log('values: ', values);
@@ -72,7 +70,7 @@ function SinhHieu({ dataSelected }: any) {
                             "ha": values?.ha,
                             "chieucao": values?.chieucao,
                             "cannang": values?.cannang,
-                            "bmi": values?.bmi,
+                            "bmi": Number(tinhBMI(values?.chieucao, values?.cannang)),
                             "benhmangtinh": values?.benhmangtinh
                         }
                     }
@@ -89,7 +87,7 @@ function SinhHieu({ dataSelected }: any) {
                                 "ha": values?.ha,
                                 "chieucao": values?.chieucao,
                                 "cannang": values?.cannang,
-                                "bmi": values?.bmi,
+                                "bmi": Number(tinhBMI(values?.chieucao, values?.cannang)),
                                 "benhmangtinh": values?.benhmangtinh
                             }
                         }
@@ -104,6 +102,16 @@ function SinhHieu({ dataSelected }: any) {
             console.log('lỗi là: ', error)
         }
     };
+
+    const tinhBMI = (chieucao: number, cannang: number) => {
+        const bmi = cannang / ((chieucao / 100) * (chieucao / 100));
+        return bmi.toFixed(2);
+    }
+
+    useEffect(() => {
+        setBmi(Number(tinhBMI(Number(chieucao), Number(cannang))))
+    }, [chieucao, cannang])
+
     return (
         <>
             <Form onSubmit={handleSubmit}>
@@ -189,8 +197,8 @@ function SinhHieu({ dataSelected }: any) {
                             <Form.Control
                                 placeholder="Nhập BMI..."
                                 defaultValue={bmi || ''}
-                                onChange={(event) => setBmi(parseFloat(event.target.value))}
-                                disabled={editSinhHieu}
+                                /* onChange={(event) => setBmi(parseFloat(event.target.value))} */
+                                disabled={true}
                             />
                         </Form.Group>
                     </Col>

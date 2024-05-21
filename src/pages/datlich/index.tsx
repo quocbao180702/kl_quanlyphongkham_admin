@@ -12,6 +12,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 
 import "./style.css";
+import { message } from "antd";
 
 interface Datlich {
     _id: string;
@@ -200,6 +201,7 @@ function DatLich() {
 
         try {
             if (!selected?._id || !selectedValues.length) {
+                message.warning("Vui lòng chọn bệnh nhân và ít nhất một phòng");
                 setThongBao('Vui lòng chọn bệnh nhân và ít nhất một phòng.')
                 setshowWarning(true);
                 return;
@@ -229,11 +231,20 @@ function DatLich() {
                     },
                 }) : null
             ]);
+            setHoten('');
+            setPhoneNumber('');
+            setDiaChi('');
+            setMota('');
+            setNgaySinh(dayjs())
+            setNgayKham(dayjs());
             existingDatLichrefetch();
+            setSelectedValues([]);
+            message.success("Tạo Phiếu Thành Công");
             setThongBao('Đã tạo phiếu xác nhận cho bệnh nhân ' + selected?.benhnhan?.hoten + ' lúc: ' + dayjs(ngaykham).format('YYYY-MM-DD'));
             setShowSuccess(true)
             return;
         } catch (error) {
+            message.error("Lỗi khi tạo phiếu xác nhận");
             console.error("Lỗi khi tạo phiếu xác nhận:", error);
         }
     }
@@ -268,19 +279,25 @@ function DatLich() {
                         }
                     }
                 })
-                setThongBao('Đã tạo phiếu xác nhận');
-                setShowSuccess(true);
+                /* setThongBao('Đã tạo phiếu xác nhận');
+                setShowSuccess(true); */
+                message.success("Đã tạo phiếu xác nhận thành công");
                 setHoten('');
+                setPhoneNumber('');
+                setDiaChi('');
                 setBhyt(false);
+                setSelectedValues([]);
                 setNgaySinh(dayjs());
                 setNgayKham(dayjs());
             }
             else {
-                setThongBao('Bệnh Nhân Hoặc Phòng Không Đầy Đủ');
-                setshowWarning(true);
+                message.warning("Bệnh Nhân Hoặc Phòng Không Đầy Đủ");
+                /* setThongBao('Bệnh Nhân Hoặc Phòng Không Đầy Đủ');
+                setshowWarning(true); */
             }
         } catch (error) {
-            console.log('lỗi đã xẩy ra');
+            message.error("Lỗi đã xảy ra");
+            /* console.log('lỗi đã xẩy ra'); */
         }
     }
 
@@ -388,7 +405,7 @@ function DatLich() {
 
 
                                         <div className="w-100 d-flex justify-content-around">
-                                            <FormControl sx={{minWidth: "25%"}} className="mt-3">
+                                            <FormControl sx={{ minWidth: "25%" }} className="mt-3">
                                                 <InputLabel id="demo-simple-select-helper-label">Phiên</InputLabel>
                                                 <Select
                                                     labelId="demo-simple-select-helper-label"
@@ -412,53 +429,7 @@ function DatLich() {
                                         </div>
 
                                     </Col>
-                                    {/* <Col xs={6}>
-                                        <Form.Group className="mb-3" controlId="formUserEmail">
-                                            <Form.Label>Bệnh Nhân</Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                placeholder={hoten || "Họ tên ..."}
-                                                value={hoten}
-                                                readOnly
-                                            />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col xs={6}>
-                                        <Form.Group className="mb-3" controlId="formUserEmail">
-                                            <Form.Label>Số Điện Thoại</Form.Label>
-                                            <Form.Control
-                                                type="tel"
-                                                placeholder={phoneNumber || "Số điện thoại ..."}
-                                                value={phoneNumber}
-                                                readOnly
-                                            />
-                                        </Form.Group>
-                                    </Col> */}
                                 </Row>
-                                {/* <Row>
-                                    <Col xs={6}>
-                                        <Form.Group controlId="formNgaysinh" className="mt-2">
-                                            <DatePickerValue label={'Ngày Sinh'} value={ngaysinh} onChange={handleDateChange} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col xs={6}>
-                                        <Form.Group controlId="formNgaykham" className="mt-2">
-                                            <DatePickerValue label={'Ngày Khám'} value={ngaykham} onChange={handleDateNgayKhamChange} />
-                                        </Form.Group>
-                                    </Col>
-                                    <Col xs={2}>
-                                        <div className="align-middle">
-                                            <Form.Check
-                                                type="checkbox"
-                                                id="autoSizingCheck"
-                                                className="mb-2"
-                                                label="BHYT"
-                                                checked={bhyt}
-                                                onChange={handleCheckboxChange}
-                                            />
-                                        </div>
-                                    </Col>
-                                </Row> */}
                             </Form>
                         </div>
                     </div>

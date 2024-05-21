@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-type TypeFile = 'image'  | 'documentbenhnhan'  | 'documentthuoc'
+type TypeFile = 'image'  | 'documentbenhnhan'  | 'documentthuoc' 
 export const backendUrlFile = {
     image: `http://localhost:3000/images`,
-   /*  documentbacsi: 'http://localhost:3000/file-upload/PhongKhamDocumentBacSiUpload', */
+    /* documentbacsi: 'http://localhost:3000/file-upload/PhongKhamDocumentBacSiUpload', */
     documentbenhnhan: 'http://localhost:3000/file-upload/PhongKhamDocumentBenhNhanUpload',
    /*  documentnhanvien: 'http://localhost:3000/file-upload/PhongKhamDocumentNhanVienUpload', */
     documentthuoc: 'http://localhost:3000/file-upload/PhongKhamDocumentThuocUpload',
@@ -11,9 +11,9 @@ export const backendUrlFile = {
 
 const backendUpload = {
     image: `http://localhost:3000/file-upload/PhongKhamImageUpload`,
-   /*  documentbacsi: 'http://localhost:3000/file-upload/PhongKhamDocumentBacSiUpload', */
+    /* documentbacsi: 'http://localhost:3000/file-upload/PhongKhamDocumentBacSiUpload', */
     documentbenhnhan: 'http://localhost:3000/file-upload/PhongKhamDocumentBenhNhanUpload',
-  /*   documentnhanvien: 'http://localhost:3000/file-upload/PhongKhamDocumentNhanVienUpload', */
+    /* documentnhanvien: 'http://localhost:3000/file-upload/PhongKhamDocumentNhanVienUpload', */
     documentthuoc: 'http://localhost:3000/file-upload/PhongKhamDocumentThuocUpload',
 }
 

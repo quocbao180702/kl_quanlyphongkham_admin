@@ -120,6 +120,7 @@ function DatLichVip() {
                         }
                     })
                 ])
+                SetDataSelected(undefined);
                 refetchDatLichBacSi()
                 refetcXacNhanBacSi()
             }
@@ -137,6 +138,7 @@ function DatLichVip() {
                         trangthai: "HUY"
                     }
                 })
+                SetDataSelected(undefined);
                 refetchDatLichBacSi()
                 refetcHuyBacSi()
             }
@@ -388,152 +390,6 @@ function DatLichVip() {
                     {selectedMenuItem === '3' && <div>Nội dung cho Option 3</div>}
                 </div>
             </div>
-            {/* <div>
-                <Row>
-                    <Col lg={3}>
-                        <Tabs defaultActiveKey="1">
-                            <TabPane tab="Tab 1" key="1">
-                                Content of Tab Pane 1
-                            </TabPane>
-                            <TabPane tab="Tab 2" key="2">
-                                <Form>
-                                    <Form.Group>
-                                        <Form.Label>Họ Tên</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>Ngày Sinh</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>Giới Tính</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>Số Điện Thoại</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>Phòng</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>Bác Sĩ</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>Ngày Khám</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                    <Form.Group>
-                                        <Form.Label>Phiên</Form.Label>
-                                        <Form.Control></Form.Control>
-                                    </Form.Group>
-                                </Form>
-                            </TabPane>
-                            <TabPane tab="Tab 3" key="3">
-                                <Table responsive bordered>
-                                    <thead>
-                                        <tr>
-                                            <th>STT</th>
-                                            <th>Họ Và Tên</th>
-                                            <th>Số Điện Thoại</th>
-                                            <th>Bác Sĩ</th>
-                                            <th>Chuyên Khoa</th>
-                                            <th>Ngày Khám</th>
-                                            <th>Phiên Khám</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Phạm Dương Hoàn Tuần</td>
-                                            <td>0123456789</td>
-                                            <td>Nguyễn Văn Hoàng</td>
-                                            <td>Khoa Tim Mạch</td>
-                                            <td>30-04-2024</td>
-                                            <td>8:00 - 9:00</td>
-                                        </tr>
-                                    </tbody>
-                                </Table>
-                            </TabPane>
-                        </Tabs>
-                    </Col>
-                    <Col lg={6}>
-                        <h4 className='text-center'>Thông Tin</h4>
-                        <Form>
-                            <Form.Group>
-                                <Form.Label>Họ Tên</Form.Label>
-                                <Form.Control></Form.Control>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Ngày Sinh</Form.Label>
-                                <Form.Control></Form.Control>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Giới Tính</Form.Label>
-                                <Form.Control></Form.Control>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Số Điện Thoại</Form.Label>
-                                <Form.Control></Form.Control>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Phòng</Form.Label>
-                                <Form.Control></Form.Control>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Bác Sĩ</Form.Label>
-                                <Form.Control></Form.Control>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Ngày Khám</Form.Label>
-                                <Form.Control></Form.Control>
-                            </Form.Group>
-                            <Form.Group>
-                                <Form.Label>Phiên</Form.Label>
-                                <Form.Control></Form.Control>
-                            </Form.Group>
-                        </Form>
-                    </Col>
-                    <Col lg={3}>
-                        <Calendar style={{ width: "100%", height: 400 }} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col lg={3}>
-
-                    </Col>
-                    <Col lg={6}>
-                        <Table>
-                            <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Họ Và Tên</th>
-                                    <th>Số Điện Thoại</th>
-                                    <th>Bác Sĩ</th>
-                                    <th>Chuyên Khoa</th>
-                                    <th>Ngày Khám</th>
-                                    <th>Phiên Khám</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Phạm Dương Hoàn Tuần</td>
-                                    <td>0123456789</td>
-                                    <td>Nguyễn Văn Hoàng</td>
-                                    <td>Khoa Tim Mạch</td>
-                                    <td>30-04-2024</td>
-                                    <td>8:00 - 9:00</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                    </Col>
-                    <Col lg={3}>
-                    </Col>
-                </Row>
-            </div> */}
         </>
     );
 }

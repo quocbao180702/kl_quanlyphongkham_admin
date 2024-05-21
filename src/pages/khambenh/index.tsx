@@ -98,16 +98,17 @@ function KhamBenh() {
         setModalShow(true);
     }
 
-
-
     const rowBenhNhanSelected = (select: BenhNhan, id: string, cls: any) => {
         setDataSelected(select);
         setIdPhieuXacNhan(id);
         setDataCLS(cls)
     }
-    /* const infoCLS = (info: any) => {
-        setCanLamSang(info);
-    } */
+
+
+    const resetSeleted = () => {
+        setDataSelected(undefined);
+        setDataCLS(undefined);
+    }
 
     useEffect(() => {
         if (dataSelected?.sinhhieu == null) {
@@ -137,20 +138,7 @@ function KhamBenh() {
     }, [phong])
 
 
-    /*  const [createHoadon] = useCreateHoaDonMutation(); */
     const handleToaThuoc = () => {
-        /*  if (dataSelected?._id) {
- 
-             createHoadon({
-                 variables: {
-                     "input": {
-                         "benhnhan": dataSelected?._id,
-                         "bhyt": dataSelected?.bhyt ? true : false,
-                         "ngaytao": dayjs().format('YYYY-MM-DD')
-                     }
-                 }
-             });
-         } */
          navigate('/toathuoc');
        
     }
@@ -219,59 +207,10 @@ function KhamBenh() {
                             <div className="d-flex justify-content-around align-items-center">
                                 <Button className="mr-1" onClick={handleEditToggle}>Khám</Button>
                                 <Button className="mr-1" onClick={handleToaThuoc}>Xem Toa Thuốc</Button>
-                                {/* <Button className="mr-1">Xuất Toa Thuốc</Button> */}
                                 <Button className="mr-1" onClick={handleHoanTatKham}>Hoàn Tất Khám</Button>
                                 <Button className="mr-1" onClick={handleYeuCauXetNghiem}>Yêu Cầu Xét Nghiệm</Button>
-                                {/* <Button className="mr-1">Hủy Khám</Button> */}
                             </div>
                         </div>
-                        {/* <div className="container mt-5">
-                            <ul className="nav nav-tabs" id="myTab" role="tablist">
-                                <li className="nav-item" role="presentation">
-                                    <button className="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Hồ sơ cá nhân</button>
-                                </li>
-                                <li className="nav-item" role="presentation">
-                                    <button className="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Thông tin bệnh nhân</button>
-                                </li>
-                            </ul>
-
-                            <div className="tab-content" id="myTabContent">
-                                <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                    <div className="p-3">
-                                        {profile?.hoten && <p>Họ Tên: {profile.hoten}</p>}
-                                        {profile?.phongs?.length > 0 && (
-                                            <p>Phòng: {profile.phongs[0].tenphong}</p>
-                                        )}
-                                        {profile?.chuyenkhoa && (
-                                            <p>Chuyên Khoa: {profile.chuyenkhoa.tenkhoa}</p>
-                                        )}
-                                        {profile?.gioitinh !== undefined && (
-                                            <p>Giới Tính: {profile.gioitinh ? 'Nam' : 'Nữ'}</p>
-                                        )}
-                                        <select className="form-select mt-3" onChange={handleSelect} value={phong}>
-                                            <option value="">Chọn Phòng</option>
-                                            {profile?.phongs?.map((phong: any) => (
-                                                <option key={phong._id} value={phong._id}>{phong.tenphong}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                                    <div className="p-3">
-                                        {dataSelected ? (
-                                            <>
-                                                <p>Họ Tên: {dataSelected.hoten}</p>
-                                                <p>Giới Tính: {dataSelected.gioitinh ? 'Nam' : 'Nữ'}</p>
-                                                <p>Ngày Sinh: {moment(dataSelected.ngaysinh).format('YYYY-MM-DD')}</p>
-                                                <p>BHYT: {dataSelected.bhyt}</p>
-                                            </>
-                                        ) : (
-                                            <p className="text-muted">Chưa có thông tin bệnh nhân.</p>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div> */}
                         <div className="row mt-3">
                             <div className="card w-100">
                                 <div className="card-body">
@@ -333,6 +272,7 @@ function KhamBenh() {
                                 setshowWarning={setshowWarning}
                                 setShowSuccess={setShowSuccess}
                                 setThongBao={setThongBao}
+                                resetDataSelected={resetSeleted}
                             />
                         </div>
                     </div>

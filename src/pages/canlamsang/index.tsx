@@ -153,6 +153,8 @@ function CanLamSang() {
                 setKetLuan('');
                 setThietBi('');
                 setFileName('');
+                setImages([]);
+                setHinhAnh([]);
                 refetch()
                 refetchDatXetNghiem()
             }
