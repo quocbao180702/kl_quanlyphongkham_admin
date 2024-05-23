@@ -9,10 +9,11 @@ import { EditContext } from ".";
 import { GrAddCircle, GrSubtractCircle } from "react-icons/gr";
 import ThemBenh from "./f_thembenh";
 import { message } from "antd";
+import { config } from "process";
 
 
 
-function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIEM, refetchHOANTAT, refetchChoKham, setshowWarning, setShowSuccess, setThongBao,  resetDataSelected }: any) {
+function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIEM, refetchHOANTAT, refetchChoKham, setshowWarning, setShowSuccess, setThongBao, resetDataSelected }: any) {
     const { data: benhData, loading: benhLoading, error: benhError, refetch: refetchBenh } = useGetAllBenhQuery();
     const { data: thuocData, loading: thuocLoading, error: thuocError } = useGetAllThuocQuery();
     const [selectedBenh, setSelectedBenh] = useState([]);
@@ -21,9 +22,8 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
     const [label] = useState('ngày tái khám');
     const [ngaytaikham, setNgayTaiKham] = useState<Dayjs>(dayjs());;
     const [selectedBenhPhu, setSelectedBenhPhu] = useState([]);
-    const [hangs, setHangs] = useState([{ id: 0, idThuoc: '', tenthuoc: '', giaBHYT: '', giaKhongBHYT: '', soLuong: '' }]);
+    const [hangs, setHangs] = useState([{ id: 0, idThuoc: '', tenthuoc: '', giaBHYT: '', giaKhongBHYT: '', soLuong: '', maxSoluong: 0 }]);
     const [selectedItems, setSelectedItems] = useState<DichVuInput[]>([]);
-
 
 
     const { isEditing, setIsEditing }: any = useContext(EditContext);
@@ -53,14 +53,25 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
         newHangs[index].tenthuoc = value ? value.tenPhoBien : '';
         newHangs[index].giaBHYT = value ? value.giaBHYT.toString() : '';
         newHangs[index].giaKhongBHYT = value ? value.giaKhongBHYT.toString() : '';
+        console.log('số lượng tối đa: ', value?.soluong)
+        newHangs[index].maxSoluong = value ? value.soluong : 0;
         setHangs(newHangs);
     };
 
+    useEffect(() => {
+        console.log('thuốc đã chọn: ', hangs);
+    }, [hangs]);
+
     const handleSoLuongChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
         const value = event.target.value;
-        const newHangs = [...hangs];
-        newHangs[index].soLuong = value;
-        setHangs(newHangs);
+        if (Number(value) > Number(hangs[index].maxSoluong)) {
+            message.warning(`Số Lượng Thuốc ${hangs[index].tenthuoc} Tối Đa Là: ${hangs[index].maxSoluong}`)
+        }
+        else {
+            const newHangs = [...hangs];
+            newHangs[index].soLuong = value;
+            setHangs(newHangs);
+        }
     };
 
     const handleRowSelect = () => {
@@ -69,7 +80,7 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
 
     const themHang = () => {
         const newId = hangs.length;
-        const newHang = { id: newId, idThuoc: '', tenthuoc: '', giaBHYT: '', giaKhongBHYT: '', soLuong: '' };
+        const newHang = { id: newId, idThuoc: '', tenthuoc: '', giaBHYT: '', giaKhongBHYT: '', soLuong: '', maxSoluong: 0 };
         setHangs([...hangs, newHang]);
     };
 
@@ -197,7 +208,7 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                 SetResetBenhPhu(resetBenhPhu === "keyBenhPhu1" ? "keyBenhPhu2" : "keyBenhPhu1")
                 setSelectedBenhPhu([]);
                 setSelectedItems([]);
-                setHangs([{ id: 0, idThuoc: '', tenthuoc: '', giaBHYT: '', giaKhongBHYT: '', soLuong: '' }])
+                setHangs([{ id: 0, idThuoc: '', tenthuoc: '', giaBHYT: '', giaKhongBHYT: '', soLuong: '', maxSoluong: 0 }])
                 resetDataSelected();
                 console.log('Đã tạo toa thuốc thành công cho bệnh nhân ');
                 message.success('Đã tạo toa thuốc thành công cho bệnh nhân');

@@ -33,7 +33,6 @@ export function Login() {
         event.preventDefault();
         try {
             const response = await login({ variables: { input: { username, password } } });
-            navigate('..');
 
             if (response.data?.login) {
                 setJwtToken(response.data.login.access_token as string);

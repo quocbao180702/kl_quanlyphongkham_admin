@@ -24,6 +24,9 @@ function ToaThuoc() {
         setSelectedToaThuoc(toathuoc);
         setModalShow(true)
     }
+    useEffect(() => {
+        console.log('toa thuốc', selectedToaThuoc);
+    }, [selectedToaThuoc])
 
 
     return (

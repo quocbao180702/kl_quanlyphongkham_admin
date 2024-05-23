@@ -3,8 +3,7 @@ import { Outlet } from 'react-router-dom'
 import Header from './components/header'
 import { useContext, useEffect, useState } from 'react'
 import { AuthContext } from './provider/AuthContextProvider'
-/* import { Link } from 'react-router-dom'
- */
+
 function App() {
   const { checkAuth } = useContext(AuthContext)
   const [loading, setLoading] = useState(true)
@@ -12,9 +11,8 @@ function App() {
   useEffect(() => {
     const authenticate = async () => {
       await checkAuth()
-      setLoading(false)
+      setLoading(false);
     }
-
     authenticate()
   }, [checkAuth])
 

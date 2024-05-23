@@ -1073,6 +1073,7 @@ export type Query = {
   getAllToaThuocbyBenhNhan: Array<Toathuoc>;
   getAllUsers: Array<Users>;
   getAllVatTuYTe: Array<Vattuyte>;
+  getBacSibyId?: Maybe<BacSi>;
   getBacSibyUserId?: Maybe<BacSi>;
   getBenhNhanbyHoten?: Maybe<Array<BenhNhan>>;
   getBenhNhanbyId: BenhNhan;
@@ -1082,6 +1083,7 @@ export type Query = {
   getHoaDonbyNgay: Array<Hoadon>;
   getLastestBlog: Array<Blog>;
   getLichKham: Lichkham;
+  getNhanVienbyId?: Maybe<NhanVien>;
   getNhanVienbyUserId?: Maybe<NhanVien>;
   getPhieuCanLamSangbyPhieuXacNhanId?: Maybe<Phieuchidinhcanlamsang>;
   getStartAndEndOfMonth: Array<MonthRange>;
@@ -1092,7 +1094,7 @@ export type Query = {
   getTotalThanhTienByDate: Scalars['Float']['output'];
   getTotalThanhTienCLSByDate: Scalars['Float']['output'];
   getUserByEmail: Users;
-  getUserById: Users;
+  getUserById?: Maybe<Users>;
   getUserByUsername?: Maybe<Users>;
   onlyUser?: Maybe<OnlyUser>;
 };
@@ -1203,6 +1205,11 @@ export type QueryGetAllUsersArgs = {
 };
 
 
+export type QueryGetBacSibyIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type QueryGetBacSibyUserIdArgs = {
   user: Scalars['String']['input'];
 };
@@ -1244,6 +1251,11 @@ export type QueryGetLastestBlogArgs = {
 
 
 export type QueryGetLichKhamArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetNhanVienbyIdArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -2206,6 +2218,27 @@ export type GetAllHinhAnhQueryVariables = Exact<{
 
 
 export type GetAllHinhAnhQuery = { __typename?: 'Query', get: { __typename?: 'Test', _id: string } };
+
+export type GetNhanVienIdQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type GetNhanVienIdQuery = { __typename?: 'Query', getNhanVienbyId?: { __typename?: 'NhanVien', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, ngayBD: any, chucvu: string, user: { __typename?: 'Users', _id: string, username: string, email: string, role: UserRole, isLocked: boolean, avatar: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }> } | null };
+
+export type GetBacSiIdQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type GetBacSiIdQuery = { __typename?: 'Query', getBacSibyId?: { __typename?: 'BacSi', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, ngayBD: any, user: { __typename?: 'Users', _id: string, username: string, email: string, role: UserRole, isLocked: boolean, avatar: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, chuyenkhoa: { __typename?: 'ChuyenKhoa', tenkhoa: string } } | null };
+
+export type GetUserByIdQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'Users', _id: string, username: string, email: string, role: UserRole, isLocked: boolean, avatar: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } } | null };
 
 export type NewDatLichSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -5735,6 +5768,185 @@ export type GetAllHinhAnhQueryHookResult = ReturnType<typeof useGetAllHinhAnhQue
 export type GetAllHinhAnhLazyQueryHookResult = ReturnType<typeof useGetAllHinhAnhLazyQuery>;
 export type GetAllHinhAnhSuspenseQueryHookResult = ReturnType<typeof useGetAllHinhAnhSuspenseQuery>;
 export type GetAllHinhAnhQueryResult = Apollo.QueryResult<GetAllHinhAnhQuery, GetAllHinhAnhQueryVariables>;
+export const GetNhanVienIdDocument = gql`
+    query GetNhanVienId($id: String!) {
+  getNhanVienbyId(id: $id) {
+    _id
+    hoten
+    ngaysinh
+    gioitinh
+    diachi
+    sodienthoai
+    cccd
+    ngayBD
+    chucvu
+    user {
+      _id
+      username
+      email
+      role
+      avatar {
+        url
+        fileName
+        type
+      }
+      isLocked
+    }
+    phongs {
+      _id
+      tenphong
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetNhanVienIdQuery__
+ *
+ * To run a query within a React component, call `useGetNhanVienIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNhanVienIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNhanVienIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetNhanVienIdQuery(baseOptions: Apollo.QueryHookOptions<GetNhanVienIdQuery, GetNhanVienIdQueryVariables> & ({ variables: GetNhanVienIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetNhanVienIdQuery, GetNhanVienIdQueryVariables>(GetNhanVienIdDocument, options);
+      }
+export function useGetNhanVienIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNhanVienIdQuery, GetNhanVienIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetNhanVienIdQuery, GetNhanVienIdQueryVariables>(GetNhanVienIdDocument, options);
+        }
+export function useGetNhanVienIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetNhanVienIdQuery, GetNhanVienIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetNhanVienIdQuery, GetNhanVienIdQueryVariables>(GetNhanVienIdDocument, options);
+        }
+export type GetNhanVienIdQueryHookResult = ReturnType<typeof useGetNhanVienIdQuery>;
+export type GetNhanVienIdLazyQueryHookResult = ReturnType<typeof useGetNhanVienIdLazyQuery>;
+export type GetNhanVienIdSuspenseQueryHookResult = ReturnType<typeof useGetNhanVienIdSuspenseQuery>;
+export type GetNhanVienIdQueryResult = Apollo.QueryResult<GetNhanVienIdQuery, GetNhanVienIdQueryVariables>;
+export const GetBacSiIdDocument = gql`
+    query GetBacSiId($id: String!) {
+  getBacSibyId(id: $id) {
+    _id
+    hoten
+    ngaysinh
+    gioitinh
+    diachi
+    sodienthoai
+    cccd
+    ngayBD
+    user {
+      _id
+      username
+      email
+      role
+      avatar {
+        url
+        fileName
+        type
+      }
+      isLocked
+    }
+    phongs {
+      _id
+      tenphong
+    }
+    chuyenkhoa {
+      tenkhoa
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetBacSiIdQuery__
+ *
+ * To run a query within a React component, call `useGetBacSiIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBacSiIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBacSiIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetBacSiIdQuery(baseOptions: Apollo.QueryHookOptions<GetBacSiIdQuery, GetBacSiIdQueryVariables> & ({ variables: GetBacSiIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBacSiIdQuery, GetBacSiIdQueryVariables>(GetBacSiIdDocument, options);
+      }
+export function useGetBacSiIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBacSiIdQuery, GetBacSiIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBacSiIdQuery, GetBacSiIdQueryVariables>(GetBacSiIdDocument, options);
+        }
+export function useGetBacSiIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetBacSiIdQuery, GetBacSiIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetBacSiIdQuery, GetBacSiIdQueryVariables>(GetBacSiIdDocument, options);
+        }
+export type GetBacSiIdQueryHookResult = ReturnType<typeof useGetBacSiIdQuery>;
+export type GetBacSiIdLazyQueryHookResult = ReturnType<typeof useGetBacSiIdLazyQuery>;
+export type GetBacSiIdSuspenseQueryHookResult = ReturnType<typeof useGetBacSiIdSuspenseQuery>;
+export type GetBacSiIdQueryResult = Apollo.QueryResult<GetBacSiIdQuery, GetBacSiIdQueryVariables>;
+export const GetUserByIdDocument = gql`
+    query GetUserById($id: String!) {
+  getUserById(_id: $id) {
+    _id
+    username
+    email
+    role
+    avatar {
+      url
+      fileName
+      type
+    }
+    isLocked
+  }
+}
+    `;
+
+/**
+ * __useGetUserByIdQuery__
+ *
+ * To run a query within a React component, call `useGetUserByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUserByIdQuery(baseOptions: Apollo.QueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables> & ({ variables: GetUserByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+      }
+export function useGetUserByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+        }
+export function useGetUserByIdSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+        }
+export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
+export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
+export type GetUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetUserByIdSuspenseQuery>;
+export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;
 export const NewDatLichDocument = gql`
     subscription NewDatLich {
   newDatLich {

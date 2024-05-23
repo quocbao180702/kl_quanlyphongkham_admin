@@ -1,13 +1,17 @@
+import { useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
+import Taothuoc from "../pdf/taothuoc";
 
 function XemToaThuoc({ show, onHide, toathuoc }: any) {
 
-    console.log('toa thuốc: ', toathuoc)
     const ketQua = (toathuoc?.thuocs || []).reduce((acc: any, curr: any, index: number) => {
         acc.push({ thuoc: curr?.tenthuoc, soLuong: (toathuoc?.soluongs || [])[index] });
         return acc;
     }, []);
-    console.log('kết quả là: ', ketQua)
+
+    useEffect(() => {
+        console.log('kết quả', ketQua)
+    }, [ketQua])
 
     return ( 
         <Modal
@@ -20,6 +24,9 @@ function XemToaThuoc({ show, onHide, toathuoc }: any) {
                 <Modal.Title>Toa Thuốc</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+                {toathuoc && (
+                    <Taothuoc data={toathuoc} />
+                )}
                 {/* {toathuoc && ( < ToaThuocPDF data={toathuoc}/>)} */}
             </Modal.Body>
             <Modal.Footer>

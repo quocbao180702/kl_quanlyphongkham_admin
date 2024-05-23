@@ -821,3 +821,86 @@ query GetAllHinhAnh($id: String!){
     _id
   }
 }`
+
+const getNhanVienbyId = gql`
+query GetNhanVienId($id: String!){
+  getNhanVienbyId(id: $id){
+ 		_id
+      hoten
+      ngaysinh
+      gioitinh
+      diachi
+      sodienthoai
+      cccd
+      ngayBD
+      chucvu
+      user{
+        _id
+      username
+      email
+      role
+      avatar{
+        url
+        fileName
+        type
+      }
+      isLocked
+      }
+      phongs{
+        _id
+        tenphong
+      }   
+  }
+}`
+
+
+const getBacSibyId = gql`
+query GetBacSiId($id: String!){
+  getBacSibyId(id: $id){
+    _id
+      hoten
+      ngaysinh
+      gioitinh
+      diachi
+      sodienthoai
+      cccd
+      ngayBD
+      user{
+        _id
+      username
+      email
+      role
+      avatar{
+        url
+        fileName
+        type
+      }
+      isLocked
+      }
+      phongs{
+        _id
+        tenphong
+      }
+      chuyenkhoa{
+        tenkhoa
+      }
+  }
+}`
+
+
+const getUserById = gql`
+query GetUserById($id: String!){
+  getUserById(_id: $id){
+    _id
+      username
+      email
+      role
+      avatar{
+        url
+        fileName
+        type
+      }
+      isLocked
+  }
+}
+`

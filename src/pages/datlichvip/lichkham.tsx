@@ -1,9 +1,13 @@
 import { Badge, Calendar } from "antd";
-import { Button, Modal } from "react-bootstrap";
+import CloseButton from 'react-bootstrap/CloseButton';
+import { Button, Collapse, Modal } from "react-bootstrap";
 import { MdClose } from "react-icons/md";
 import { useGetAllDatLichBacSiByBacSiLazyQuery, useGetLichKhamLazyQuery } from "../../graphql-definition/graphql";
 import { useEffect, useState } from "react";
 import moment from "moment";
+
+
+import './style.css';
 
 
 interface Event {
@@ -18,16 +22,13 @@ function LichKham({ show, onHide, idLich, idBacSi }: any) {
     const [getLichKham, { data: dataLichKham, loading: loadingLichKham, error: errorLichKham }] = useGetLichKhamLazyQuery();
     const [getDatLich, { data: dataDatLich, loading: loadingDatLich, error: errorDatlich }] = useGetAllDatLichBacSiByBacSiLazyQuery();
 
+    const [open, setOpen] = useState(false);
     const [enabledDates, setEnabledDates] = useState<string[] | undefined>(undefined);
     const [phien, SetPhien] = useState([] as any[]);
     const [selectedDate, setSelectedDate] = useState<any>(null);
     const [eventList, setEventList] = useState<Event[]>([]);
+    const [benhnhan, SetBenhnhan] = useState<{ status: "success" | "warning" | "error" | "default" | "processing", text: string }[]>([]);
 
-    /* const eventList: Event[] = [
-        { date: '2024-05-10', type: 'success', content: 'Hội nghị khoa học' },
-        { date: '2024-05-15', type: 'warning', content: 'Hạn nộp báo cáo' },
-        { date: '2024-05-20', type: 'error', content: 'Kiểm tra định kỳ' },
-      ]; */
 
     const dateCellRender = (value: any) => {
         const dateStr = value.format('YYYY-MM-DD');
@@ -62,7 +63,7 @@ function LichKham({ show, onHide, idLich, idBacSi }: any) {
         if (dataDatLich?.getAllDatLichBacSiByBacSi) {
             const newEvents: Event[] = dataDatLich.getAllDatLichBacSiByBacSi.map(item => {
                 let eventType: Event['type'] = item?.trangthai ? 'success' : 'warning';
-    
+
                 return {
                     date: moment(item?.ngaykham).format('YYYY-MM-DD') || '',
                     type: eventType,
@@ -72,7 +73,7 @@ function LichKham({ show, onHide, idLich, idBacSi }: any) {
             setEventList(newEvents);
         }
     }, [dataDatLich?.getAllDatLichBacSiByBacSi]);
-    
+
 
 
     useEffect(() => {
@@ -93,11 +94,15 @@ function LichKham({ show, onHide, idLich, idBacSi }: any) {
 
     const onDateSelect = (date: any) => {
         console.log(date.format('YYYY-MM-DD'));
+        setOpen(true);
         setSelectedDate(date);
-        const phiens = dataLichKham?.getLichKham?.ngaykham
-            .flatMap(ngay => ngay?.ngaytrongtuan === date.format('dddd') ? ngay?.phiens : [])
-            .filter(Boolean);
-        SetPhien(phiens || []);
+        const dateStr = date.format('YYYY-MM-DD');
+        const events = eventList.filter(event => event.date === dateStr);
+        const dataCho = events.map(event => ({
+            status: event.type,
+            text: event.content
+        }));
+        SetBenhnhan(dataCho);
     };
 
     const disabledDate = (current: any) => {
@@ -136,6 +141,20 @@ function LichKham({ show, onHide, idLich, idBacSi }: any) {
             </Modal.Header>
             <Modal.Body>
                 <Calendar disabledDate={disabledDate} onSelect={onDateSelect} cellRender={dateCellRender} />
+                <Collapse in={open}>
+                    <div>
+                        <Button variant="white" onClick={() => setOpen(false)}>X</Button>
+                        <div id="example-collapse-text">
+                            <ul className="events">
+                                {benhnhan && benhnhan.map((event, index) => (
+                                    <li key={index}>
+                                        <Badge status={event.status} text={event.text} />
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </Collapse>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onHide}>
