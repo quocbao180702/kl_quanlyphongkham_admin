@@ -14,6 +14,7 @@ interface Event {
     date: string;
     type: 'success' | 'warning' | 'error' | 'default' | 'processing';
     content: string;
+    trangthai: string;
 }
 
 
@@ -32,7 +33,7 @@ function LichKham({ show, onHide, idLich, idBacSi }: any) {
 
     const dateCellRender = (value: any) => {
         const dateStr = value.format('YYYY-MM-DD');
-        const events = eventList.filter(event => event.date === dateStr);
+        const events = eventList.filter(event => event.date === dateStr && event.trangthai === "XACNHAN");
 
         return (
             <ul className="events">
@@ -67,7 +68,8 @@ function LichKham({ show, onHide, idLich, idBacSi }: any) {
                 return {
                     date: moment(item?.ngaykham).format('YYYY-MM-DD') || '',
                     type: eventType,
-                    content: item?.benhnhan?.hoten || ''
+                    content: item?.benhnhan?.hoten || '',
+                    trangthai: item?.trangthai || "DANGXET"
                 };
             });
             setEventList(newEvents);
@@ -97,7 +99,7 @@ function LichKham({ show, onHide, idLich, idBacSi }: any) {
         setOpen(true);
         setSelectedDate(date);
         const dateStr = date.format('YYYY-MM-DD');
-        const events = eventList.filter(event => event.date === dateStr);
+        const events = eventList.filter(event => event.date === dateStr && event.trangthai === "XACNHAN");
         const dataCho = events.map(event => ({
             status: event.type,
             text: event.content

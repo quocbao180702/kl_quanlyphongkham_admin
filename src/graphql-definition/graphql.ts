@@ -885,6 +885,7 @@ export type NewDatLichBacSiInput = {
   ngaysinh: Scalars['DateTime']['input'];
   phien: PhienInput;
   sodienthoai: Scalars['String']['input'];
+  trangthai?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type NewDatLichInput = {
@@ -1495,6 +1496,7 @@ export type UpdateDatLichBacSiInput = {
   ngaysinh?: InputMaybe<Scalars['DateTime']['input']>;
   phien?: InputMaybe<PhienInput>;
   sodienthoai?: InputMaybe<Scalars['String']['input']>;
+  trangthai?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateDatLichInput = {

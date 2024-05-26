@@ -48,7 +48,7 @@ interface DatLichBacSi{
     ngaydat: Date;
     ngaykham: Date;
     email: string;
-    trangthai: boolean;
+    trangthai: string;
 }
 
 
@@ -272,7 +272,7 @@ function DatLichVip() {
                         <div>
                             <Tabs defaultActiveKey="1">
                                 <TabPane tab="Bệnh Nhân Mới" key="1">
-                                    <div className=' border position-relative w-100' style={{ height: 300 }}>
+                                    <div className=' border position-relative w-100' style={{height: 300,  overflowY: "auto" }}>
                                         <Table responsive bordered hover>
                                             <thead>
                                                 <tr>
@@ -313,7 +313,7 @@ function DatLichVip() {
                                     </div>
                                 </TabPane>
                                 <TabPane tab="Đã Xác Nhận" key="2">
-                                    <div className='position-relative w-100' style={{ height: 300 }}>
+                                    <div className='position-relative w-100' style={{height: 300,  overflowY: "auto" }}>
                                         <Table responsive bordered hover>
                                             <thead className='sticky-top top-0'>
                                                 <tr>
@@ -348,7 +348,7 @@ function DatLichVip() {
                                     </div>
                                 </TabPane>
                                 <TabPane tab="Đã Hủy" key="3">
-                                    <div className='position-relative w-100' style={{ height: 300 }}>
+                                    <div className='position-relative w-100' style={{height: 300,  overflowY: "auto" }}>
                                         <Table responsive bordered>
                                             <thead>
                                                 <tr>
