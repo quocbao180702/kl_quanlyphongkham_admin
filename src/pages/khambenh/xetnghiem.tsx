@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "react-bootstrap";
 import { Image, Carousel } from "antd";
 import { KetQuaCanLamSang, LinkImage } from "../../graphql-definition/graphql";
@@ -13,6 +13,12 @@ function XetNghiem({ dataSelected }: any) {
         setKetQuaCLS(select);
         setHinhAnh(select?.hinhanh || []);
     };
+
+    useEffect(() => {
+        if(dataSelected === undefined){
+            setHinhAnh([]);
+        }
+    }, [dataSelected])
 
     return (
         <div>

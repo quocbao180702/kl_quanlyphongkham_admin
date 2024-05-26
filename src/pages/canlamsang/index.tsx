@@ -8,6 +8,7 @@ import { backendUrlFile, getUrlImage, uploadMultiFile } from "../../utils/upload
 import TestUpload from "../test/uploadTest";
 import { useSubscription } from "@apollo/client";
 import { UpdateCLSThanhToanSubcription } from "../../../codegen/graphql-definition/subcriptions";
+import { useNavigate } from "react-router-dom";
 
 
 function CanLamSang() {
@@ -21,6 +22,7 @@ function CanLamSang() {
     const [filename, setFileName] = useState('');
     const [ketluan, setKetLuan] = useState('');
     const [thietbi, setThietBi] = useState('');
+    const navigate = useNavigate();
 
 
     const [images, setImages] = useState<any[]>([]);
@@ -132,6 +134,10 @@ function CanLamSang() {
         }
     }
 
+    const PhieuClS = () => {
+        navigate('/phieucanlamsang');
+    }
+
     const handleImagesChange = useCallback((images: any) => {
         setImages(images);
     }, []);
@@ -182,6 +188,7 @@ function CanLamSang() {
                 <div className="col-7">
                     <div className="d-flex justify-content-around align-items-center mt-2">
                         <Button className="btn btn-primary">Khám</Button>
+                        <Button className="btn btn-primary" onClick={PhieuClS}>Phiếu Lâm Sàng</Button>
                         <Button className="btn btn-primary" onClick={guiMau}>Gửi mẫu</Button>
                         <Button className="btn btn-primary" onClick={handleHuyKham}>Hủy Khám</Button>
                     </div>

@@ -10,6 +10,10 @@ import Pagination from "../../components/pagination";
 import moment from "moment";
 import { CSVLink } from "react-csv";
 import Search, { SearchProps } from "antd/es/input/Search";
+import { FaEyeSlash } from "react-icons/fa6";
+import { BsEye } from "react-icons/bs";
+import XemBlog from "./xemBlogs";
+import { message } from "antd";
 
 
 
@@ -31,7 +35,9 @@ function Blogs() {
     })
 
     const [modalShow, setModalShow] = useState(false);
+    const [show, SetShow] = useState(false);
     const [selectedBlog, setSelectedBlog] = useState({});
+    const [blogXem, setblogXem] = useState({});
     const [page, setPage] = useState(1);
 
 
@@ -75,6 +81,11 @@ function Blogs() {
         setModalShow(true);
     }
 
+    const handleXem = (blog: any) => {
+        setblogXem(blog);
+        SetShow(true);
+    }
+
     const [updateKichHoat] = useUpdateKichHoatMutation();
 
     const handleKichHoat = async (id: string) => {
@@ -87,7 +98,7 @@ function Blogs() {
             })
             refetch()
         } catch (error) {
-            console.log(error)
+           message.error("Bạn Không Có Quyền Chỉnh Sửa");
         }
     }
     const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
@@ -114,13 +125,13 @@ function Blogs() {
                 <Table striped bordered hover responsive>
                     <thead>
                         <tr>
-                            <th>STT</th>
-                            <th>Hình Ảnh</th>
-                            <th>Tiêu Đề</th>
-                            <th>Tóm Tắt</th>
-                            <th>Nội Dung</th>
-                            <th>Trạng Thái</th>
-                            <th colSpan={2}>Thao Tác</th>
+                            <th className="text-center">STT</th>
+                            <th className="text-center">Hình Ảnh</th>
+                            <th className="text-center">Tiêu Đề</th>
+                            <th className="text-center">Tóm Tắt</th>
+                            {/* <th>Nội Dung</th> */}
+                            <th className="text-center">Trạng Thái</th>
+                            <th colSpan={3} className="text-center">Thao Tác</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -141,10 +152,11 @@ function Blogs() {
                                     </td>
                                     <td className="align-middle">{blog?.tieude}</td>
                                     <td className="align-middle">{blog?.tomtat}</td>
-                                    <td className="align-middle">{blog?.noidung}</td>
+                                    {/* <td className="align-middle">{blog?.noidung}</td> */}
                                     <td className="align-middle" onClick={() => handleKichHoat(blog?._id)}>{blog?.kichhoat && blog?.kichhoat ? <Badge bg="success">Đã Duyệt</Badge> : <Badge bg="warning">Chưa Duyệt</Badge>}</td>
                                     <td className="align-middle" onClick={() => handleDelete(blog?._id)}><MdDelete /></td>
                                     <td className="align-middle" onClick={() => handleEdit(blog)}><FaMarker /></td>
+                                    <td className="align-middle" onClick={() => handleXem(blog)}><BsEye /></td>
                                 </tr>
                             )
                         })}
@@ -156,6 +168,11 @@ function Blogs() {
                     onHide={() => setModalShow(false)}
                     blog={selectedBlog}
                     refetch={refetch}
+                />
+                <XemBlog
+                    show={show}
+                    onHide={() => SetShow(false)}
+                    blog={blogXem}
                 />
             </Container>
         </>

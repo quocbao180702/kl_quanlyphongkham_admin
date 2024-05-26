@@ -21,6 +21,7 @@ import BaoCao from "../pages/baocao/page"
 import DatLichVip from "../pages/datlichvip"
 import Profile from "../pages/profile"
 import ToaThuoc from "../pages/toathuoc"
+import PhieuCanLamSang from "../pages/phieucanlamsang"
 /* import Test from "../pages/test/test" */
 
 export const AppRouter = () => {
@@ -50,6 +51,7 @@ export const AppRouter = () => {
                             <Route path="blogs/them" element={<ThemBlog />} />
                             <Route path="profile" element={<Profile />} />
                             <Route path="toathuoc" element={<ToaThuoc />}/>
+                            <Route path="phieucanlamsang" element={<PhieuCanLamSang />}/>
                         </Route>
                     </Route>
 

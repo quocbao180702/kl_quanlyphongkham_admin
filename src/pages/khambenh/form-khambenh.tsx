@@ -12,6 +12,15 @@ import { message } from "antd";
 import { config } from "process";
 
 
+interface Hangs {
+    id: number,
+    idThuoc: string,
+    tenthuoc: string,
+    giaBHYT: string,
+    giaKhongBHYT: string,
+    soLuong: string,
+    maxSoluong: number
+}
 
 function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetchDAXETNGHIEM, refetchHOANTAT, refetchChoKham, setshowWarning, setShowSuccess, setThongBao, resetDataSelected }: any) {
     const { data: benhData, loading: benhLoading, error: benhError, refetch: refetchBenh } = useGetAllBenhQuery();
@@ -22,7 +31,7 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
     const [label] = useState('ngày tái khám');
     const [ngaytaikham, setNgayTaiKham] = useState<Dayjs>(dayjs());;
     const [selectedBenhPhu, setSelectedBenhPhu] = useState([]);
-    const [hangs, setHangs] = useState([{ id: 0, idThuoc: '', tenthuoc: '', giaBHYT: '', giaKhongBHYT: '', soLuong: '', maxSoluong: 0 }]);
+    const [hangs, setHangs] = useState<Hangs[]>([/* { id: 0, idThuoc: '', tenthuoc: '', giaBHYT: '', giaKhongBHYT: '', soLuong: '', maxSoluong: 0 } */]);
     const [selectedItems, setSelectedItems] = useState<DichVuInput[]>([]);
 
 
@@ -57,10 +66,6 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
         newHangs[index].maxSoluong = value ? value.soluong : 0;
         setHangs(newHangs);
     };
-
-    useEffect(() => {
-        console.log('thuốc đã chọn: ', hangs);
-    }, [hangs]);
 
     const handleSoLuongChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
         const value = event.target.value;
@@ -208,7 +213,7 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                 SetResetBenhPhu(resetBenhPhu === "keyBenhPhu1" ? "keyBenhPhu2" : "keyBenhPhu1")
                 setSelectedBenhPhu([]);
                 setSelectedItems([]);
-                setHangs([{ id: 0, idThuoc: '', tenthuoc: '', giaBHYT: '', giaKhongBHYT: '', soLuong: '', maxSoluong: 0 }])
+                setHangs([]);
                 resetDataSelected();
                 console.log('Đã tạo toa thuốc thành công cho bệnh nhân ');
                 message.success('Đã tạo toa thuốc thành công cho bệnh nhân');
@@ -310,7 +315,7 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                     <h5>Thuốc</h5>
                     <hr />
                     <div>
-                        {hangs.map((hang, index) => (
+                        {hangs.length > 0 ? hangs.map((hang, index) => (
                             <Grid container spacing={3} key={hang.id}>
                                 <Grid item md={7}>
                                     <Autocomplete
@@ -341,7 +346,9 @@ function KhamBenhForm({ selected, dataSelected, bacsiId, idPhieuXacNhan, refetch
                                     </Button>
                                 </Grid>
                             </Grid>
-                        ))}
+                        )) : <>
+                        <div className="text-center">Chưa có chọn thuốc. Click vào tạo thuốc!  </div>
+                        </>}
                         <Button onClick={themHang} variant="contained" color="primary">
                             <GrAddCircle color="red" />
                         </Button>

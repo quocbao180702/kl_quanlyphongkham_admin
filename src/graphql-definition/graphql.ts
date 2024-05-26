@@ -1033,8 +1033,10 @@ export type Query = {
   CountHoadon: Scalars['Float']['output'];
   CountHoadonchidinhcanlamsang: Scalars['Float']['output'];
   CountNhanVien: Scalars['Float']['output'];
+  CountPhieuCLS: Scalars['Float']['output'];
   CountPhong: Scalars['Float']['output'];
   CountThuoc: Scalars['Float']['output'];
+  CountToaThuocbyBacSi: Scalars['Float']['output'];
   countBlogs: Scalars['Float']['output'];
   countPhieuXacNhanByDate: Scalars['Float']['output'];
   countUser: Scalars['Float']['output'];
@@ -1080,6 +1082,7 @@ export type Query = {
   getBenhNhanbySodienthoai?: Maybe<BenhNhan>;
   getBenhNhanbyUserId?: Maybe<BenhNhan>;
   getBlogbyId: Blog;
+  getHoaDonCLSbyBenhNhan: Array<Hoadonchidinhcanlamsang>;
   getHoaDonbyNgay: Array<Hoadon>;
   getLastestBlog: Array<Blog>;
   getLichKham: Lichkham;
@@ -1097,6 +1100,11 @@ export type Query = {
   getUserById?: Maybe<Users>;
   getUserByUsername?: Maybe<Users>;
   onlyUser?: Maybe<OnlyUser>;
+};
+
+
+export type QueryCountToaThuocbyBacSiArgs = {
+  bacsiId: Scalars['String']['input'];
 };
 
 
@@ -1192,6 +1200,7 @@ export type QueryGetAllSinhHieuByBenhNhanArgs = {
 
 export type QueryGetAllToaThuocbyBacSiArgs = {
   bacsiId: Scalars['String']['input'];
+  fetchPagination: FetchPagination;
 };
 
 
@@ -1237,6 +1246,11 @@ export type QueryGetBenhNhanbyUserIdArgs = {
 
 export type QueryGetBlogbyIdArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryGetHoaDonClSbyBenhNhanArgs = {
+  idbenhnhan: Scalars['String']['input'];
 };
 
 
@@ -2206,11 +2220,12 @@ export type GetAllDatLichBacSiByBacSiQueryVariables = Exact<{
 export type GetAllDatLichBacSiByBacSiQuery = { __typename?: 'Query', getAllDatLichBacSiByBacSi?: Array<{ __typename?: 'DatLichBacSi', _id: string, motabenh: string, ngaydat: any, ngaykham: any, email: string, trangthai: TrangThaiDatKham, bacsi: { __typename?: 'BacSi', _id: string, hoten: string, chuyenkhoa: { __typename?: 'ChuyenKhoa', tenkhoa: string }, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }> }, benhnhan: { __typename?: 'BenhNhan', _id: string, hoten: string, sodienthoai: string, ngaysinh: any, gioitinh: boolean, diachi: string, cccd: string }, phien: { __typename?: 'Phiens', batdau: string, ketthuc: string, soluongToiDa: number, trangthai: boolean } }> | null };
 
 export type GetAllToaThuocbyBacSiQueryVariables = Exact<{
-  input: Scalars['String']['input'];
+  id: Scalars['String']['input'];
+  input: FetchPagination;
 }>;
 
 
-export type GetAllToaThuocbyBacSiQuery = { __typename?: 'Query', getAllToaThuocbyBacSi: Array<{ __typename?: 'Toathuoc', _id: string, soluongs: Array<number>, bhyt: boolean, ngaytaikham: any, ngaytao: any, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sinhhieu?: { __typename?: 'Sinhhieu', cannang: number } | null }, bacsi: { __typename?: 'BacSi', hoten: string }, thuocs: Array<{ __typename?: 'Thuoc', tenthuoc: string }>, benhs: Array<{ __typename?: 'Benh', tenbenh: string }> }> };
+export type GetAllToaThuocbyBacSiQuery = { __typename?: 'Query', CountToaThuocbyBacSi: number, getAllToaThuocbyBacSi: Array<{ __typename?: 'Toathuoc', _id: string, soluongs: Array<number>, bhyt: boolean, ngaytaikham: any, ngaytao: any, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sinhhieu?: { __typename?: 'Sinhhieu', cannang: number } | null }, bacsi: { __typename?: 'BacSi', hoten: string }, thuocs: Array<{ __typename?: 'Thuoc', tenthuoc: string }>, benhs: Array<{ __typename?: 'Benh', tenbenh: string }> }> };
 
 export type GetAllHinhAnhQueryVariables = Exact<{
   id: Scalars['String']['input'];
@@ -2239,6 +2254,11 @@ export type GetUserByIdQueryVariables = Exact<{
 
 
 export type GetUserByIdQuery = { __typename?: 'Query', getUserById?: { __typename?: 'Users', _id: string, username: string, email: string, role: UserRole, isLocked: boolean, avatar: { __typename?: 'LinkImage', url: string, fileName: string, type: TypeImage } } | null };
+
+export type GetAllPhieuCanLamSangQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllPhieuCanLamSangQuery = { __typename?: 'Query', CountPhieuCLS: number, getAllPhieuCLS: Array<{ __typename?: 'Phieuchidinhcanlamsang', _id: string, bhyt: boolean, truoc: boolean, benhnhan: { __typename?: 'BenhNhan', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string, diachi: string }, bacsi: { __typename?: 'BacSi', hoten: string, ngaysinh: any, gioitinh: boolean, sodienthoai: string }, ketquacanlamsangs: Array<{ __typename?: 'KetQuaCanLamSang', _id: string, ketluan?: string | null, thietbi?: string | null, loaicanlamsang: { __typename?: 'LoaiCanLamSang', tenxetnghiem: string, gia: number, loaicanlamsang: string }, hinhanh?: Array<{ __typename?: 'LinkImage', fileName: string, url: string, type: TypeImage }> | null }> }> };
 
 export type NewDatLichSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -5667,8 +5687,9 @@ export type GetAllDatLichBacSiByBacSiLazyQueryHookResult = ReturnType<typeof use
 export type GetAllDatLichBacSiByBacSiSuspenseQueryHookResult = ReturnType<typeof useGetAllDatLichBacSiByBacSiSuspenseQuery>;
 export type GetAllDatLichBacSiByBacSiQueryResult = Apollo.QueryResult<GetAllDatLichBacSiByBacSiQuery, GetAllDatLichBacSiByBacSiQueryVariables>;
 export const GetAllToaThuocbyBacSiDocument = gql`
-    query GetAllToaThuocbyBacSi($input: String!) {
-  getAllToaThuocbyBacSi(bacsiId: $input) {
+    query GetAllToaThuocbyBacSi($id: String!, $input: FetchPagination!) {
+  CountToaThuocbyBacSi(bacsiId: $id)
+  getAllToaThuocbyBacSi(bacsiId: $id, fetchPagination: $input) {
     _id
     benhnhan {
       hoten
@@ -5708,6 +5729,7 @@ export const GetAllToaThuocbyBacSiDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllToaThuocbyBacSiQuery({
  *   variables: {
+ *      id: // value for 'id'
  *      input: // value for 'input'
  *   },
  * });
@@ -5947,6 +5969,76 @@ export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
 export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
 export type GetUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetUserByIdSuspenseQuery>;
 export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;
+export const GetAllPhieuCanLamSangDocument = gql`
+    query GetAllPhieuCanLamSang {
+  CountPhieuCLS
+  getAllPhieuCLS {
+    _id
+    benhnhan {
+      hoten
+      ngaysinh
+      gioitinh
+      sodienthoai
+      diachi
+    }
+    bacsi {
+      hoten
+      ngaysinh
+      gioitinh
+      sodienthoai
+    }
+    bhyt
+    truoc
+    ketquacanlamsangs {
+      _id
+      loaicanlamsang {
+        tenxetnghiem
+        gia
+        loaicanlamsang
+      }
+      hinhanh {
+        fileName
+        url
+        type
+      }
+      ketluan
+      thietbi
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllPhieuCanLamSangQuery__
+ *
+ * To run a query within a React component, call `useGetAllPhieuCanLamSangQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllPhieuCanLamSangQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllPhieuCanLamSangQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllPhieuCanLamSangQuery(baseOptions?: Apollo.QueryHookOptions<GetAllPhieuCanLamSangQuery, GetAllPhieuCanLamSangQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllPhieuCanLamSangQuery, GetAllPhieuCanLamSangQueryVariables>(GetAllPhieuCanLamSangDocument, options);
+      }
+export function useGetAllPhieuCanLamSangLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllPhieuCanLamSangQuery, GetAllPhieuCanLamSangQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllPhieuCanLamSangQuery, GetAllPhieuCanLamSangQueryVariables>(GetAllPhieuCanLamSangDocument, options);
+        }
+export function useGetAllPhieuCanLamSangSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetAllPhieuCanLamSangQuery, GetAllPhieuCanLamSangQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllPhieuCanLamSangQuery, GetAllPhieuCanLamSangQueryVariables>(GetAllPhieuCanLamSangDocument, options);
+        }
+export type GetAllPhieuCanLamSangQueryHookResult = ReturnType<typeof useGetAllPhieuCanLamSangQuery>;
+export type GetAllPhieuCanLamSangLazyQueryHookResult = ReturnType<typeof useGetAllPhieuCanLamSangLazyQuery>;
+export type GetAllPhieuCanLamSangSuspenseQueryHookResult = ReturnType<typeof useGetAllPhieuCanLamSangSuspenseQuery>;
+export type GetAllPhieuCanLamSangQueryResult = Apollo.QueryResult<GetAllPhieuCanLamSangQuery, GetAllPhieuCanLamSangQueryVariables>;
 export const NewDatLichDocument = gql`
     subscription NewDatLich {
   newDatLich {

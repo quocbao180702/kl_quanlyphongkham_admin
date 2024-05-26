@@ -5,19 +5,35 @@ import { Container, Row, Table } from "react-bootstrap";
 import dayjs from 'dayjs';
 import { FaEye } from "react-icons/fa6";
 import XemToaThuoc from "./XemToaThuoc";
+import Pagination from "../../components/pagination";
 
 function ToaThuoc() {
 
-    const { profile } = useContext(AuthContext)
+    const { profile } = useContext(AuthContext);
+    const [take, setTake] = useState(10);
+    const [skip, setSkip] = useState(0);
+    const [page, setPage] = useState(1);
+
     const { data: dataToathuoc, loading: loadingToathuoc, error: errorToathuoc } = useGetAllToaThuocbyBacSiQuery({
         variables: {
-           input: profile?._id
+            id: profile?._id,
+            input: {
+                take: take,
+                skip: skip
+            }
         },
         skip: !profile?._id
-    })
+    });
+
+    const handleChangPage = (skip: number, page: number) => {
+        setSkip(skip);
+        setPage(page)
+    }
 
     const [selectedToaThuoc, setSelectedToaThuoc] = useState({})
-    const [show, setModalShow] = useState(false)
+    const [show, setModalShow] = useState(false);
+
+
 
     const handleXem = (toathuoc: any) => {
         console.log('toa thuốc là: ', toathuoc)
@@ -63,6 +79,7 @@ function ToaThuoc() {
 
                         </tbody>
                     </Table>
+                    <Pagination count={dataToathuoc?.CountToaThuocbyBacSi as number} take={take} skip={handleChangPage} page={page} />
                 </Row>
                 <XemToaThuoc
                     show={show}

@@ -34,8 +34,18 @@ function SinhHieu({ dataSelected }: any) {
             setCannang(memoizedDataSelected?.sinhhieu?.cannang || 0.0);
             setBmi(Number(tinhBMI(memoizedDataSelected?.sinhhieu?.chieucao, memoizedDataSelected?.sinhhieu?.cannang)) || 0.0);
             setIsChecked(!!memoizedDataSelected?.sinhhieu?.benhmangtinh);
+        } else {
+            setMach(0.0);
+            setNhietdo(0.0);
+            setHa1('');
+            setHa2('');
+            setChieucao(0.0);
+            setCannang(0.0);
+            setBmi(0.0);
+            setIsChecked(false);
         }
     }, [memoizedDataSelected]);
+
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsChecked(event.target.checked);

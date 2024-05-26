@@ -496,7 +496,7 @@ function DatLich() {
                             </tr>
                         </thead>
                         <tbody>
-                            {Phongdata?.getAllPhong?.map((item: any) => (
+                            {Phongdata?.getAllPhong.filter((item) => item?._id !== '6604355793235cb47fc8d56a' && item?._id !== '6603f28417572ba8295a3581').map((item: any) => (
                                 <tr key={item._id} className="text-center">
                                     <td style={{ padding: '0' }} className="align-middle">{item.tenphong}</td>
                                     <td style={{ padding: '0' }} className="align-middle">{item.chuyenkhoa?.tenkhoa}</td>

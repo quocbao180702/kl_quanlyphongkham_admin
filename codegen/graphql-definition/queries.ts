@@ -786,33 +786,35 @@ query GetAllDatLichBacSiByBacSi($bacsi: String!){
 
 
 const getAllToaThuocbyBacSi = gql`
-query GetAllToaThuocbyBacSi($input: String!){
-  getAllToaThuocbyBacSi(bacsiId: $input){
+query GetAllToaThuocbyBacSi($id: String!, $input: FetchPagination!) {
+  CountToaThuocbyBacSi(bacsiId: $id) 
+  getAllToaThuocbyBacSi(bacsiId: $id, fetchPagination: $input) {
     _id
-    benhnhan{
+    benhnhan {
       hoten
       ngaysinh
       gioitinh
       diachi
-      sinhhieu{
+      sinhhieu {
         cannang
       }
     }
-    bacsi{
+    bacsi {
       hoten
     }
-    thuocs{
+    thuocs {
       tenthuoc
     }
     soluongs
-    benhs{
+    benhs {
       tenbenh
     }
     bhyt
     ngaytaikham
     ngaytao
   }
-}`
+}
+`
 
 
 const get = gql`
@@ -904,3 +906,42 @@ query GetUserById($id: String!){
   }
 }
 `
+
+
+const getAllPhieuCLS = gql`
+query GetAllPhieuCanLamSang{
+  CountPhieuCLS
+  getAllPhieuCLS{
+      _id
+    benhnhan{
+      hoten
+      ngaysinh
+      gioitinh
+      sodienthoai
+      diachi
+    }
+    bacsi{
+      hoten
+      ngaysinh
+      gioitinh
+      sodienthoai
+    }
+    bhyt
+    truoc
+    ketquacanlamsangs{
+      _id
+      loaicanlamsang{
+        tenxetnghiem
+        gia
+        loaicanlamsang
+      }
+      hinhanh{
+        fileName
+        url
+        type
+      }
+      ketluan
+      thietbi
+    }
+  }
+}`
