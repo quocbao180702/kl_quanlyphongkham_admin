@@ -145,6 +145,7 @@ query GetAllBacSi($input: FetchPagination!){
     		chuyenkhoa{
           _id
           tenkhoa
+          mota
         }
     }
 }
@@ -360,7 +361,9 @@ query GetAllPhong{
     tenphong
     mota
     chuyenkhoa{
+      _id
       tenkhoa
+      mota
     }
   }
 }`

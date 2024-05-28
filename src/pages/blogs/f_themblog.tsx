@@ -36,7 +36,7 @@ function ThemBlog() {
                 const response = await createBlog({
                     variables: {
                         "input": {
-                            "user": profile?.user?._id,
+                            "user": profile?.user?._id || profile?._id,
                             "hinhanh": {
                                 "url": imageUrl?.url || '',
                                 "fileName": imageUrl?.fileName || '',

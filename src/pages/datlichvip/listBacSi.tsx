@@ -6,7 +6,7 @@ import LichKham from "./lichkham";
 
 function ListBacSi() {
 
-    const [take, setTake] = useState(4);
+    const [take, setTake] = useState(10);
     const [skip, setSkip] = useState(0);
     const [idBacSi, SetIdBacSi] = useState('');
     const [idLich, SetIdLich] = useState('');

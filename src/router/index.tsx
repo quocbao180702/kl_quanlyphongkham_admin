@@ -22,6 +22,9 @@ import DatLichVip from "../pages/datlichvip"
 import Profile from "../pages/profile"
 import ToaThuoc from "../pages/toathuoc"
 import PhieuCanLamSang from "../pages/phieucanlamsang"
+import Phong from "../pages/phong"
+import CoSoVatChat from "../pages/cosovatchat"
+import ChuyenKhoa from "../pages/chuyenkhoa"
 /* import Test from "../pages/test/test" */
 
 export const AppRouter = () => {
@@ -41,6 +44,10 @@ export const AppRouter = () => {
                                 <Route /* path="bacsi" */ index element={<BacSiPage />} />
                                 <Route path="nhanvien" element={<NhanVienPage />} />
                             </Route>
+                            <Route path="phong" element={<CoSoVatChat />}>
+                                <Route index element={<Phong />} />
+                                <Route path="chuyenkhoa" element={<ChuyenKhoa />} />
+                            </Route>
                             <Route path="datlichvip" element={<DatLichVip />} />
                             <Route path="baocao" element={<BaoCao />} />
                             <Route path="thuoc" element={<Thuoc />} />
@@ -50,8 +57,8 @@ export const AppRouter = () => {
                             <Route path="blogs" element={<Blogs />} />
                             <Route path="blogs/them" element={<ThemBlog />} />
                             <Route path="profile" element={<Profile />} />
-                            <Route path="toathuoc" element={<ToaThuoc />}/>
-                            <Route path="phieucanlamsang" element={<PhieuCanLamSang />}/>
+                            <Route path="toathuoc" element={<ToaThuoc />} />
+                            <Route path="phieucanlamsang" element={<PhieuCanLamSang />} />
                         </Route>
                     </Route>
 

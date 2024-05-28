@@ -42,7 +42,7 @@ function ThemBacSi({ onHide, show, refetch }: any) {
     const [imageUrl, setImageUrl] = useState<LinkImage>()
 
 
-    const daysOfWeek = ["Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu"];
+    const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
     const timeSlots = [
         "7:30-8:00",

@@ -28,7 +28,7 @@ function KhamBenh() {
     const [phong, setPhong] = useState(profile?.phongs && profile.phongs.length > 0 ? profile.phongs[0]._id : "");
     const [dataAgrsChoKham, setDataAgrsChoKham] = useState({
         ngaykham: dayjs().format('YYYY-MM-DD'),
-        phongIds: (profile && profile.phongs && profile.phongs.length > 0) ? profile.phongs[0]._id : "",
+        phongIds: /* (profile && profile.phongs && profile.phongs.length > 0) ? profile.phongs[0]._id : "" */ phong,
     })
 
     const [isEditing, setIsEditing] = useState(true);
@@ -123,7 +123,7 @@ function KhamBenh() {
         setPhong(selectedPhongId);
     };
 
-    useEffect(() => {
+   /*  useEffect(() => {
         if (profile && profile.phongs && profile.phongs[0]?._id) {
             setPhong(profile.phongs[0]._id);
             setDataAgrsChoKham({
@@ -131,16 +131,28 @@ function KhamBenh() {
                 phongIds: profile.phongs[0]._id,
             });
         }
-    }, [profile]);
+    }, [profile]); */
 
     useEffect(() => {
-        console.log(dataAgrsChoKham?.ngaykham, dataAgrsChoKham?.phongIds)
-    }, [phong])
+        if (phong) {
+            setDataAgrsChoKham({
+                ngaykham: dayjs().format('YYYY-MM-DD'),
+                phongIds: phong,
+            });
+        }
+    }, [phong]);
 
+    useEffect(() => {
+        if(dataAgrsChoKham.phongIds){
+            refetchChoKham();
+            refetchCHOXETNGHIEM();
+            refetchDAXETNGHIEM();
+            refetchHOANTAT();
+        }
+    }, [dataAgrsChoKham.phongIds])
 
     const handleToaThuoc = () => {
-         navigate('/toathuoc');
-       
+        navigate('/toathuoc');
     }
 
     const [updateTrangThaiKham] = useUpdateTrangThaiKhamMutation()

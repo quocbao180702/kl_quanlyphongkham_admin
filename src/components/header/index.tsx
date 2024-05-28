@@ -8,7 +8,7 @@ import { TfiWrite } from "react-icons/tfi";
 import { PiCalendarCheckThin, PiStethoscopeLight } from "react-icons/pi";
 import { IoHomeOutline } from "react-icons/io5";
 import { ImLab } from "react-icons/im";
-import { MdOutlinePeopleAlt } from "react-icons/md";
+import { MdOutlineHomeRepairService, MdOutlinePeopleAlt } from "react-icons/md";
 import { FaPeopleGroup, FaRegUser } from "react-icons/fa6";
 import { Container, Dropdown, Nav, Navbar } from "react-bootstrap";
 
@@ -75,6 +75,7 @@ function Header() {
                             <>
                                 <Nav.Link as={Link} to={"/bacsi"} className={`nav-link-custom text-uppercase border-left ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`}><FaPeopleGroup size={14} /> Nhân Sự</Nav.Link>
                                 <Nav.Link as={Link} to={"/nguoidung"} className={` nav-link-custom  text-uppercase border-left ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`}><FaRegUser size={14} /> Người Dùng</Nav.Link>
+                                <Nav.Link as={Link} to={"/phong"} className={` nav-link-custom  text-uppercase border-left ${profile?.role === UserRole.Admin ? 'nav-link-admin' : ''}`}><MdOutlineHomeRepairService size={14} />Cơ Sở Vật Chất</Nav.Link>
                             </>
                         )
                     }

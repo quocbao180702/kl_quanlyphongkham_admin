@@ -845,9 +845,9 @@ export type NewBacSiInput = {
   hoten: Scalars['String']['input'];
   ngayBD: Scalars['DateTime']['input'];
   ngaysinh: Scalars['DateTime']['input'];
-  phongs: Array<Scalars['ID']['input']>;
+  phongs: Array<Scalars['String']['input']>;
   sodienthoai: Scalars['String']['input'];
-  username: Scalars['String']['input'];
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type NewBenhInput = {
@@ -1035,6 +1035,7 @@ export type Query = {
   CountHoadonchidinhcanlamsang: Scalars['Float']['output'];
   CountNhanVien: Scalars['Float']['output'];
   CountPhieuCLS: Scalars['Float']['output'];
+  CountPhieuDatLichbyNgayAndBatDau?: Maybe<Scalars['Float']['output']>;
   CountPhong: Scalars['Float']['output'];
   CountThuoc: Scalars['Float']['output'];
   CountToaThuocbyBacSi: Scalars['Float']['output'];
@@ -1101,6 +1102,13 @@ export type Query = {
   getUserById?: Maybe<Users>;
   getUserByUsername?: Maybe<Users>;
   onlyUser?: Maybe<OnlyUser>;
+};
+
+
+export type QueryCountPhieuDatLichbyNgayAndBatDauArgs = {
+  batdau: Scalars['String']['input'];
+  idBacSi: Scalars['String']['input'];
+  ngaykham: Scalars['DateTime']['input'];
 };
 
 
@@ -1443,7 +1451,7 @@ export type UpdateBacSiInput = {
   id: Scalars['String']['input'];
   ngayBD?: InputMaybe<Scalars['DateTime']['input']>;
   ngaysinh?: InputMaybe<Scalars['DateTime']['input']>;
-  phongs?: InputMaybe<Array<Scalars['ID']['input']>>;
+  phongs?: InputMaybe<Array<Scalars['String']['input']>>;
   sodienthoai?: InputMaybe<Scalars['String']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1981,6 +1989,48 @@ export type UpdateUutienMutationVariables = Exact<{
 
 export type UpdateUutienMutation = { __typename?: 'Mutation', updateUuTien: { __typename?: 'Phieuchidinhcanlamsang', _id: string, truoc: boolean } };
 
+export type CreateChuyenKhoaMutationVariables = Exact<{
+  input: NewChuyenKhoaInput;
+}>;
+
+
+export type CreateChuyenKhoaMutation = { __typename?: 'Mutation', createChuyenKhoa: { __typename?: 'ChuyenKhoa', _id: string } };
+
+export type UpdateChuyenKhoaMutationVariables = Exact<{
+  input: UpdateChuyenKhoaInput;
+}>;
+
+
+export type UpdateChuyenKhoaMutation = { __typename?: 'Mutation', updateChuyenKhoa: { __typename?: 'ChuyenKhoa', _id: string } };
+
+export type DeleteChuyenKhoaMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteChuyenKhoaMutation = { __typename?: 'Mutation', deleteChuyenKhoa: boolean };
+
+export type DeletePhongMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeletePhongMutation = { __typename?: 'Mutation', deletePhong: boolean };
+
+export type CreatePhongMutationVariables = Exact<{
+  input: NewPhongInput;
+}>;
+
+
+export type CreatePhongMutation = { __typename?: 'Mutation', createPhong: { __typename?: 'Phong', _id: string } };
+
+export type UpdatePhongMutationVariables = Exact<{
+  input: UpdatePhongInput;
+}>;
+
+
+export type UpdatePhongMutation = { __typename?: 'Mutation', updatePhong: { __typename?: 'Phong', _id: string } };
+
 export type OnlyUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1998,7 +2048,7 @@ export type GetAllBacSiQueryVariables = Exact<{
 }>;
 
 
-export type GetAllBacSiQuery = { __typename?: 'Query', CountBacSi: number, getAllBacSi: Array<{ __typename?: 'BacSi', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, lichkham?: string | null, ngayBD: any, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, chuyenkhoa: { __typename?: 'ChuyenKhoa', _id: string, tenkhoa: string } }> };
+export type GetAllBacSiQuery = { __typename?: 'Query', CountBacSi: number, getAllBacSi: Array<{ __typename?: 'BacSi', _id: string, hoten: string, ngaysinh: any, gioitinh: boolean, diachi: string, sodienthoai: string, cccd: string, lichkham?: string | null, ngayBD: any, phongs: Array<{ __typename?: 'Phong', _id: string, tenphong: string }>, chuyenkhoa: { __typename?: 'ChuyenKhoa', _id: string, tenkhoa: string, mota: string } }> };
 
 export type CountBacSiQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2081,7 +2131,7 @@ export type GetAllPhieuClSbyNgayQuery = { __typename?: 'Query', getAllPhieuCLSby
 export type GetAllPhongQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllPhongQuery = { __typename?: 'Query', getAllPhong: Array<{ __typename?: 'Phong', _id: string, tenphong: string, mota: string, chuyenkhoa?: { __typename?: 'ChuyenKhoa', tenkhoa: string } | null }> };
+export type GetAllPhongQuery = { __typename?: 'Query', getAllPhong: Array<{ __typename?: 'Phong', _id: string, tenphong: string, mota: string, chuyenkhoa?: { __typename?: 'ChuyenKhoa', _id: string, tenkhoa: string, mota: string } | null }> };
 
 export type GetAllChuyenKhoaQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3719,6 +3769,200 @@ export function useUpdateUutienMutation(baseOptions?: Apollo.MutationHookOptions
 export type UpdateUutienMutationHookResult = ReturnType<typeof useUpdateUutienMutation>;
 export type UpdateUutienMutationResult = Apollo.MutationResult<UpdateUutienMutation>;
 export type UpdateUutienMutationOptions = Apollo.BaseMutationOptions<UpdateUutienMutation, UpdateUutienMutationVariables>;
+export const CreateChuyenKhoaDocument = gql`
+    mutation CreateChuyenKhoa($input: NewChuyenKhoaInput!) {
+  createChuyenKhoa(newChuyenKhoaInput: $input) {
+    _id
+  }
+}
+    `;
+export type CreateChuyenKhoaMutationFn = Apollo.MutationFunction<CreateChuyenKhoaMutation, CreateChuyenKhoaMutationVariables>;
+
+/**
+ * __useCreateChuyenKhoaMutation__
+ *
+ * To run a mutation, you first call `useCreateChuyenKhoaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateChuyenKhoaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createChuyenKhoaMutation, { data, loading, error }] = useCreateChuyenKhoaMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateChuyenKhoaMutation(baseOptions?: Apollo.MutationHookOptions<CreateChuyenKhoaMutation, CreateChuyenKhoaMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateChuyenKhoaMutation, CreateChuyenKhoaMutationVariables>(CreateChuyenKhoaDocument, options);
+      }
+export type CreateChuyenKhoaMutationHookResult = ReturnType<typeof useCreateChuyenKhoaMutation>;
+export type CreateChuyenKhoaMutationResult = Apollo.MutationResult<CreateChuyenKhoaMutation>;
+export type CreateChuyenKhoaMutationOptions = Apollo.BaseMutationOptions<CreateChuyenKhoaMutation, CreateChuyenKhoaMutationVariables>;
+export const UpdateChuyenKhoaDocument = gql`
+    mutation UpdateChuyenKhoa($input: UpdateChuyenKhoaInput!) {
+  updateChuyenKhoa(updateChuyenKhoaInput: $input) {
+    _id
+  }
+}
+    `;
+export type UpdateChuyenKhoaMutationFn = Apollo.MutationFunction<UpdateChuyenKhoaMutation, UpdateChuyenKhoaMutationVariables>;
+
+/**
+ * __useUpdateChuyenKhoaMutation__
+ *
+ * To run a mutation, you first call `useUpdateChuyenKhoaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateChuyenKhoaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateChuyenKhoaMutation, { data, loading, error }] = useUpdateChuyenKhoaMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateChuyenKhoaMutation(baseOptions?: Apollo.MutationHookOptions<UpdateChuyenKhoaMutation, UpdateChuyenKhoaMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateChuyenKhoaMutation, UpdateChuyenKhoaMutationVariables>(UpdateChuyenKhoaDocument, options);
+      }
+export type UpdateChuyenKhoaMutationHookResult = ReturnType<typeof useUpdateChuyenKhoaMutation>;
+export type UpdateChuyenKhoaMutationResult = Apollo.MutationResult<UpdateChuyenKhoaMutation>;
+export type UpdateChuyenKhoaMutationOptions = Apollo.BaseMutationOptions<UpdateChuyenKhoaMutation, UpdateChuyenKhoaMutationVariables>;
+export const DeleteChuyenKhoaDocument = gql`
+    mutation DeleteChuyenKhoa($id: String!) {
+  deleteChuyenKhoa(_id: $id)
+}
+    `;
+export type DeleteChuyenKhoaMutationFn = Apollo.MutationFunction<DeleteChuyenKhoaMutation, DeleteChuyenKhoaMutationVariables>;
+
+/**
+ * __useDeleteChuyenKhoaMutation__
+ *
+ * To run a mutation, you first call `useDeleteChuyenKhoaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteChuyenKhoaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteChuyenKhoaMutation, { data, loading, error }] = useDeleteChuyenKhoaMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteChuyenKhoaMutation(baseOptions?: Apollo.MutationHookOptions<DeleteChuyenKhoaMutation, DeleteChuyenKhoaMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteChuyenKhoaMutation, DeleteChuyenKhoaMutationVariables>(DeleteChuyenKhoaDocument, options);
+      }
+export type DeleteChuyenKhoaMutationHookResult = ReturnType<typeof useDeleteChuyenKhoaMutation>;
+export type DeleteChuyenKhoaMutationResult = Apollo.MutationResult<DeleteChuyenKhoaMutation>;
+export type DeleteChuyenKhoaMutationOptions = Apollo.BaseMutationOptions<DeleteChuyenKhoaMutation, DeleteChuyenKhoaMutationVariables>;
+export const DeletePhongDocument = gql`
+    mutation DeletePhong($id: String!) {
+  deletePhong(_id: $id)
+}
+    `;
+export type DeletePhongMutationFn = Apollo.MutationFunction<DeletePhongMutation, DeletePhongMutationVariables>;
+
+/**
+ * __useDeletePhongMutation__
+ *
+ * To run a mutation, you first call `useDeletePhongMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePhongMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePhongMutation, { data, loading, error }] = useDeletePhongMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePhongMutation(baseOptions?: Apollo.MutationHookOptions<DeletePhongMutation, DeletePhongMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePhongMutation, DeletePhongMutationVariables>(DeletePhongDocument, options);
+      }
+export type DeletePhongMutationHookResult = ReturnType<typeof useDeletePhongMutation>;
+export type DeletePhongMutationResult = Apollo.MutationResult<DeletePhongMutation>;
+export type DeletePhongMutationOptions = Apollo.BaseMutationOptions<DeletePhongMutation, DeletePhongMutationVariables>;
+export const CreatePhongDocument = gql`
+    mutation CreatePhong($input: NewPhongInput!) {
+  createPhong(newPhongInput: $input) {
+    _id
+  }
+}
+    `;
+export type CreatePhongMutationFn = Apollo.MutationFunction<CreatePhongMutation, CreatePhongMutationVariables>;
+
+/**
+ * __useCreatePhongMutation__
+ *
+ * To run a mutation, you first call `useCreatePhongMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePhongMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPhongMutation, { data, loading, error }] = useCreatePhongMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreatePhongMutation(baseOptions?: Apollo.MutationHookOptions<CreatePhongMutation, CreatePhongMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePhongMutation, CreatePhongMutationVariables>(CreatePhongDocument, options);
+      }
+export type CreatePhongMutationHookResult = ReturnType<typeof useCreatePhongMutation>;
+export type CreatePhongMutationResult = Apollo.MutationResult<CreatePhongMutation>;
+export type CreatePhongMutationOptions = Apollo.BaseMutationOptions<CreatePhongMutation, CreatePhongMutationVariables>;
+export const UpdatePhongDocument = gql`
+    mutation UpdatePhong($input: UpdatePhongInput!) {
+  updatePhong(input: $input) {
+    _id
+  }
+}
+    `;
+export type UpdatePhongMutationFn = Apollo.MutationFunction<UpdatePhongMutation, UpdatePhongMutationVariables>;
+
+/**
+ * __useUpdatePhongMutation__
+ *
+ * To run a mutation, you first call `useUpdatePhongMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePhongMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePhongMutation, { data, loading, error }] = useUpdatePhongMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdatePhongMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePhongMutation, UpdatePhongMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePhongMutation, UpdatePhongMutationVariables>(UpdatePhongDocument, options);
+      }
+export type UpdatePhongMutationHookResult = ReturnType<typeof useUpdatePhongMutation>;
+export type UpdatePhongMutationResult = Apollo.MutationResult<UpdatePhongMutation>;
+export type UpdatePhongMutationOptions = Apollo.BaseMutationOptions<UpdatePhongMutation, UpdatePhongMutationVariables>;
 export const OnlyUserDocument = gql`
     query OnlyUser {
   onlyUser {
@@ -3910,6 +4154,7 @@ export const GetAllBacSiDocument = gql`
     chuyenkhoa {
       _id
       tenkhoa
+      mota
     }
   }
 }
@@ -4580,7 +4825,9 @@ export const GetAllPhongDocument = gql`
     tenphong
     mota
     chuyenkhoa {
+      _id
       tenkhoa
+      mota
     }
   }
 }

@@ -113,7 +113,7 @@ function BacSiPage() {
                     <Table striped bordered hover responsive>
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>STT</th>
                                 <th>Họ tên</th>
                                 <th>Ngày sinh</th>
                                 <th>Giới tính</th>
@@ -132,12 +132,12 @@ function BacSiPage() {
                                     <tr key={bs._id}>
                                         <td>{index + 1}</td>
                                         <td>{bs?.hoten}</td>
-                                        <td>{dayjs(bs?.ngaysinh).format('YYYY-MM-DD')}</td>
+                                        <td>{dayjs(bs?.ngaysinh).format('DD-MM-YYYY')}</td>
                                         <td>{bs?.gioitinh ? 'Nam' : 'Nữ'}</td>
                                         <td>{bs?.diachi}</td>
                                         <td>{bs?.sodienthoai}</td>
                                         <td>{bs?.cccd}</td>
-                                        <td>{new Intl.DateTimeFormat('vi-VN', { dateStyle: 'short' }).format(bs?.ngaybd)}</td>
+                                        <td>{dayjs(bs?.ngayBD).format("DD-MM-YYYY")}</td>
                                         <td>
                                             {bs?.phongs?.map((phong: any) => (
                                                 <div key={phong._id}>{phong.tenphong}</div>

@@ -346,3 +346,42 @@ mutation UpdateUutien($id: String!){
     truoc
   }
 }`
+
+const createChuyenKhoa = gql`
+mutation CreateChuyenKhoa($input: NewChuyenKhoaInput!){
+  createChuyenKhoa(newChuyenKhoaInput: $input){
+    _id
+  }
+}`
+
+const updateChuyenKhoa = gql`
+mutation UpdateChuyenKhoa($input: UpdateChuyenKhoaInput!){
+  updateChuyenKhoa(updateChuyenKhoaInput: $input){
+    _id
+  }
+}`
+
+const deleteChuyenKhoa = gql`
+mutation DeleteChuyenKhoa($id: String!){
+  deleteChuyenKhoa(_id: $id)
+}
+`
+
+const deletePhong = gql`
+mutation DeletePhong($id: String!){
+  deletePhong(_id: $id)
+}`
+
+const createPhong = gql`
+mutation CreatePhong($input: NewPhongInput!){
+  createPhong(newPhongInput: $input){
+    _id
+  }
+}`
+
+const updatePhong = gql`
+mutation UpdatePhong($input: UpdatePhongInput!){
+  updatePhong(input: $input){
+    _id
+  }
+}`

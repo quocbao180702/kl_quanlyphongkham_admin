@@ -65,10 +65,11 @@ function LichKham({ show, onHide, idLich, idBacSi }: any) {
             const newEvents: Event[] = dataDatLich.getAllDatLichBacSiByBacSi.map(item => {
                 let eventType: Event['type'] = item?.trangthai ? 'success' : 'warning';
 
+                const str = `${item?.benhnhan?.hoten}: ${item?.phien.batdau} - ${item?.phien?.ketthuc}`
                 return {
                     date: moment(item?.ngaykham).format('YYYY-MM-DD') || '',
                     type: eventType,
-                    content: item?.benhnhan?.hoten || '',
+                    content: str || '',
                     trangthai: item?.trangthai || "DANGXET"
                 };
             });

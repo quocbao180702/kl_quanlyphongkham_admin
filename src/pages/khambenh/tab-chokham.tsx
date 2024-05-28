@@ -9,8 +9,6 @@ function ChoKham({ data, loading, error, selected }: any) {
         console.log('row selected is:', benhnhan, cls);
     };
 
-    
-
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error...{error.message}</div>;
 
@@ -19,19 +17,19 @@ function ChoKham({ data, loading, error, selected }: any) {
             <Table responsive hover >
                 <thead>
                     <tr>
-                        <th>Phiên khám</th>
-                        <th>Họ tên</th>
-                        <th>Ngày sinh</th>
-                        <th>Giới tính</th>
-                        <th>BHYT</th>
-                        <th>SĐT</th>
+                        <th style={{whiteSpace: "nowrap"}} className='align-middle'>Phiên khám</th>
+                        <th style={{whiteSpace: "nowrap"}} className='align-middle'>Họ tên</th>
+                        <th style={{whiteSpace: "nowrap"}} className='align-middle'>Ngày sinh</th>
+                        <th style={{whiteSpace: "nowrap"}} className='align-middle'>Giới tính</th>
+                        <th style={{whiteSpace: "nowrap"}} className='align-middle'>BHYT</th>
+                        <th style={{whiteSpace: "nowrap"}} className='align-middle'>SĐT</th>
                     </tr>
                 </thead>
                 <tbody>
                     {data?.getAllByNgayVaPhong && data.getAllByNgayVaPhong.length > 0 && data.getAllByNgayVaPhong.map((kb: any) => (
                         <tr className='rowSelected' key={kb._id} onClick={() => handleRowSelect(kb?.benhnhan, kb?._id, undefined)}>
                             <td>{kb?.phien?.batdau} - {kb?.phien?.ketthuc}</td>
-                            <td>{kb?.benhnhan?.hoten}</td>
+                            <td style={{whiteSpace: "nowrap"}} className='align-middle'>{kb?.benhnhan?.hoten}</td>
                             <td>{moment(kb?.benhnhan?.ngaysinh).format('YYYY/MM/DD')}</td>
                             <td>{kb?.benhnhan?.gioitinh ? 'Nam' : 'Nữ'}</td>
                             <td>{kb?.benhnhan?.bhyt ? "Yes" : 'No'}</td>
