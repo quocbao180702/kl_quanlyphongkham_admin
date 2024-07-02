@@ -415,11 +415,20 @@ function DatLich() {
                                                     onChange={handleChangePhien}
                                                 >
                                                     <MenuItem value={"7:00-8:00"}>7:00-8:00</MenuItem>
+                                                    <MenuItem value={"7:30-8:30"}>7:30-8:30</MenuItem>
+                                                    <MenuItem value={"8:00-8:30"}>8:00-8:30</MenuItem>
                                                     <MenuItem value={"8:00-9:00"}>8:00-9:00</MenuItem>
+                                                    <MenuItem value={"9:00-9:30"}>9:00-9:30</MenuItem>
+                                                    <MenuItem value={"9:30-10:00"}>9:30-10:00</MenuItem>
                                                     <MenuItem value={"9:00-10:00"}>9:00-10:00</MenuItem>
                                                     <MenuItem value={"10:00-11:00"}>10:00-11:00</MenuItem>
+                                                    <MenuItem value={"10:30-11:00"}>10:30-11:00</MenuItem>
                                                     <MenuItem value={"13:00-14:00"}>13:00-14:00</MenuItem>
+                                                    <MenuItem value={"13:30-14:00"}>13:30-14:00</MenuItem>
+                                                    <MenuItem value={"14:00-14:30"}>14:00-14:30</MenuItem>
+                                                    <MenuItem value={"15:00-15:30"}>15:00-15:30</MenuItem>
                                                     <MenuItem value={"15:00-16:00"}>15:00-16:00</MenuItem>
+                                                    <MenuItem value={"16:00-16:30"}>15:00-16:00</MenuItem>
                                                     <MenuItem value={"16:00-17:00"}>16:00-17:00</MenuItem>
                                                 </Select>
                                             </FormControl>

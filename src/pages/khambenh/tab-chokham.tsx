@@ -38,7 +38,7 @@ function ChoKham({ data, loading, error, selected }: any) {
                     ))}
                     {data?.getAllPhieuXacNhanDaXetNgiem && data.getAllPhieuXacNhanDaXetNgiem.length > 0 && data.getAllPhieuXacNhanDaXetNgiem.map((kb: any) => (
                         <tr className='rowSelected' key={kb._id} onClick={() => handleRowSelect(kb?.benhnhan, kb?._id, kb?.phieuchidinhcanlamsang)}>
-                            <td>{kb?.sothutu}</td>
+                            <td>{kb?.phien?.batdau} - {kb?.phien?.ketthuc}</td>
                             <td>{kb?.benhnhan?.hoten}</td>
                             <td>{moment(kb?.benhnhan?.ngaysinh).format('YYYY/MM/DD')}</td>
                             <td>{kb?.benhnhan?.gioitinh ? 'Nam' : 'Nữ'}</td>
